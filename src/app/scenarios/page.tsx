@@ -1,10 +1,12 @@
 import { Container } from "@/components/ui/Container";
-import { Card } from "@/components/ui/Card";
+import { ScenarioPlayer } from "@/components/scenario/ScenarioPlayer";
+import { firstPeriodScenario } from "@/lib/scenarios";
 
 // Owner: Person A
-// Build the interactive scenario modules here (the inherited blueprint's
-// core concept). Each scenario is a short, practical situation with a
-// walkthrough — pull content from the Product-thon team's research.
+// One scenario is built as a working example below. To add more: copy a
+// new array into src/lib/scenarios.ts (same shape as firstPeriodScenario)
+// and render another <ScenarioPlayer /> here. The component itself
+// doesn't need to change — just the content.
 
 export default function ScenariosPage() {
   return (
@@ -12,11 +14,14 @@ export default function ScenariosPage() {
       <div className="py-12">
         <h1 className="text-2xl font-semibold text-foreground">Learn</h1>
         <p className="mt-2 text-text-muted">
-          Interactive scenarios — coming from the inherited blueprint.
+          Interactive scenarios — click through and see where it leads.
         </p>
-        <Card className="mt-6">
-          <p className="text-sm text-text-muted">Scenario modules go here.</p>
-        </Card>
+        <div className="mt-6">
+          <ScenarioPlayer
+            title="Your first period at school"
+            steps={firstPeriodScenario}
+          />
+        </div>
       </div>
     </Container>
   );
