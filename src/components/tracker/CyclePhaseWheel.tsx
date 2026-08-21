@@ -28,9 +28,13 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 export function CyclePhaseWheel({
   phases,
   activePhaseName,
+  centerLabel = "Your cycle",
+  centerCaption = "tap a phase",
 }: {
   phases: Phase[];
   activePhaseName?: string;
+  centerLabel?: string;
+  centerCaption?: string;
 }) {
   const [selected, setSelected] = useState(activePhaseName ?? phases[0].name);
   const selectedPhase = phases.find((p) => p.name === selected) ?? phases[0];
@@ -59,9 +63,8 @@ export function CyclePhaseWheel({
                 fill="none"
                 stroke={COLORS[i % COLORS.length]}
                 strokeWidth={isActive ? STROKE + 4 : STROKE - 4}
-                strokeDasharray={`${segmentLength - 6} ${
-                  CIRCUMFERENCE - segmentLength + 6
-                }`}
+                strokeDasharray={`${segmentLength - 6} ${CIRCUMFERENCE - segmentLength + 6
+                  }`}
                 strokeDashoffset={-i * segmentLength}
                 strokeLinecap="round"
                 opacity={isActive ? 1 : 0.55}
@@ -70,17 +73,22 @@ export function CyclePhaseWheel({
           })}
         </svg>
 
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span className="max-w-20 text-xs font-semibold leading-tight text-foreground">
+            {centerLabel}
+          </span>
+          <span className="mt-1 text-[10px] text-text-muted">{centerCaption}</span>
+        </div>
+
         {phases.map((phase, i) => (
           <button
             key={phase.name}
             onClick={() => setSelected(phase.name)}
-            className={`absolute flex h-14 w-14 items-center justify-center rounded-full border text-center text-[11px] font-medium leading-tight transition-colors ${
-              POSITIONS[i]
-            } ${
-              selected === phase.name
+            className={`absolute flex h-14 w-14 items-center justify-center rounded-full border text-center text-[11px] font-medium leading-tight transition-colors ${POSITIONS[i]
+              } ${selected === phase.name
                 ? "border-primary bg-primary text-white"
                 : "border-border bg-surface text-text-muted hover:text-foreground"
-            }`}
+              }`}
           >
             {phase.name.replace(" phase", "")}
           </button>

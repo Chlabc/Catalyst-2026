@@ -38,7 +38,7 @@ function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
-export function Tracker() {
+export function Tracker({ compact = false }: { compact?: boolean }) {
   const [logs, setLogs] = useState<Logs>({});
   const [ratings, setRatings] = useState<Record<string, Rating>>({});
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -127,15 +127,27 @@ export function Tracker() {
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   const inMenstrualPhase = Boolean(logs[todayKey] || logs[toKey(yesterday)]);
+  const activePhaseName = streak
+    ? streak.length <= 5
+      ? "Menstrual phase"
+      : streak.length <= 13
+        ? "Follicular phase"
+        : streak.length === 14
+          ? "Ovulation"
+          : "Luteal phase"
+    : undefined;
 
   const selectedSymptoms = selectedDate ? logs[selectedDate]?.symptoms ?? [] : [];
   const currentRating = streak ? ratings[streak.startKey] : undefined;
 
   return (
     <div className="flex flex-col gap-4">
-      <Card>
+      <Card className={compact ? "border-primary/30 bg-[#fffaf7]" : ""}>
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-foreground">{monthLabel}</h3>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.12em] text-secondary">Your private rhythm</p>
+            <h3 className="mt-1 font-semibold text-foreground">{monthLabel}</h3>
+          </div>
           <GrowthBadge count={Object.keys(logs).length} />
         </div>
 
@@ -153,13 +165,12 @@ export function Tracker() {
               <button
                 key={key}
                 onClick={() => toggleDay(key)}
-                className={`aspect-square rounded-full text-sm transition-colors ${
-                  isLogged
+                className={`aspect-square rounded-full text-sm transition-colors ${isLogged
                     ? "bg-primary text-white"
                     : isToday
                       ? "border border-primary text-foreground"
                       : "text-foreground hover:bg-background"
-                } ${isSelected ? "ring-2 ring-offset-1 ring-secondary" : ""}`}
+                  } ${isSelected ? "ring-2 ring-offset-1 ring-secondary" : ""}`}
               >
                 {date.getDate()}
               </button>
@@ -167,9 +178,8 @@ export function Tracker() {
           })}
         </div>
 
-        <p className="mt-4 text-xs text-text-muted">
-          Tap a day to log it and add symptoms. Nothing leaves your device —
-          no account, no upload.
+        <p className="mt-4 text-xs leading-relaxed text-text-muted">
+          Tap today to check in. Your notes stay on this device — no account, no upload.
         </p>
       </Card>
 
@@ -190,11 +200,10 @@ export function Tracker() {
                   key={m.value}
                   onClick={() => setMood(m.value)}
                   title={m.label}
-                  className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg transition-colors ${
-                    active
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg transition-colors ${active
                       ? "border-primary bg-primary/10"
                       : "border-border hover:bg-background"
-                  }`}
+                    }`}
                 >
                   {m.emoji}
                 </button>
@@ -212,11 +221,10 @@ export function Tracker() {
                 <button
                   key={tag}
                   onClick={() => toggleSymptom(tag)}
-                  className={`rounded-full border px-3 py-1 text-xs transition-colors ${
-                    active
+                  className={`rounded-full border px-3 py-1 text-xs transition-colors ${active
                       ? "border-primary bg-primary text-white"
                       : "border-border text-text-muted hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   {tag}
                 </button>
@@ -260,6 +268,24 @@ export function Tracker() {
         </Card>
       )}
 
+      {compact && !selectedDate && (
+        <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
+          <Card className="bg-[#f2f6ef]">
+            <p className="text-sm font-semibold text-foreground">
+              {streak ? `You're on day ${streak.length} of this cycle` : "Ready when you are"}
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-text-muted">
+              {streak
+                ? "Log how you feel today and build a picture that is yours."
+                : "Start by tapping a day in the calendar to make this space personal."}
+            </p>
+          </Card>
+          <Link href="/tracker" className="text-sm font-semibold text-primary hover:underline">
+            Open tracker →
+          </Link>
+        </div>
+      )}
+
       {streak && (
         <Card>
           <p className="text-sm font-medium text-foreground">
@@ -273,11 +299,10 @@ export function Tracker() {
                 onClick={() =>
                   setRatings((prev) => ({ ...prev, [streak.startKey]: rating }))
                 }
-                className={`rounded-full border px-3 py-1.5 text-sm capitalize transition-colors ${
-                  currentRating === rating
+                className={`rounded-full border px-3 py-1.5 text-sm capitalize transition-colors ${currentRating === rating
                     ? "border-primary bg-primary text-white"
                     : "border-border text-text-muted hover:text-foreground"
-                }`}
+                  }`}
               >
                 {rating}
               </button>
@@ -292,7 +317,7 @@ export function Tracker() {
         </Card>
       )}
 
-      <Card>
+      {!compact && <Card>
         <p className="text-sm font-medium text-foreground">What to pack</p>
         <p className="mt-1 text-xs text-text-muted">
           A simple starter checklist — keep what works for you.
@@ -306,7 +331,7 @@ export function Tracker() {
             it&apos;s okay
           </li>
         </ul>
-      </Card>
+      </Card>}
 
       <Card>
         <p className="text-sm font-medium text-foreground">
@@ -319,7 +344,9 @@ export function Tracker() {
         </p>
         <CyclePhaseWheel
           phases={cyclePhases}
-          activePhaseName={inMenstrualPhase ? "Menstrual phase" : undefined}
+          activePhaseName={activePhaseName ?? (inMenstrualPhase ? "Menstrual phase" : undefined)}
+          centerLabel={streak ? `Day ${streak.length}` : "Your cycle"}
+          centerCaption={streak ? "of this cycle" : "tap a phase"}
         />
       </Card>
     </div>

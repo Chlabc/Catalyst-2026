@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { Greeting } from "@/components/Greeting";
-import { TrackerSummaryCard } from "@/components/TrackerSummaryCard";
+import { Tracker } from "@/components/tracker/Tracker";
 import { BookIcon, DropletIcon, CalendarIcon, QuizIcon } from "@/components/icons";
 
 const features = [
@@ -36,28 +36,32 @@ const features = [
 export default function Home() {
   return (
     <Container>
-      <section className="grid grid-cols-1 gap-6 py-12 lg:grid-cols-[3fr_2fr] lg:items-center">
-        <div>
+      <section className="grid grid-cols-1 gap-8 py-10 lg:grid-cols-[0.9fr_1.3fr] lg:items-start lg:py-14">
+        <div className="pt-3">
           <Greeting />
-          <p className="mt-4 max-w-md text-text-muted">
-            Blossom is a straightforward, judgment-free guide to
-            menstruation — built for curious pre-teens, and anyone else who
-            wants clear answers.
+          <p className="mt-4 max-w-md text-lg leading-relaxed text-text-muted">
+            A calm corner for understanding your body, one small check-in at a time.
           </p>
-          <div className="mt-6">
+          <div className="mt-7 flex flex-wrap gap-3">
             <Link
               href="/scenarios"
-              className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
+              className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
             >
-              Start here
+              Explore Menstrome Island →
             </Link>
+            <Link href="/library" className="inline-flex items-center justify-center rounded-full border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground hover:border-primary">
+              Browse the library
+            </Link>
+          </div>
+          <div className="mt-10 border-l-2 border-secondary pl-4 text-sm leading-relaxed text-text-muted">
+            Private by design. Blossom keeps your check-ins on your device and is a learning guide, not a replacement for sex education or medical care.
           </div>
         </div>
 
-        <TrackerSummaryCard />
+        <Tracker compact />
       </section>
 
-      <section className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2">
+      <section className="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 lg:grid-cols-4">
         {features.map((feature) => (
           <Link key={feature.href} href={feature.href}>
             <Card className="h-full transition-all hover:-translate-y-0.5 hover:shadow-md">
