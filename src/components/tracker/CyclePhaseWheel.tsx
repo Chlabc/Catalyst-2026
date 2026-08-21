@@ -21,6 +21,7 @@ const COLORS = [
 ];
 
 const SIZE = 200;
+const LABEL_SPACE = 28;
 const STROKE = 16;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -42,60 +43,73 @@ export function CyclePhaseWheel({
 
   return (
     <div>
-      <div className="relative mx-auto py-8" style={{ width: SIZE }}>
-        <svg width={SIZE} height={SIZE} className="-rotate-90">
-          <circle
-            cx={SIZE / 2}
-            cy={SIZE / 2}
-            r={RADIUS}
-            fill="none"
-            stroke="var(--border)"
-            strokeWidth={STROKE}
-          />
-          {phases.map((phase, i) => {
-            const isActive = phase.name === activePhaseName;
-            return (
-              <circle
-                key={phase.name}
-                cx={SIZE / 2}
-                cy={SIZE / 2}
-                r={RADIUS}
-                fill="none"
-                stroke={COLORS[i % COLORS.length]}
-                strokeWidth={isActive ? STROKE + 4 : STROKE - 4}
-                strokeDasharray={`${segmentLength - 6} ${CIRCUMFERENCE - segmentLength + 6
-                  }`}
-                strokeDashoffset={-i * segmentLength}
-                strokeLinecap="round"
-                opacity={isActive ? 1 : 0.55}
-              />
-            );
-          })}
-        </svg>
+      <div
+        className="relative mx-auto"
+        style={{ width: SIZE + LABEL_SPACE * 2, height: SIZE + LABEL_SPACE * 2 }}
+      >
+        <div
+          className="absolute"
+          style={{
+            width: SIZE,
+            height: SIZE,
+            top: LABEL_SPACE,
+            left: LABEL_SPACE,
+          }}
+        >
+          <svg width={SIZE} height={SIZE} className="-rotate-90">
+            <circle
+              cx={SIZE / 2}
+              cy={SIZE / 2}
+              r={RADIUS}
+              fill="none"
+              stroke="var(--border)"
+              strokeWidth={STROKE}
+            />
+            {phases.map((phase, i) => {
+              const isActive = phase.name === activePhaseName;
+              return (
+                <circle
+                  key={phase.name}
+                  cx={SIZE / 2}
+                  cy={SIZE / 2}
+                  r={RADIUS}
+                  fill="none"
+                  stroke={COLORS[i % COLORS.length]}
+                  strokeWidth={isActive ? STROKE + 4 : STROKE - 4}
+                  strokeDasharray={`${segmentLength - 6} ${CIRCUMFERENCE - segmentLength + 6
+                    }`}
+                  strokeDashoffset={-i * segmentLength}
+                  strokeLinecap="round"
+                  opacity={isActive ? 1 : 0.55}
+                />
+              );
+            })}
+          </svg>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="max-w-20 text-xs font-semibold leading-tight text-foreground">
-            {centerLabel}
-          </span>
-          <span className="mt-1 text-[10px] text-text-muted">{centerCaption}</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span className="max-w-20 text-xs font-semibold leading-tight text-foreground">
+              {centerLabel}
+            </span>
+            <span className="mt-1 text-[10px] text-text-muted">{centerCaption}</span>
+          </div>
+
+          {phases.map((phase, i) => (
+            <button
+              key={phase.name}
+              onClick={() => setSelected(phase.name)}
+              className={`absolute flex h-14 w-14 items-center justify-center rounded-full border text-center text-[11px] font-medium leading-tight transition-colors ${POSITIONS[i]
+                } ${selected === phase.name
+                  ? "border-primary bg-primary text-white"
+                  : "border-border bg-surface text-text-muted hover:text-foreground"
+                }`}
+            >
+              {phase.name.replace(" phase", "")}
+            </button>
+          ))}
         </div>
-
-        {phases.map((phase, i) => (
-          <button
-            key={phase.name}
-            onClick={() => setSelected(phase.name)}
-            className={`absolute flex h-14 w-14 items-center justify-center rounded-full border text-center text-[11px] font-medium leading-tight transition-colors ${POSITIONS[i]
-              } ${selected === phase.name
-                ? "border-primary bg-primary text-white"
-                : "border-border bg-surface text-text-muted hover:text-foreground"
-              }`}
-          >
-            {phase.name.replace(" phase", "")}
-          </button>
-        ))}
       </div>
 
-      <div className="rounded-lg bg-background p-4">
+      <div className="mt-2 rounded-lg bg-background p-4">
         <p className="text-sm font-medium text-foreground">
           {selectedPhase.name}
           {selectedPhase.name === activePhaseName && (
