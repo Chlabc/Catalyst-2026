@@ -1,14 +1,22 @@
 # Divergence Log — Blossom (originally MenstraMission)
 
-Built on the Figma design and research by the Product-thon team (credit them
-by name here before submission). This log is the heart of our Forma
-submission — update it as you build, not at the end.
+Built on the Figma design and research by **Team PADthai** (Ann — UX/UI
+Design; Morn — Politics & Chinese Studies; Nana — Environmental Science;
+Pam — Physiology), from `PADthai - Track2.pdf` / `PADthai - Track 2.fig`.
+This log is the heart of our Forma submission — update it as you build,
+not at the end.
+
+PADthai's research: questionnaire survey, 140 participants (period-havers
+only), target user = pre-teen girls with no prior menstruation knowledge,
+target age before 12-13. Their own disclaimer: "we are not trying to
+replace sex education" — we've carried that line into our own copy.
 
 | Blueprint element | Kept / Changed / Cut | Why (tied to their research) |
 |---|---|---|
 | Name "MenstraMission" | Renamed to "Blossom" | Broadened audience (see below) meant a name centered on "mission" framing read narrower than the product now is; Blossom keeps the growth/biome metaphor without the narrower framing |
 | Biome-based interactive scenarios | Kept | Core validated concept from their user research |
-| Pre-teen-only audience | Broadened to pre-teen–late teen + parents/educators | Their own "what's next" section flagged this gap |
+| Pre-teen-only audience → parents/educators | Broadened | **Confirmed by their research**: their "Future Expansion" slide explicitly lists "single-father, parents, educator/schools" as target users |
+| Pre-teen-only audience → late teens | Broadened | **Our own call, not directly cited** — PADthai's research target is specifically pre-teens before 12-13; extending to late teens is a reasonable adjacent guess, not something their data says |
 | Playful/bright visual tone | Changed to calm, muted, plain-language UI | Serves a broader age range and builds trust on a sensitive health topic |
 | Static, education-only site | Added a period tracker/calendar | Turns a one-time education visit into an ongoing tool |
 | — | Added myth-busting quiz | Reinforces their scenario concept with a progress/reward loop, built from their own interview data on common myths |
@@ -19,7 +27,14 @@ submission — update it as you build, not at the end.
 | Tracker: calendar only | Added per-day symptom tagging, auto cycle-length count, a smooth/mild/difficult check-in, and general (non-personalized) cycle-phase education | Stays in the "education" lane the blueprint set — teaches through pattern-noticing, not a medical tracking tool. Framed deliberately as general info, not diagnosis |
 | — | Added a support card (trusted adult + one verified helpline) shown only on a "difficult" cycle rating | Real safety net without fabricating hotline data; only surfaces when relevant, doesn't clutter the default experience |
 | AI symptom assistant | Considered, not built | Needs a backend, an API key, and real safety review before an AI gives health-adjacent guidance to a young audience — too heavy and too risky for this timeline. Left as a "what's next," not shipped |
-| Full pivot to general adult-women audience | Not made | Bigger identity shift than the current "broadened, not replaced" audience call — holding off until the actual Product-thon research has been reviewed, so this stays evidence-based rather than assumed |
+| Full pivot to general adult-women audience | Considered, not made | Not supported by PADthai's research — their stated expansion is the adults *around* a pre-teen (parents/educators), not adult menstruators as primary users. Going further would be an unsupported guess |
+| Nameless biome concept | Adopted PADthai's own "Menstrome Island" name for the Learn section | This is literally their branding from the deck, not our invention — strengthens fidelity to the blueprint rather than diverging from it |
+| Scenario titles | Two levels renamed to "Cramper" and "Bloodbury" (heavy-flow scenario, new) | Matches PADthai's own island-naming convention for the biome map |
+| Tracker symptoms shown in isolation | Linked each symptom to its matching Menstrome Island mission (e.g. logging "Cramps" links to the "Cramper" mission) | Connects the tracker back into their biome/scenario concept instead of leaving it as a separate bolt-on tool |
+| Symptom tips only | Added short factual "why is this happening" explanations alongside the existing comfort tips | Matches Gen-Alpha learning-style research PADthai cited (interactive, low cognitive load) — explains the "why," not just the "what to do" |
+| Generic homepage | Added a local-only name greeting and a live cycle-day summary card, redesigned as an asymmetric (not centered) layout | Personalization without an account — consistent with the tracker's privacy-first stance already logged above |
+| Flat product list | Added 3 situational quick-picks ("swimming tomorrow?" etc.) above the filters | Matches PADthai's own "practical solution, not theoretical" positioning from their market-analysis slide |
+| Nearby pharmacy/supermarket finder | Considered, not built | Needs real geolocation + a paid maps API + ongoing data accuracy — too heavy and too risky (sending someone to a store that's wrong/closed) for this timeline |
 
 ## Notes as we build
 _(add dated bullet points here as decisions get made — these become your
@@ -31,7 +46,12 @@ video script's strongest section)_
 - 2026-08-21: Renamed MenstraMission → Blossom (see table above for why).
 - 2026-08-21: Expanded Learn into a 3-scenario level-path; expanded
   tracker with symptom tagging, cycle-length calc, and phase education.
-- **TODO (Huey):** read the actual Product-thon research doc and check
-  whether the audience-broadening and any other assumed justifications
-  above actually hold up against what they found — swap in real quotes/
-  myths for the quiz where their research supports it.
+- 2026-08-21: Read PADthai's actual research (`PADthai - Track2.pdf`).
+  Corrected the audience-broadening claim — parents/educators is
+  research-backed, late-teens is our own reasonable guess, general adult
+  women was considered and rejected as unsupported. Adopted their real
+  "Menstrome Island" branding, which we hadn't known about before this.
+- **Still open:** swap the quiz's placeholder myths for real ones if
+  PADthai's questionnaire data (referenced but not fully quoted in the
+  PDF text) has specific myth data to pull from — check the Figma file
+  or the full PDF's appendix/FigJam section for the underlying detail.

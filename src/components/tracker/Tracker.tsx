@@ -1,72 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { GrowthBadge } from "@/components/GrowthBadge";
 import { SupportCard } from "@/components/SupportCard";
-import { SYMPTOM_TAGS, wellnessTips, type SymptomTag } from "@/lib/symptoms";
+import {
+  SYMPTOM_TAGS,
+  wellnessTips,
+  symptomWhy,
+  symptomToScenarioLevel,
+  type SymptomTag,
+} from "@/lib/symptoms";
 import { cyclePhases } from "@/lib/cyclePhases";
-
-const LOGS_KEY = "menstramission_tracker_logs";
-const RATINGS_KEY = "menstramission_cycle_ratings";
-
-type DayLog = { symptoms: SymptomTag[] };
-type Logs = Record<string, DayLog>;
-type Rating = "smooth" | "mild" | "difficult";
-
-function toKey(date: Date) {
-  // Local date parts, not toISOString() — that converts to UTC first,
-  // which silently shifts the date for any timezone ahead of UTC.
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-function fromKey(key: string) {
-  const [y, m, d] = key.split("-").map(Number);
-  return new Date(y, m - 1, d);
-}
+import { scenarioLevels } from "@/lib/scenarios";
+import {
+  LOGS_KEY,
+  RATINGS_KEY,
+  toKey,
+  fromKey,
+  normalizeLoadedLogs,
+  computeCurrentStreak,
+  type Logs,
+  type Rating,
+} from "@/lib/trackerStorage";
 
 function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
-}
-
-function computeCurrentStreak(logs: Logs): { startKey: string; length: number } | null {
-  const keys = Object.keys(logs).sort();
-  if (keys.length === 0) return null;
-
-  const mostRecent = keys[keys.length - 1];
-  let length = 1;
-  let cursor = fromKey(mostRecent);
-
-  for (;;) {
-    const prevDay = new Date(cursor);
-    prevDay.setDate(prevDay.getDate() - 1);
-    const prevKey = toKey(prevDay);
-    if (logs[prevKey]) {
-      length += 1;
-      cursor = prevDay;
-    } else {
-      break;
-    }
-  }
-
-  return { startKey: toKey(cursor), length };
-}
-
-function normalizeLoadedLogs(raw: unknown): Logs {
-  // Older builds stored a plain array of date strings — migrate that
-  // shape into the new per-day object format instead of losing it.
-  if (Array.isArray(raw)) {
-    const migrated: Logs = {};
-    for (const key of raw) {
-      if (typeof key === "string") migrated[key] = { symptoms: [] };
-    }
-    return migrated;
-  }
-  if (raw && typeof raw === "object") return raw as Logs;
-  return {};
 }
 
 export function Tracker() {
@@ -219,13 +179,32 @@ export function Tracker() {
           </div>
 
           {selectedSymptoms.length > 0 && (
-            <div className="mt-4 flex flex-col gap-2 text-sm text-text-muted">
-              {selectedSymptoms.map((tag) => (
-                <p key={tag}>
-                  <span className="font-medium text-secondary">{tag}:</span>{" "}
-                  {wellnessTips[tag]}
-                </p>
-              ))}
+            <div className="mt-4 flex flex-col gap-4 text-sm text-text-muted">
+              {selectedSymptoms.map((tag) => {
+                const missionId = symptomToScenarioLevel[tag];
+                const mission = scenarioLevels.find((l) => l.id === missionId);
+                return (
+                  <div key={tag}>
+                    <p className="font-medium text-secondary">{tag}</p>
+                    <p className="mt-1">
+                      <span className="font-medium text-foreground">
+                        Why:
+                      </span>{" "}
+                      {symptomWhy[tag]}
+                    </p>
+                    <p className="mt-1">{wellnessTips[tag]}</p>
+                    {mission && (
+                      <Link
+                        href="/scenarios"
+                        className="mt-1 inline-block text-xs font-medium text-primary hover:underline"
+                      >
+                        Related: play the &ldquo;{mission.title}&rdquo;
+                        mission on Menstrome Island →
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
               <p className="text-xs italic">
                 General comfort tips, not medical advice — see a doctor if
                 symptoms feel severe.
@@ -266,6 +245,22 @@ export function Tracker() {
           )}
         </Card>
       )}
+
+      <Card>
+        <p className="text-sm font-medium text-foreground">What to pack</p>
+        <p className="mt-1 text-xs text-text-muted">
+          A simple starter checklist — keep what works for you.
+        </p>
+        <ul className="mt-3 list-disc pl-4 text-sm text-text-muted">
+          <li>Your preferred product (see the Product Library if unsure)</li>
+          <li>A spare change of underwear</li>
+          <li>Wipes or tissues</li>
+          <li>
+            Pain relief, if you use it and a trusted adult&apos;s said
+            it&apos;s okay
+          </li>
+        </ul>
+      </Card>
 
       <Card>
         <p className="text-sm font-medium text-foreground">

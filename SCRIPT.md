@@ -12,11 +12,12 @@ judgment-free place that just explained what was happening. That's the gap
 we wanted to close."
 
 ## 2. Credit + blueprint (20s)
-"This is built on a design and research from [Product-thon team name]'s
-MenstraMission project, which won Product-thon. They did the research and
-the blueprint — our job in Forma was to actually build it, and to make
-justified calls on where to improve it. We renamed it Blossom, which we'll
-get into."
+"This is built on a design and research from Team PADthai — Ann, Morn,
+Nana, and Pam — whose MenstraMission project won Product-thon. They did
+the research and the blueprint, including the 'Menstrome Island' biome
+world — our job in Forma was to actually build it, and to make justified
+calls on where to improve it. We renamed the product Blossom, which
+we'll get into."
 
 ## 3. What we kept and why (25s)
 "We kept their core idea: menstruation explained through interactive,
@@ -29,9 +30,11 @@ parent's lecture, just clear answers."
 - We renamed it Blossom — the original name centered on 'mission,' which
   read narrower once we broadened the audience. Blossom keeps their own
   growth/biome metaphor without that narrower framing.
-- We widened the audience slightly, from pre-teens only to pre-teens
-  through late teens, plus parents and educators — their own research
-  already pointed at this as a next step, we just built it in from day one.
+- We widened the audience — their own 'Future Expansion' slide named
+  parents and educators as a next step, so we built that in from day one.
+  We also stretched slightly further to late teens ourselves — that part's
+  our own call, not something their research directly says, and we're
+  upfront about that distinction.
 - We shifted the tone and colors — calmer, more direct, muted tones instead
   of bright and playful — because a wider age range needs something that
   reads as credible, not childish.
@@ -47,18 +50,21 @@ parent's lecture, just clear answers."
 
 ## 5. Live demo (75s)
 "Let's walk through it. [Screen share]
-- Here's a scenario — 'your first period at school.' You make a choice,
-  it branches, you make another choice. At one ending, we show a
+- Homepage — it knows you, locally, no account: just a name you give it
+  once, and a live summary of where you're at in your cycle.
+- Menstrome Island — their own name for the biome world. You make a
+  choice, it branches, you make another. At one ending, we show a
   ready-to-send message you can text a parent or teacher, because
   honestly, the hardest part usually isn't the info — it's finding the
   words to ask for help out loud.
-- Here's the product library — filter by what you need, sports,
-  overnight, first period — plain pros and cons, no jargon.
-- Here's the quiz — real myths, answer, see why, and there's a small
-  growth visual that reflects your progress, tying back to their
-  original 'biome' concept.
-- And here's the tracker — tap a day to log it, nothing's uploaded
-  anywhere, it's just yours."
+- Product library — filter by what you need, or tap a real situation
+  like 'swimming tomorrow?' and it filters for you.
+- The quiz — real myths, answer, see why, small growth visual tying
+  back to their biome concept.
+- And the tracker — tap a day, tag a symptom, and it tells you why
+  that's happening, links you to the matching Menstrome mission — log
+  'Cramps' and it points you straight at the 'Cramper' level — and
+  nothing here ever leaves your device."
 
 ## 6. Close (15s)
 "What's next for us: the sample-reward system and multilingual support

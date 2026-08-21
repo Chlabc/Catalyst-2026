@@ -123,6 +123,31 @@ export const crampsScenario: ScenarioStep[] = [
   },
 ];
 
+export const bloodburyScenario: ScenarioStep[] = [
+  {
+    id: "start",
+    prompt: "You wake up with a heavier flow than usual. What do you do?",
+    choices: [
+      { label: "Switch to a higher-absorbency product", next: "switch" },
+      { label: "Layer a pad with period underwear for extra backup", next: "layer" },
+    ],
+  },
+  {
+    id: "switch",
+    prompt: "",
+    choices: [],
+    closing:
+      "Good call — sizing up is exactly what higher-absorbency products are for, and it's completely normal for flow to vary.",
+  },
+  {
+    id: "layer",
+    prompt: "",
+    choices: [],
+    closing:
+      "Layering for extra security is a solid approach, especially overnight — worth knowing for your heavier days.",
+  },
+];
+
 export type ScenarioLevel = {
   id: string;
   title: string;
@@ -130,6 +155,8 @@ export type ScenarioLevel = {
   steps: ScenarioStep[];
 };
 
+// Level ids "cramper" and "bloodbury" match the island names from
+// PADthai's own Menstrome Island biome map — see DIVERGENCE.md.
 export const scenarioLevels: ScenarioLevel[] = [
   {
     id: "first-period",
@@ -144,9 +171,15 @@ export const scenarioLevels: ScenarioLevel[] = [
     steps: sleepoverScenario,
   },
   {
-    id: "cramps-practice",
-    title: "Cramps at practice",
-    teaser: "Pain hits mid-session. Push through or speak up?",
+    id: "cramper",
+    title: "Cramper",
+    teaser: "Pain hits mid-session at practice. Push through or speak up?",
     steps: crampsScenario,
+  },
+  {
+    id: "bloodbury",
+    title: "Bloodbury",
+    teaser: "A heavier flow morning. What's your move?",
+    steps: bloodburyScenario,
   },
 ];

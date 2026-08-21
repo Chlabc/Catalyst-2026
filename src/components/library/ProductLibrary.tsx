@@ -6,10 +6,31 @@ import { ChevronIcon } from "@/components/icons";
 import { products } from "@/lib/products";
 
 const FILTERS = ["All", "First period", "Sports", "Overnight", "Light days"] as const;
+type Filter = (typeof FILTERS)[number];
+
+const SITUATIONS: { label: string; filter: Filter; blurb: string }[] = [
+  {
+    label: "Swimming tomorrow?",
+    filter: "Sports",
+    blurb: "These options move with you and work in water.",
+  },
+  {
+    label: "Heavy flow overnight?",
+    filter: "Overnight",
+    blurb: "These give extra coverage while you sleep.",
+  },
+  {
+    label: "Not sure where to start?",
+    filter: "First period",
+    blurb: "These are usually the easiest first choice.",
+  },
+];
 
 export function ProductLibrary() {
-  const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
+  const [filter, setFilter] = useState<Filter>("All");
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  const activeSituation = SITUATIONS.find((s) => s.filter === filter);
 
   const visible =
     filter === "All"
@@ -30,7 +51,23 @@ export function ProductLibrary() {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {SITUATIONS.map((s) => (
+          <button
+            key={s.label}
+            onClick={() => setFilter(s.filter)}
+            className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+              filter === s.filter
+                ? "border-primary bg-primary/10"
+                : "border-border hover:bg-background"
+            }`}
+          >
+            <span className="font-medium text-foreground">{s.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -45,6 +82,10 @@ export function ProductLibrary() {
           </button>
         ))}
       </div>
+
+      {activeSituation && (
+        <p className="mt-3 text-sm text-text-muted">{activeSituation.blurb}</p>
+      )}
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {visible.map((product) => {

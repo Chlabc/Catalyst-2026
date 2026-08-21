@@ -9,9 +9,12 @@ export default function ScenariosPage() {
   return (
     <Container>
       <div className="py-12">
-        <h1 className="text-2xl font-semibold text-foreground">Learn</h1>
+        <h1 className="text-2xl font-semibold text-foreground">
+          Menstrome Island
+        </h1>
         <p className="mt-2 text-text-muted">
-          Interactive scenarios — click through and see where it leads.
+          Interactive scenarios — click through and see where it leads. Not a
+          replacement for sex ed, just somewhere to start.
         </p>
         <div className="mt-6">
           <ScenarioPath levels={scenarioLevels} />
