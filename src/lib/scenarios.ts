@@ -72,3 +72,81 @@ export const firstPeriodScenario: ScenarioStep[] = [
     showMessageGenerator: true,
   },
 ];
+
+export const sleepoverScenario: ScenarioStep[] = [
+  {
+    id: "start",
+    prompt:
+      "You're at a sleepover and your period starts unexpectedly. What do you do?",
+    choices: [
+      { label: "Quietly ask the host's parent for a pad", next: "ask_parent" },
+      { label: "Text your own parent to bring supplies", next: "message" },
+    ],
+  },
+  {
+    id: "ask_parent",
+    prompt: "",
+    choices: [],
+    closing:
+      "Most adults keep spares on hand or can grab some quickly — asking is completely normal, and probably not the first time they've been asked.",
+  },
+  {
+    id: "message",
+    prompt: "",
+    choices: [],
+    closing:
+      "Sending a message means you don't have to explain the whole situation out loud in front of everyone.",
+    showMessageGenerator: true,
+  },
+];
+
+export const crampsScenario: ScenarioStep[] = [
+  {
+    id: "start",
+    prompt: "You're at sports practice and cramps hit hard. What do you do?",
+    choices: [
+      { label: "Tell your coach you need a break", next: "tell_coach" },
+      { label: "Push through quietly", next: "push_through" },
+    ],
+  },
+  {
+    id: "push_through",
+    prompt: "It's getting worse. What now?",
+    choices: [{ label: "Okay, let's tell the coach", next: "tell_coach" }],
+  },
+  {
+    id: "tell_coach",
+    prompt: "",
+    choices: [],
+    closing:
+      "Coaches deal with this more than you'd think. A short break, some stretching, or a warm drink can genuinely help.",
+  },
+];
+
+export type ScenarioLevel = {
+  id: string;
+  title: string;
+  teaser: string;
+  steps: ScenarioStep[];
+};
+
+export const scenarioLevels: ScenarioLevel[] = [
+  {
+    id: "first-period",
+    title: "Your first period at school",
+    teaser: "It happens somewhere you didn't expect. What now?",
+    steps: firstPeriodScenario,
+  },
+  {
+    id: "sleepover",
+    title: "Your period at a sleepover",
+    teaser: "Away from home, with no supplies on hand.",
+    steps: sleepoverScenario,
+  },
+  {
+    id: "cramps-practice",
+    title: "Cramps at practice",
+    teaser: "Pain hits mid-session. Push through or speak up?",
+    steps: crampsScenario,
+  },
+];

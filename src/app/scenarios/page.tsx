@@ -1,12 +1,9 @@
 import { Container } from "@/components/ui/Container";
-import { ScenarioPlayer } from "@/components/scenario/ScenarioPlayer";
-import { firstPeriodScenario } from "@/lib/scenarios";
+import { ScenarioPath } from "@/components/scenario/ScenarioPath";
+import { scenarioLevels } from "@/lib/scenarios";
 
-// Owner: Person A
-// One scenario is built as a working example below. To add more: copy a
-// new array into src/lib/scenarios.ts (same shape as firstPeriodScenario)
-// and render another <ScenarioPlayer /> here. The component itself
-// doesn't need to change — just the content.
+// Add more levels by extending scenarioLevels in src/lib/scenarios.ts —
+// this page and ScenarioPath don't need to change.
 
 export default function ScenariosPage() {
   return (
@@ -17,10 +14,7 @@ export default function ScenariosPage() {
           Interactive scenarios — click through and see where it leads.
         </p>
         <div className="mt-6">
-          <ScenarioPlayer
-            title="Your first period at school"
-            steps={firstPeriodScenario}
-          />
+          <ScenarioPath levels={scenarioLevels} />
         </div>
       </div>
     </Container>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MessageGenerator } from "@/components/MessageGenerator";
@@ -9,17 +9,25 @@ import type { ScenarioStep } from "@/lib/scenarios";
 export function ScenarioPlayer({
   title,
   steps,
+  onComplete,
 }: {
-  title: string;
+  title?: string;
   steps: ScenarioStep[];
+  onComplete?: () => void;
 }) {
   const [stepId, setStepId] = useState(steps[0].id);
   const step = steps.find((s) => s.id === stepId) ?? steps[0];
   const isEnd = step.choices.length === 0;
 
+  useEffect(() => {
+    if (isEnd) onComplete?.();
+    // Only re-fire when the reached step actually changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepId]);
+
   return (
     <Card>
-      <h3 className="font-semibold text-foreground">{title}</h3>
+      {title && <h3 className="font-semibold text-foreground">{title}</h3>}
 
       {!isEnd && <p className="mt-3 text-text-muted">{step.prompt}</p>}
 
