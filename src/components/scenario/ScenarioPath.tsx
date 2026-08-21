@@ -6,7 +6,8 @@ import { ChevronIcon } from "@/components/icons";
 import { ScenarioPlayer } from "./ScenarioPlayer";
 import type { ScenarioLevel } from "@/lib/scenarios";
 
-const STORAGE_KEY = "blossom_completed_scenarios";
+export const COMPLETED_SCENARIOS_KEY = "blossom_completed_scenarios";
+const STORAGE_KEY = COMPLETED_SCENARIOS_KEY;
 
 export function ScenarioPath({ levels }: { levels: ScenarioLevel[] }) {
   const [completed, setCompleted] = useState<Set<string>>(new Set());
