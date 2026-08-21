@@ -9,6 +9,7 @@ const links = [
   { href: "/scenarios", label: "Learn" },
   { href: "/library", label: "Library" },
   { href: "/tracker", label: "Tracker" },
+  { href: "/find-help", label: "Find Help" },
 ];
 
 export function NavBar() {

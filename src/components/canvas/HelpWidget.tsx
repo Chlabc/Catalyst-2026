@@ -1,71 +1,31 @@
-"use client";
-
-import { useState } from "react";
-import { ChevronIcon } from "@/components/icons";
-
-// PLACEHOLDER: [teammate] is replacing this FAQ list with the real
-// helpline module - a map of nearby support, yoga poses, helplines, and
-// a printable report generated from tracker data. Keep the outer
-// rounded-b-2xl wrapper so it still fits the canvas.
-const FAQS = [
-  {
-    q: "Is my data private?",
-    a: "Yes — everything is stored only on this device. No account, no upload.",
-  },
-  {
-    q: "How do I move these widgets?",
-    a: "Drag the ⠿⠿⠿ handle at the top of any widget. Tracking and Help can be hidden and brought back; the flower and Menstrome Island stay put.",
-  },
-  {
-    q: "What if something feels really wrong?",
-    a: "Talk to a trusted adult, a school nurse, or a doctor. Kids Helpline (Australia): 1800 55 1800.",
-  },
-];
+import Link from "next/link";
+import { HelpIcon } from "@/components/icons";
 
 export function HelpWidget() {
-  const [expanded, setExpanded] = useState<string | null>(null);
-
   return (
     <div className="rounded-b-2xl border-2 border-t-0 border-accent/30 bg-accent-soft p-5">
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-foreground">Quick help</p>
-        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-accent">
-          placeholder
-        </span>
+        <div className="flex items-center gap-2">
+          <HelpIcon className="h-6 w-6 text-accent" />
+          <p className="text-base font-semibold text-foreground">Find help</p>
+        </div>
       </div>
       <p className="mt-2 text-sm leading-relaxed text-text-muted">
-        A calm place to find support. The full help centre will connect nearby
-        pharmacies, helplines, gentle movement, and printable period notes.
+        Start with what is happening, or go straight to nearby support.
       </p>
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {["Nearby support", "Yoga & comfort", "Period summary"].map((item) => (
-          <span
-            key={item}
-            className="rounded-full bg-white/60 px-2.5 py-1 text-xs font-medium text-text-muted"
-          >
-            {item}
-          </span>
-        ))}
-      </div>
-      <div className="mt-2 flex flex-col divide-y divide-border">
-        {FAQS.map((faq) => {
-          const isOpen = expanded === faq.q;
-          return (
-            <div key={faq.q}>
-              <button
-                onClick={() => setExpanded(isOpen ? null : faq.q)}
-                className="flex w-full items-center justify-between py-2 text-left text-sm text-foreground"
-              >
-                <span>{faq.q}</span>
-                <ChevronIcon
-                  className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""
-                    }`}
-                />
-              </button>
-              {isOpen && <p className="pb-2 text-sm text-text-muted">{faq.a}</p>}
-            </div>
-          );
-        })}
+      <div className="mt-4 flex flex-col gap-2">
+        <Link
+          href="/find-help"
+          className="rounded-xl bg-accent px-4 py-2.5 text-center text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          I have a health concern
+        </Link>
+        <Link
+          href="/find-help?view=nearby"
+          className="rounded-xl border-2 border-accent/30 bg-white/60 px-4 py-2.5 text-center text-sm font-semibold text-foreground transition-colors hover:border-accent hover:bg-white"
+        >
+          Find support near me
+        </Link>
       </div>
     </div>
   );
