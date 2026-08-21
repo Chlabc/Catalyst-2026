@@ -51,6 +51,12 @@ video script's strongest section)_
   research-backed, late-teens is our own reasonable guess, general adult
   women was considered and rejected as unsupported. Adopted their real
   "Menstrome Island" branding, which we hadn't known about before this.
+- 2026-08-21: Replaced the text-list cycle-phase card with an interactive
+  circular phase wheel (click a phase to read about it) — same content,
+  more interactive presentation. Added daily mood check-in alongside
+  symptom tagging. Gave the growth-visual companion a small face. Added
+  a static, pre-written help panel (deliberately not an AI chatbot — see
+  table above for why) accessible from every page.
 - **Still open:** swap the quiz's placeholder myths for real ones if
   PADthai's questionnaire data (referenced but not fully quoted in the
   PDF text) has specific myth data to pull from — check the Figma file

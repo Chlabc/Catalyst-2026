@@ -56,3 +56,21 @@ export function ChevronIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function HelpIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M4 5.5c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2H9l-4 3.5V16.5H6c-1.1 0-2-.9-2-2v-9Z" />
+      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.35-1 .8-1 1.7" />
+      <circle cx="12" cy="15.5" r="0.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}

@@ -3,7 +3,8 @@ import type { SymptomTag } from "./symptoms";
 export const LOGS_KEY = "menstramission_tracker_logs";
 export const RATINGS_KEY = "menstramission_cycle_ratings";
 
-export type DayLog = { symptoms: SymptomTag[] };
+export type Mood = "good" | "okay" | "low" | "irritable";
+export type DayLog = { symptoms: SymptomTag[]; mood?: Mood };
 export type Logs = Record<string, DayLog>;
 export type Rating = "smooth" | "mild" | "difficult";
 

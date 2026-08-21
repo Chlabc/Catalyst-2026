@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { GrowthBadge } from "@/components/GrowthBadge";
 import { SupportCard } from "@/components/SupportCard";
+import { CyclePhaseWheel } from "@/components/tracker/CyclePhaseWheel";
 import {
   SYMPTOM_TAGS,
   wellnessTips,
@@ -23,7 +24,15 @@ import {
   computeCurrentStreak,
   type Logs,
   type Rating,
+  type Mood,
 } from "@/lib/trackerStorage";
+
+const MOODS: { value: Mood; emoji: string; label: string }[] = [
+  { value: "good", emoji: "🙂", label: "Good" },
+  { value: "okay", emoji: "😐", label: "Okay" },
+  { value: "low", emoji: "😔", label: "Low" },
+  { value: "irritable", emoji: "😤", label: "Irritable" },
+];
 
 function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -81,7 +90,17 @@ export function Tracker() {
       const symptoms = has
         ? day.symptoms.filter((s) => s !== tag)
         : [...day.symptoms, tag];
-      return { ...prev, [selectedDate]: { symptoms } };
+      return { ...prev, [selectedDate]: { ...day, symptoms } };
+    });
+  }
+
+  function setMood(mood: Mood) {
+    if (!selectedDate) return;
+    setLogs((prev) => {
+      const day = prev[selectedDate];
+      if (!day) return prev;
+      const nextMood = day.mood === mood ? undefined : mood;
+      return { ...prev, [selectedDate]: { ...day, mood: nextMood } };
     });
   }
 
@@ -157,9 +176,36 @@ export function Tracker() {
       {selectedDate && (
         <Card>
           <p className="text-sm font-medium text-foreground">
-            Symptoms on {fromKey(selectedDate).toLocaleDateString()}
+            {fromKey(selectedDate).toLocaleDateString()}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
+
+          <p className="mt-3 text-xs font-medium text-text-muted">
+            How are you feeling today?
+          </p>
+          <div className="mt-2 flex gap-2">
+            {MOODS.map((m) => {
+              const active = logs[selectedDate]?.mood === m.value;
+              return (
+                <button
+                  key={m.value}
+                  onClick={() => setMood(m.value)}
+                  title={m.label}
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border text-lg transition-colors ${
+                    active
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:bg-background"
+                  }`}
+                >
+                  {m.emoji}
+                </button>
+              );
+            })}
+          </div>
+
+          <p className="mt-4 text-xs font-medium text-text-muted">
+            Any symptoms?
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
             {SYMPTOM_TAGS.map((tag) => {
               const active = selectedSymptoms.includes(tag);
               return (
@@ -268,34 +314,13 @@ export function Tracker() {
         </p>
         <p className="mt-1 text-xs text-text-muted">
           General education — everyone&apos;s cycle length varies, so treat
-          this as a rough guide, not a personal prediction.
+          this as a rough guide, not a personal prediction. Tap a phase to
+          read about it.
         </p>
-        <div className="mt-3 flex flex-col gap-3">
-          {cyclePhases.map((phase) => {
-            const isCurrent = phase.name === "Menstrual phase" && inMenstrualPhase;
-            return (
-              <div
-                key={phase.name}
-                className={`rounded-lg p-3 ${isCurrent ? "bg-secondary/10" : ""}`}
-              >
-                <p className="text-sm font-medium text-foreground">
-                  {phase.name}
-                  {isCurrent && (
-                    <span className="ml-2 text-xs font-normal text-secondary">
-                      you&apos;re likely here
-                    </span>
-                  )}
-                  <span className="ml-2 text-xs font-normal text-text-muted">
-                    {phase.days}
-                  </span>
-                </p>
-                <p className="mt-1 text-xs text-text-muted">
-                  {phase.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+        <CyclePhaseWheel
+          phases={cyclePhases}
+          activePhaseName={inMenstrualPhase ? "Menstrual phase" : undefined}
+        />
       </Card>
     </div>
   );
