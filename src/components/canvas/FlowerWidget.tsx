@@ -9,6 +9,7 @@ import {
 
 const LENGTH_KEY = "blossom_typical_period_length";
 const LAST_SEEN_KEY = "blossom_flower_last_seen_remaining";
+const WAS_BLEEDING_KEY = "blossom_flower_was_bleeding";
 const DEFAULT_LENGTH = 7;
 const FALL_DURATION_MS = 1200;
 
@@ -18,6 +19,15 @@ type PlantPhase = "menstrual" | "follicular" | "ovulation" | "luteal";
 
 function dateDistance(from: Date, to: Date) {
   return Math.round((to.getTime() - from.getTime()) / 86400000);
+}
+
+// How many petals are still attached for a given day count into the
+// period: one drops per day of bleeding, but the last one clings
+// (doesn't drop to 0) until the period is explicitly over - so a
+// longer-than-usual period doesn't leave the plant bare.
+function petalsStillAttached(typicalLength: number, daysBleeding: number) {
+  if (daysBleeding === 0) return typicalLength;
+  return Math.max(typicalLength - Math.min(daysBleeding, typicalLength - 1), 1);
 }
 
 function petalPoints(count: number, index: number, radius: number, center: number) {
@@ -34,10 +44,19 @@ export function FlowerWidget() {
   const [editing, setEditing] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [activeDays, setActiveDays] = useState(0);
-  // Which petal index is mid-fall right now, if any - rendered with the
-  // fall animation even though it's already excluded from the "still
-  // blooming" count.
-  const [fallingIndex, setFallingIndex] = useState<number | null>(null);
+  // Which petal indices are mid-fall right now, if any - rendered with
+  // the fall animation even though they're already excluded from the
+  // "still blooming" count. Holds one index for an ordinary day-to-day
+  // drop, or several at once when a period ends early and the
+  // remaining petals shed together.
+  const [fallingIndices, setFallingIndices] = useState<Set<number>>(new Set());
+  // While true, keep rendering the menstrual bloom (with the shed
+  // animation playing) even though the period has already ended and
+  // the real phase has moved on - otherwise the remaining petals would
+  // just vanish the instant the phase flips to follicular.
+  const [shedding, setShedding] = useState(false);
+  const [sheddingCount, setSheddingCount] = useState(0);
+  const [previewPhase, setPreviewPhase] = useState<PlantPhase | null>(null);
 
   useEffect(() => {
     let storedLength = DEFAULT_LENGTH;
@@ -65,25 +84,42 @@ export function FlowerWidget() {
     const days = isActive && streak ? streak.length : 0;
     setActiveDays(days);
 
-    const remaining = days === 0 ? storedLength : Math.max(storedLength - days, 1);
+    const remaining = petalsStillAttached(storedLength, days);
 
-    // Compare against what we last showed, so a petal that dropped while
-    // the user was elsewhere (e.g. logging a day on /tracker) still gets
-    // its fall animation the next time they land on this page.
-    let lastSeen = remaining;
+    // Compare against what we last showed, so a petal that dropped (or
+    // a period that ended) while the user was elsewhere still gets its
+    // animation the next time they land on this page.
+    let remainingAtLastVisit = remaining;
+    let wasBleeding = isActive;
     try {
-      const raw = window.localStorage.getItem(LAST_SEEN_KEY);
-      if (raw !== null) lastSeen = Number(raw);
+      const rawRemaining = window.localStorage.getItem(LAST_SEEN_KEY);
+      if (rawRemaining !== null) remainingAtLastVisit = Number(rawRemaining);
+      const rawWasBleeding = window.localStorage.getItem(WAS_BLEEDING_KEY);
+      if (rawWasBleeding !== null) wasBleeding = rawWasBleeding === "true";
     } catch {
       // Ignore, treat as no prior visit.
     }
 
-    if (remaining < lastSeen) {
-      const droppedIndex = lastSeen - 1;
-      setFallingIndex(droppedIndex);
-      window.setTimeout(() => setFallingIndex(null), FALL_DURATION_MS);
+    if (isActive && remaining < remainingAtLastVisit) {
+      // Ordinary day-to-day drop, still bleeding.
+      const droppedIndex = remainingAtLastVisit - 1;
+      setFallingIndices(new Set([droppedIndex]));
+      window.setTimeout(() => setFallingIndices(new Set()), FALL_DURATION_MS);
+    } else if (!isActive && wasBleeding && remainingAtLastVisit > 0) {
+      // Period just ended - whatever was left sheds together instead of
+      // the whole flower silently swapping to a sprout mid-render.
+      setSheddingCount(remainingAtLastVisit);
+      setFallingIndices(
+        new Set(Array.from({ length: remainingAtLastVisit }, (_, i) => i)),
+      );
+      setShedding(true);
+      window.setTimeout(() => {
+        setShedding(false);
+        setFallingIndices(new Set());
+      }, FALL_DURATION_MS);
     }
 
+    window.localStorage.setItem(WAS_BLEEDING_KEY, String(isActive));
     window.localStorage.setItem(LAST_SEEN_KEY, String(remaining));
     setLoaded(true);
   }, []);
@@ -105,7 +141,7 @@ export function FlowerWidget() {
     ? Math.max(1, dateDistance(mostRecentLog, today) + 1)
     : 0;
   const isBleeding = activeDays > 0;
-  const phase: PlantPhase = isBleeding
+  const realPhase: PlantPhase = shedding || isBleeding
     ? "menstrual"
     : cycleDay >= 15
       ? "luteal"
@@ -114,9 +150,17 @@ export function FlowerWidget() {
         : cycleDay > 0
           ? "follicular"
           : "follicular";
-  const petalsRemaining = isBleeding
-    ? Math.max(typicalLength - Math.min(activeDays, typicalLength - 1), 1)
-    : 0;
+  const phase = previewPhase ?? realPhase;
+  const petalsRemaining = shedding
+    ? sheddingCount
+    : isBleeding
+      ? petalsStillAttached(typicalLength, activeDays)
+      : 0;
+  // The single petal that's overstaying rather than dropping - only
+  // while the period is still ongoing, not during the end-of-period
+  // shed (that one's on its way out, not clinging).
+  const isClinging =
+    !shedding && isBleeding && petalsRemaining === 1 && activeDays >= typicalLength;
 
   const size = 260;
   const center = size / 2;
@@ -145,14 +189,44 @@ export function FlowerWidget() {
             <span className="text-sm text-text-muted">days</span>
           </div>
         ) : (
-          <button
-            onClick={() => setEditing(true)}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            {typicalLength}-day cycle · edit
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setEditing(true)}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {typicalLength}-day cycle · edit
+            </button>
+            <button
+              onClick={() => setPreviewPhase(previewPhase ? null : "follicular")}
+              className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-semibold text-text-muted hover:border-primary hover:text-primary"
+            >
+              {previewPhase ? "Exit preview" : "Preview stages"}
+            </button>
+          </div>
         )}
       </div>
+
+      {previewPhase && (
+        <div className="mt-3 flex flex-wrap gap-1.5 rounded-xl bg-background p-2">
+          {([
+            ["menstrual", "Bloom"],
+            ["follicular", "Sprout"],
+            ["ovulation", "Bud"],
+            ["luteal", "Mature bud"],
+          ] as [PlantPhase, string][]).map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setPreviewPhase(value)}
+              className={`rounded-full px-2.5 py-1 text-xs font-semibold transition-colors ${previewPhase === value ? "bg-primary text-white" : "text-text-muted hover:bg-surface hover:text-foreground"}`}
+            >
+              {label}
+            </button>
+          ))}
+          <p className="basis-full px-1 pt-1 text-[10px] text-text-muted">
+            Preview only — your tracker data is unchanged.
+          </p>
+        </div>
+      )}
 
       <div className="mx-auto mt-2" style={{ width: size, height: size }}>
         <svg width={size} height={size} style={{ overflow: "visible" }}>
@@ -165,8 +239,14 @@ export function FlowerWidget() {
 
           {phase === "menstrual" && Array.from({ length: typicalLength }, (_, i) => {
             const isPetal = i < petalsRemaining;
-            const isFalling = i === fallingIndex;
+            const isFalling = fallingIndices.has(i);
+            const glow = isClinging && i === 0;
             const { x, y, angleDeg } = petalPoints(typicalLength, i, petalRadius, center);
+            const petalClass = isFalling
+              ? "animate-petal-fall"
+              : glow
+                ? "animate-petal-glow"
+                : "";
 
             if (isPetal || isFalling) {
               return (
@@ -179,7 +259,7 @@ export function FlowerWidget() {
                     fill={PETAL_COLORS[i % PETAL_COLORS.length]}
                     opacity={0.92}
                     transform={`rotate(${angleDeg} ${x} ${y})`}
-                    className={isFalling ? "animate-petal-fall" : ""}
+                    className={petalClass}
                     style={
                       isFalling
                         ? { transformBox: "fill-box", transformOrigin: "center" }
@@ -193,7 +273,7 @@ export function FlowerWidget() {
                     ry={petalLength / 2}
                     fill="url(#petalShine)"
                     transform={`rotate(${angleDeg} ${x} ${y})`}
-                    className={isFalling ? "animate-petal-fall" : ""}
+                    className={petalClass}
                     style={
                       isFalling
                         ? { transformBox: "fill-box", transformOrigin: "center" }
@@ -237,16 +317,19 @@ export function FlowerWidget() {
       </div>
 
       <p className="text-center text-sm font-semibold text-foreground">
-        {phase === "menstrual" && `Menstrual phase · Day ${activeDays}`}
+        {previewPhase && <span className="mr-1 text-primary">Preview:</span>}
+        {phase === "menstrual" && (shedding ? "Petals returning to the soil…" : `Menstrual phase · Day ${activeDays}`)}
         {phase === "follicular" && "Follicular phase · new growth"}
         {phase === "ovulation" && "Ovulation · flower bud"}
         {phase === "luteal" && "Luteal phase · bud preparing"}
       </p>
       <p className="mt-1 text-center text-xs leading-relaxed text-text-muted">
         {phase === "menstrual"
-          ? petalsRemaining === 1 && activeDays >= typicalLength
-            ? "Your last petal is holding on until bleeding is marked as finished."
-            : `${petalsRemaining} petal${petalsRemaining === 1 ? "" : "s"} remaining from your ${typicalLength}-day estimate.`
+          ? shedding
+            ? "Your period ended — the last petals are letting go together."
+            : isClinging
+              ? "Your last petal is glowing and holding on until bleeding is marked as finished."
+              : `${petalsRemaining} petal${petalsRemaining === 1 ? "" : "s"} remaining from your ${typicalLength}-day estimate.`
           : cycleDay > 0
             ? "A gentle guide based on your last logged period, not a prediction."
             : "Log the days you are bleeding to help your plant follow your cycle."}

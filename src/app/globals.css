@@ -86,6 +86,21 @@ h4 {
   animation: petal-fall 1.2s cubic-bezier(0.45, 0, 0.55, 1) forwards;
 }
 
+/* The last petal of a longer-than-usual period, clinging on rather
+   than falling, pulses gently so it reads as "waiting" not "stuck". */
+@keyframes petal-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 0 rgba(255, 111, 94, 0)) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(255, 111, 94, 0.7)) brightness(1.15);
+  }
+}
+
+.animate-petal-glow {
+  animation: petal-glow 1.8s ease-in-out infinite;
+}
+
 @keyframes plant-grow {
   0% {
     opacity: 0;
@@ -114,5 +129,10 @@ h4 {
   .plant-grow,
   .plant-sprout {
     animation-duration: 0.01ms;
+  }
+
+  .animate-petal-glow {
+    animation: none;
+    filter: drop-shadow(0 0 4px rgba(255, 111, 94, 0.5));
   }
 }
