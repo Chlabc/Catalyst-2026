@@ -2,17 +2,31 @@
 
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { ChevronIcon } from "@/components/icons";
 import { products } from "@/lib/products";
 
 const FILTERS = ["All", "First period", "Sports", "Overnight", "Light days"] as const;
 
 export function ProductLibrary() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   const visible =
     filter === "All"
       ? products
       : products.filter((p) => p.goodFor.includes(filter));
+
+  function toggleExpanded(id: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
 
   return (
     <div>
@@ -33,42 +47,63 @@ export function ProductLibrary() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {visible.map((product) => (
-          <Card key={product.id}>
-            <h3 className="font-semibold text-foreground">{product.name}</h3>
-            <p className="mt-1 text-sm text-text-muted">{product.description}</p>
+        {visible.map((product) => {
+          const isOpen = expanded.has(product.id);
+          return (
+            <Card key={product.id} className="cursor-pointer">
+              <button
+                onClick={() => toggleExpanded(product.id)}
+                className="flex w-full items-start justify-between text-left"
+              >
+                <div>
+                  <h3 className="font-semibold text-foreground">
+                    {product.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-text-muted">
+                    {product.description}
+                  </p>
+                </div>
+                <ChevronIcon
+                  className={`mt-1 h-4 w-4 shrink-0 text-text-muted transition-transform ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-            <div className="mt-3 flex flex-wrap gap-1">
-              {product.goodFor.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-background px-2 py-0.5 text-xs text-text-muted"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+              <div className="mt-3 flex flex-wrap gap-1">
+                {product.goodFor.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-background px-2 py-0.5 text-xs text-text-muted"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <p className="font-medium text-secondary">Pros</p>
-                <ul className="mt-1 list-disc pl-4 text-text-muted">
-                  {product.pros.map((p) => (
-                    <li key={p}>{p}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="font-medium text-accent">Cons</p>
-                <ul className="mt-1 list-disc pl-4 text-text-muted">
-                  {product.cons.map((c) => (
-                    <li key={c}>{c}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </Card>
-        ))}
+              {isOpen && (
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="font-medium text-secondary">Pros</p>
+                    <ul className="mt-1 list-disc pl-4 text-text-muted">
+                      {product.pros.map((p) => (
+                        <li key={p}>{p}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-medium text-accent">Cons</p>
+                    <ul className="mt-1 list-disc pl-4 text-text-muted">
+                      {product.cons.map((c) => (
+                        <li key={c}>{c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
