@@ -68,7 +68,7 @@ export function WidgetCanvas() {
         </button>
       </div>
       {editing && (
-        <div className="mb-4 rounded-2xl border border-primary/30 bg-[#fffaf7] p-4 text-sm text-text-muted">
+        <div className="mb-4 rounded-2xl border border-primary/30 bg-primary-soft p-4 text-sm text-text-muted">
           <p className="font-semibold text-foreground">Arrange your view</p>
           <p className="mt-1">Drag the dotted handle to move a widget. Use Hide to remove Tracking or Quick help; add them back below whenever you need them.</p>
         </div>
@@ -79,15 +79,21 @@ export function WidgetCanvas() {
           minHeight: 760,
           backgroundColor: "var(--background)",
           backgroundImage:
-            "radial-gradient(color-mix(in srgb, var(--border) 70%, transparent) 1.5px, transparent 1.5px)",
-          backgroundSize: "22px 22px",
+            "radial-gradient(color-mix(in srgb, var(--secondary) 28%, transparent) 1.5px, transparent 1.5px)",
+          backgroundSize: "24px 24px",
         }}
       >
-        <DraggableWidget id="learning" label="Learning module" defaultX={24} defaultY={24}>
+        <DraggableWidget
+          id="learning"
+          label="Learning module"
+          defaultX={24}
+          defaultY={24}
+          handleClassName="border-secondary/30 bg-secondary-soft"
+        >
           <LearningWidget />
         </DraggableWidget>
 
-        <DraggableWidget id="flower" label="Bloom" defaultX={344} defaultY={24}>
+        <DraggableWidget id="flower" label="Bloom" defaultX={376} defaultY={24}>
           <FlowerWidget />
         </DraggableWidget>
 
@@ -96,8 +102,9 @@ export function WidgetCanvas() {
             id="tracking"
             label="Tracking"
             defaultX={24}
-            defaultY={420}
+            defaultY={480}
             onRemove={() => hide("tracking")}
+            handleClassName="border-primary/30 bg-primary-soft"
           >
             <TrackingWidget />
           </DraggableWidget>
@@ -107,9 +114,10 @@ export function WidgetCanvas() {
           <DraggableWidget
             id="help"
             label="Quick help"
-            defaultX={344}
-            defaultY={420}
+            defaultX={376}
+            defaultY={480}
             onRemove={() => hide("help")}
+            handleClassName="border-accent/30 bg-accent-soft"
           >
             <HelpWidget />
           </DraggableWidget>

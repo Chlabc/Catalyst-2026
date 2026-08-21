@@ -33,7 +33,7 @@ export function Greeting() {
 
   if (!loaded) {
     return (
-      <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+      <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
         Welcome
       </h1>
     );
@@ -60,7 +60,7 @@ export function Greeting() {
   }
 
   return (
-    <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+    <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
       Welcome back, {name}
       <button
         onClick={() => {

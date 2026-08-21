@@ -5,12 +5,12 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const base =
-  "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:pointer-events-none";
 
 const variants = {
-  primary: "bg-primary text-white hover:opacity-90",
+  primary: "bg-primary text-white hover:bg-primary-dark",
   secondary:
-    "bg-transparent text-foreground border border-border hover:bg-surface",
+    "bg-surface text-foreground border-2 border-border hover:border-primary hover:bg-primary-soft",
 };
 
 export function Button({

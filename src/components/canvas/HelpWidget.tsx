@@ -26,14 +26,14 @@ export function HelpWidget() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
-    <div className="rounded-b-2xl border border-t-0 border-border bg-surface p-5">
+    <div className="rounded-b-2xl border-2 border-t-0 border-accent/30 bg-accent-soft p-5">
       <div className="flex items-center justify-between">
-        <p className="font-semibold text-foreground">Quick help</p>
-        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-medium text-accent">
+        <p className="text-base font-semibold text-foreground">Quick help</p>
+        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-accent">
           placeholder
         </span>
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-text-muted">
+      <p className="mt-2 text-sm leading-relaxed text-text-muted">
         A calm place to find support. The full help centre will connect nearby
         pharmacies, helplines, gentle movement, and printable period notes.
       </p>
@@ -41,7 +41,7 @@ export function HelpWidget() {
         {["Nearby support", "Yoga & comfort", "Period summary"].map((item) => (
           <span
             key={item}
-            className="rounded-full bg-background px-2.5 py-1 text-[10px] font-medium text-text-muted"
+            className="rounded-full bg-white/60 px-2.5 py-1 text-xs font-medium text-text-muted"
           >
             {item}
           </span>
@@ -58,12 +58,11 @@ export function HelpWidget() {
               >
                 <span>{faq.q}</span>
                 <ChevronIcon
-                  className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
-              {isOpen && <p className="pb-2 text-xs text-text-muted">{faq.a}</p>}
+              {isOpen && <p className="pb-2 text-sm text-text-muted">{faq.a}</p>}
             </div>
           );
         })}

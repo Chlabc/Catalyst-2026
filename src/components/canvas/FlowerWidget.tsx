@@ -14,6 +14,12 @@ const FALL_DURATION_MS = 1200;
 
 const PETAL_COLORS = ["var(--primary)", "var(--accent)", "var(--secondary)"];
 
+type PlantPhase = "menstrual" | "follicular" | "ovulation" | "luteal";
+
+function dateDistance(from: Date, to: Date) {
+  return Math.round((to.getTime() - from.getTime()) / 86400000);
+}
+
 function petalPoints(count: number, index: number, radius: number, center: number) {
   const angle = (index / count) * Math.PI * 2 - Math.PI / 2;
   return {
@@ -91,21 +97,39 @@ export function FlowerWidget() {
 
   if (!loaded) return null;
 
-  const petalsRemaining =
-    activeDays === 0 ? typicalLength : Math.max(typicalLength - activeDays, 1);
+  const today = new Date();
+  const recentLogs = readLogsFromStorage();
+  const recentStreak = computeCurrentStreak(recentLogs);
+  const mostRecentLog = recentStreak ? new Date(recentStreak.startKey) : null;
+  const cycleDay = mostRecentLog
+    ? Math.max(1, dateDistance(mostRecentLog, today) + 1)
+    : 0;
+  const isBleeding = activeDays > 0;
+  const phase: PlantPhase = isBleeding
+    ? "menstrual"
+    : cycleDay >= 15
+      ? "luteal"
+      : cycleDay === 14
+        ? "ovulation"
+        : cycleDay > 0
+          ? "follicular"
+          : "follicular";
+  const petalsRemaining = isBleeding
+    ? Math.max(typicalLength - Math.min(activeDays, typicalLength - 1), 1)
+    : 0;
 
-  const size = 220;
+  const size = 260;
   const center = size / 2;
-  const petalRadius = 46;
-  const petalLength = 34;
-  const petalWidth = 16;
+  const petalRadius = 54;
+  const petalLength = 40;
+  const petalWidth = 19;
 
   return (
-    <div className="rounded-b-2xl border border-t-0 border-border bg-surface p-5">
+    <div className="rounded-b-2xl border-2 border-t-0 border-border bg-surface p-5">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-foreground">Your bloom</p>
+        <p className="text-base font-semibold text-foreground">Your bloom</p>
         {editing ? (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <input
               type="number"
               min={1}
@@ -116,14 +140,14 @@ export function FlowerWidget() {
               }}
               onBlur={(e) => saveLength(Number(e.target.value))}
               autoFocus
-              className="w-14 rounded-md border border-border bg-background px-2 py-0.5 text-xs text-foreground"
+              className="w-14 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
             />
-            <span className="text-xs text-text-muted">days</span>
+            <span className="text-sm text-text-muted">days</span>
           </div>
         ) : (
           <button
             onClick={() => setEditing(true)}
-            className="text-xs font-medium text-primary hover:underline"
+            className="text-sm font-medium text-primary hover:underline"
           >
             {typicalLength}-day cycle · edit
           </button>
@@ -139,7 +163,7 @@ export function FlowerWidget() {
             </radialGradient>
           </defs>
 
-          {Array.from({ length: typicalLength }, (_, i) => {
+          {phase === "menstrual" && Array.from({ length: typicalLength }, (_, i) => {
             const isPetal = i < petalsRemaining;
             const isFalling = i === fallingIndex;
             const { x, y, angleDeg } = petalPoints(typicalLength, i, petalRadius, center);
@@ -182,20 +206,50 @@ export function FlowerWidget() {
 
             // Settled: shown as a small resting seed instead.
             return (
-              <circle key={i} cx={x} cy={y} r={4} fill="var(--text-muted)" opacity={0.35} />
+              <circle key={i} cx={x} cy={y} r={4.5} fill="var(--text-muted)" opacity={0.35} />
             );
           })}
-          <circle cx={center} cy={center} r={14} fill="var(--secondary)" />
-          <circle cx={center} cy={center} r={14} fill="url(#petalShine)" />
+          {phase === "follicular" && (
+            <g className="plant-sprout">
+              <path d={`M ${center} ${center + 48} Q ${center - 4} ${center + 18} ${center} ${center - 4}`} fill="none" stroke="var(--secondary)" strokeWidth="7" strokeLinecap="round" />
+              <path d={`M ${center - 2} ${center + 25} Q ${center - 42} ${center + 5} ${center - 50} ${center + 22} Q ${center - 20} ${center + 28} ${center - 2} ${center + 25}`} fill="var(--secondary)" />
+              <path d={`M ${center + 2} ${center + 12} Q ${center + 40} ${center - 12} ${center + 48} ${center + 4} Q ${center + 24} ${center + 20} ${center + 2} ${center + 12}`} fill="var(--secondary)" />
+            </g>
+          )}
+          {phase === "ovulation" && (
+            <g className="plant-grow">
+              <path d={`M ${center} ${center + 72} Q ${center - 8} ${center + 18} ${center} ${center - 38}`} fill="none" stroke="var(--secondary)" strokeWidth="8" strokeLinecap="round" />
+              <path d={`M ${center - 3} ${center + 22} Q ${center - 48} ${center - 8} ${center - 58} ${center + 12} Q ${center - 30} ${center + 28} ${center - 3} ${center + 22}`} fill="var(--secondary)" />
+              <ellipse cx={center} cy={center - 52} rx="25" ry="34" fill="var(--primary)" />
+              <ellipse cx={center} cy={center - 56} rx="15" ry="25" fill="var(--accent)" opacity="0.7" />
+            </g>
+          )}
+          {phase === "luteal" && (
+            <g className="plant-grow">
+              <path d={`M ${center} ${center + 72} Q ${center - 8} ${center + 14} ${center} ${center - 38}`} fill="none" stroke="var(--secondary)" strokeWidth="8" strokeLinecap="round" />
+              <path d={`M ${center - 2} ${center + 24} Q ${center - 48} ${center - 10} ${center - 58} ${center + 10} Q ${center - 30} ${center + 30} ${center - 2} ${center + 24}`} fill="var(--secondary)" />
+              <path d={`M ${center + 2} ${center + 10} Q ${center + 48} ${center - 22} ${center + 58} ${center - 2} Q ${center + 30} ${center + 22} ${center + 2} ${center + 10}`} fill="var(--secondary)" />
+              <ellipse cx={center} cy={center - 58} rx="34" ry="42" fill="var(--primary)" />
+              <ellipse cx={center - 9} cy={center - 66} rx="20" ry="32" fill="var(--accent)" opacity="0.75" />
+            </g>
+          )}
         </svg>
       </div>
 
-      <p className="text-center text-xs text-text-muted">
-        {activeDays === 0
-          ? "Ready — log a day in the tracker to start this cycle's count."
-          : petalsRemaining === 1 && activeDays >= typicalLength
-            ? "Running a little longer than usual — that's okay, this stays until your period ends."
-            : `Day ${activeDays} — ${petalsRemaining} petal${petalsRemaining === 1 ? "" : "s"} left.`}
+      <p className="text-center text-sm font-semibold text-foreground">
+        {phase === "menstrual" && `Menstrual phase · Day ${activeDays}`}
+        {phase === "follicular" && "Follicular phase · new growth"}
+        {phase === "ovulation" && "Ovulation · flower bud"}
+        {phase === "luteal" && "Luteal phase · bud preparing"}
+      </p>
+      <p className="mt-1 text-center text-xs leading-relaxed text-text-muted">
+        {phase === "menstrual"
+          ? petalsRemaining === 1 && activeDays >= typicalLength
+            ? "Your last petal is holding on until bleeding is marked as finished."
+            : `${petalsRemaining} petal${petalsRemaining === 1 ? "" : "s"} remaining from your ${typicalLength}-day estimate.`
+          : cycleDay > 0
+            ? "A gentle guide based on your last logged period, not a prediction."
+            : "Log the days you are bleeding to help your plant follow your cycle."}
       </p>
     </div>
   );

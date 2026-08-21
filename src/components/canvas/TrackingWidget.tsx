@@ -39,26 +39,26 @@ export function TrackingWidget() {
   ];
 
   return (
-    <div className="rounded-b-2xl border border-t-0 border-border bg-surface p-5">
+    <div className="rounded-b-2xl border-2 border-t-0 border-primary/30 bg-primary-soft p-5">
       <div className="flex items-center justify-between">
         <div>
           <CalendarIcon className="h-6 w-6 text-primary" />
-          <p className="mt-2 font-semibold text-foreground">Tracking</p>
+          <p className="mt-2 text-base font-semibold text-foreground">Tracking</p>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-medium text-accent">
+          <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-accent">
             placeholder
           </span>
           <Link
             href="/tracker"
-            className="text-xs font-medium text-primary hover:underline"
+            className="text-sm font-medium text-primary hover:underline"
           >
             Open →
           </Link>
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[10px] text-text-muted">
+      <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-text-muted">
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
           <div key={`${d}-${i}`}>{d}</div>
         ))}
@@ -70,7 +70,7 @@ export function TrackingWidget() {
           return (
             <div
               key={key}
-              className={`flex aspect-square items-center justify-center rounded-full text-[11px] ${
+              className={`flex aspect-square items-center justify-center rounded-full text-xs ${
                 isLogged
                   ? "bg-primary text-white"
                   : isToday

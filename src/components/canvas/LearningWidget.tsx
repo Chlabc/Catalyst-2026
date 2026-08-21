@@ -27,14 +27,14 @@ export function LearningWidget() {
   return (
     <Link
       href="/scenarios"
-      className="block rounded-b-2xl border border-t-0 border-border bg-surface p-5 transition-colors hover:bg-background"
+      className="block rounded-b-2xl border-2 border-t-0 border-secondary/30 bg-secondary-soft p-5 transition-colors hover:brightness-[0.98]"
     >
       <BookIcon className="h-6 w-6 text-secondary" />
-      <p className="mt-3 font-semibold text-foreground">Learning modules</p>
+      <p className="mt-3 text-base font-semibold text-foreground">Learning modules</p>
       <p className="mt-1 text-sm text-text-muted">
         Menstrome Island scenarios · {completedCount} of {scenarioLevels.length} complete
       </p>
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-background">
+      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/60">
         <div
           className="h-full rounded-full bg-secondary"
           style={{

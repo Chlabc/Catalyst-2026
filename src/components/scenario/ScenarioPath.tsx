@@ -50,26 +50,30 @@ export function ScenarioPath({ levels }: { levels: ScenarioLevel[] }) {
             <div key={level.id} className="relative flex gap-3">
               <div className="flex flex-col items-center">
                 <div
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-medium ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-base font-semibold ${
                     isDone
-                      ? "bg-secondary text-white"
-                      : "border border-border text-text-muted"
+                      ? "border-secondary bg-secondary text-white"
+                      : isOpen
+                        ? "border-primary bg-primary-soft text-primary-dark"
+                        : "border-border text-text-muted"
                   }`}
                 >
                   {isDone ? "✓" : i + 1}
                 </div>
                 {i < levels.length - 1 && (
-                  <div className="mt-1 h-full w-px flex-1 bg-border" />
+                  <div className="mt-1 h-full w-0.5 flex-1 rounded-full bg-border" />
                 )}
               </div>
 
-              <Card className="mb-3 flex-1">
+              <Card
+                className={`mb-3 flex-1 ${isOpen ? "border-primary/40 bg-primary-soft" : ""}`}
+              >
                 <button
                   onClick={() => setOpenId(isOpen ? null : level.id)}
                   className="flex w-full items-start justify-between text-left"
                 >
                   <div>
-                    <h3 className="font-semibold text-foreground">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {level.title}
                     </h3>
                     <p className="mt-1 text-sm text-text-muted">

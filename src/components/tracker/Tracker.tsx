@@ -142,7 +142,7 @@ export function Tracker({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className={compact ? "border-primary/30 bg-[#fffaf7]" : ""}>
+      <Card className={compact ? "border-primary/30 bg-primary-soft" : ""}>
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.12em] text-secondary">Your private rhythm</p>
@@ -270,7 +270,7 @@ export function Tracker({ compact = false }: { compact?: boolean }) {
 
       {compact && !selectedDate && (
         <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
-          <Card className="bg-[#f2f6ef]">
+          <Card className="bg-secondary-soft">
             <p className="text-sm font-semibold text-foreground">
               {streak ? `You're on day ${streak.length} of this cycle` : "Ready when you are"}
             </p>

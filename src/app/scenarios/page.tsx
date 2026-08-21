@@ -12,10 +12,10 @@ export default function ScenariosPage() {
   return (
     <Container>
       <div className="py-12">
-        <h1 className="text-2xl font-semibold text-foreground">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
           Learning modules
         </h1>
-        <p className="mt-2 text-text-muted">
+        <p className="mt-2 text-base text-text-muted">
           Menstrome Island is the world these scenarios live in. Choose a
           situation, explore what you could do, and learn without being tested.
           Not a replacement for sex ed, just somewhere to start.
