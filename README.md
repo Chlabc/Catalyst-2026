@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blossom
 
-## Getting Started
+Built for CISSA Catalyst's Forma track — implementing and improving on the
+"MenstraMission" Product-thon blueprint. See `DIVERGENCE.md` for what we
+kept/changed/cut and why, and `SCRIPT.md` for the video pitch draft.
 
-First, run the development server:
+## Getting started (for teammates)
 
 ```bash
+git clone https://github.com/Chlabc/Catalyst-2026.git
+cd Catalyst-2026
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Working on your own feature
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Don't push straight to `main`. Branch first:
 
-## Learn More
+```bash
+git checkout -b your-name-feature
+# ...make changes...
+git push -u origin your-name-feature
+```
 
-To learn more about Next.js, take a look at the following resources:
+Then open a Pull Request on GitHub into `main` when it's ready for review.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Where things live
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/app/*/page.tsx` — one folder per route (`scenarios`, `library`,
+  `tracker`, `quiz`). This is where each feature's page lives.
+- `src/components/ui/` — shared building blocks (`Button`, `Card`,
+  `Container`, `NavBar`). Use these instead of writing new ones.
+- `src/components/icons.tsx` — hand-drawn inline SVG icons, no image
+  files needed. Add more here in the same style if you need a new one.
+- `src/lib/` — the actual content (scenario scripts, quiz questions,
+  product entries, symptom tips). Most "add more content" work happens
+  here, not in the components.
+- `src/app/globals.css` — the only place color hex codes should exist.
+  Everywhere else, use the token classes (`bg-primary`, `text-muted`, etc).
 
-## Deploy on Vercel
+## Before you commit
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run this locally before pushing — it catches type errors and broken
+imports that `npm run dev` won't always show you.
+
+## Data & privacy
+
+Nothing in this app calls an external API or stores data outside the
+browser. The tracker uses `localStorage` only — no account, no backend.
+If you add anything that needs a real secret/API key later, put it in a
+`.env.local` file (already gitignored) and never hardcode it in a
+`.tsx`/`.ts` file.
