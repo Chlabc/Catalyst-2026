@@ -1,20 +1,4 @@
-import Link from "next/link";
-
-export default function PharmacyPage() {
-  return (
-    <main className="app-shell subpage">
-      <Link className="back-link" href="/">← Back to dashboard</Link>
-      <p className="eyebrow">FIND SUPPORT</p>
-      <h1>Nearby Pharmacies</h1>
-
-      <section className="card">
-        <h2>Find a pharmacy near you</h2>
-        <p className="muted">
-          Location services will show nearby pharmacies, opening hours and
-          directions.
-        </p>
-        <button className="primary-button">Use my location</button>
-      </section>
-    </main>
-  );
-}
+"use client";
+import { useState } from "react";
+const places=[{name:"Chemist Warehouse",type:"Pharmacy",query:"Chemist Warehouse near me",icon:"✚"},{name:"Priceline Pharmacy",type:"Pharmacy",query:"Priceline Pharmacy near me",icon:"♡"},{name:"Find a local GP",type:"Medical clinic",query:"GP clinic near me",icon:"⚕"}];
+export default function PharmacyPage(){const [location,setLocation]=useState(false);function open(q:string){window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`,"_blank","noopener,noreferrer")}return <main className="feature-page"><header className="feature-hero care-hero"><p>LOCAL CARE FINDER</p><h1>Support, right around the corner.</h1><span>Find a pharmacy or GP near you using Google Maps.</span><button onClick={()=>navigator.geolocation?.getCurrentPosition(()=>setLocation(true),()=>setLocation(false))}>⌖ {location?"Location enabled":"Use my location"}</button></header><section className="place-grid">{places.map(x=><article className="feature-card place-card" key={x.name}><span>{x.icon}</span><div><small>{x.type}</small><h2>{x.name}</h2><p>Check live opening hours, directions and contact details.</p></div><button onClick={()=>open(x.query)}>Open in Maps ↗</button></article>)}</section><section className="feature-card appointment-tip"><span>💬</span><div><p>FOR YOUR APPOINTMENT</p><h2>Bring your LunaCare health summary</h2><span>Your pain and symptom trends can help your GP understand what&apos;s been happening more quickly.</span></div><a href="/tracker">Prepare my report →</a></section><section className="safety-strip"><span className="safety-icon">☎</span><div><strong>Not sure where to go?</strong><p>Healthdirect nurses can help you decide.</p></div><a href="tel:1800022222"><small>CALL 24/7</small>1800 022 222</a></section></main>}

@@ -1,186 +1,35 @@
 "use client";
+import { useMemo, useState } from "react";
 
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+const categories=[["All","✦"],["Getting started","🌱"],["Your cycle","🌙"],["Products","🩸"],["Pain & care","🌿"],["Body & mind","☁️"],["Sex & health","♡"]];
+const articles=[
+ {category:"Getting started",question:"What actually is a period?",answer:"A period is when the lining of the uterus sheds and leaves the body through the vagina. It is one part of the menstrual cycle, which is controlled by hormones.",source:"https://www.healthdirect.gov.au/menstruation",tag:"The basics"},
+ {category:"Getting started",question:"When will my first period start?",answer:"The timing is different for everyone. First periods usually happen during puberty, often around two to three years after breast development begins. Speak with a GP if you are worried about the timing of puberty or your first period.",source:"https://www.healthdirect.gov.au/puberty-for-girls",tag:"First period"},
+ {category:"Getting started",question:"What should I keep in a period kit?",answer:"A few pads or tampons, spare underwear, a small disposal bag and any pain relief approved for you are useful. Keeping a kit at school, work or in your bag can make surprises less stressful.",source:"https://www.healthdirect.gov.au/menstruation",tag:"Be prepared"},
+ {category:"Your cycle",question:"How long is a normal period and cycle?",answer:"Periods often last about three to seven days. Cycle length varies between people and can be irregular during the first few years after periods begin. A 28-day cycle is common, but it is not a rule.",source:"https://www.healthdirect.gov.au/menstruation",tag:"Cycle basics"},
+ {category:"Your cycle",question:"Why are my periods irregular?",answer:"Irregular cycles are common in the first few years after your first period. Stress, body-weight changes, intense exercise, contraception and health conditions can also affect timing. See a GP if periods are more than three months apart or the change worries you.",source:"https://www.healthdirect.gov.au/puberty-for-girls",tag:"Timing"},
+ {category:"Your cycle",question:"Is brown or dark-red period blood normal?",answer:"Period blood can range from bright to dark red. Brown blood is often older blood leaving the uterus more slowly, especially near the beginning or end of a period. Seek advice for unusual bleeding or symptoms that concern you.",source:"https://www.healthdirect.gov.au/puberty-for-girls",tag:"Colour"},
+ {category:"Products",question:"Pads, tampons, cups or period underwear — which is best?",answer:"There is no single best product. The right choice depends on comfort, flow, cost, activities and sustainability. You can combine products and change your choice from day to day.",source:"https://www.healthdirect.gov.au/menstruation",tag:"Product guide"},
+ {category:"Products",question:"How often should I change a tampon?",answer:"Follow the product instructions. Healthdirect advises changing tampons every three to four hours or when full, and never leaving one in for more than eight hours because of toxic shock syndrome risk.",source:"https://www.healthdirect.gov.au/menstruation",tag:"Tampon safety"},
+ {category:"Products",question:"Can a tampon get lost inside me?",answer:"A tampon cannot travel beyond the vagina, but it can sit high enough to be difficult to reach. If you cannot remove it, think one may be retained, or develop fever or feel unwell, seek medical care promptly.",source:"https://www.healthdirect.gov.au/bleeding-between-periods",tag:"No shame"},
+ {category:"Pain & care",question:"How much period pain is normal?",answer:"Mild cramping in the first one or two days can be common. Pain is not something you must simply endure: see a GP if it stops school, work, sleep, sport or normal activities, changes suddenly, or is difficult to control.",source:"https://www.healthdirect.gov.au/managing-period-pain",tag:"Important"},
+ {category:"Pain & care",question:"What can help period cramps?",answer:"A wrapped heat pack, gentle movement, relaxation and suitable pain-relief medicine may help. Medicines are not suitable for everyone, so read the label and ask a pharmacist or GP for personalised advice.",source:"https://www.healthdirect.gov.au/managing-period-pain",tag:"Comfort"},
+ {category:"Pain & care",question:"When is bleeding considered heavy?",answer:"Signs include changing a pad or tampon every one to two hours, bleeding through clothes, clots larger than a 50-cent coin, bleeding for more than eight days, or being unable to do usual activities. Heavy bleeding can contribute to iron deficiency.",source:"https://www.healthdirect.gov.au/heavy-periods",tag:"See a GP"},
+ {category:"Body & mind",question:"What is PMS?",answer:"PMS describes physical or emotional symptoms before a period, such as bloating, breast tenderness, headaches, tiredness, acne, irritability or mood changes. Tracking patterns can help you explain symptoms to a health professional.",source:"https://www.healthdirect.gov.au/menstruation",tag:"Body & mood"},
+ {category:"Body & mind",question:"Is vaginal discharge normal?",answer:"Clear, white or creamy discharge can be a normal part of puberty and the menstrual cycle and helps keep the vagina healthy. See a health professional if it changes significantly, smells unusual, itches, burns or comes with pain.",source:"https://www.healthdirect.gov.au/puberty-for-girls",tag:"Normal changes"},
+ {category:"Sex & health",question:"Can I get pregnant during my period?",answer:"Pregnancy is still possible because ovulation timing varies and sperm can survive for several days. Period tracking is not reliable contraception. Use contraception and condoms if pregnancy or sexually transmitted infections are a concern.",source:"https://www.healthdirect.gov.au/menstruation",tag:"Pregnancy"},
+ {category:"Sex & health",question:"Should I see a doctor for bleeding between periods or after sex?",answer:"Yes. There are many possible causes and many are not serious, but bleeding between periods or after sex should be discussed with a doctor. Very heavy bleeding with faintness needs urgent care.",source:"https://www.healthdirect.gov.au/bleeding-between-periods",tag:"Get checked"},
+];
 
-type Records = {
-  periodStart: string;
-  periodEnd: string;
-  moods: Record<string, string>;
-  symptoms: Record<string, string[]>;
-};
-
-function dateKey(date: Date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0"),
-  ].join("-");
-}
-
-export default function CalendarPage() {
-  const today = new Date();
-  const todayKey = dateKey(today);
-
-  const [month, setMonth] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1),
-  );
-  const [selectedDate, setSelectedDate] = useState(todayKey);
-  const [records, setRecords] = useState<Records>({
-    periodStart: "",
-    periodEnd: "",
-    moods: {},
-    symptoms: {},
-  });
-
-  useEffect(() => {
-    const saved = localStorage.getItem("menstraRecords");
-
-    if (saved) {
-      setRecords(JSON.parse(saved));
-    }
-  }, []);
-
-  const calendarDays = useMemo(() => {
-    const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
-    const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
-
-    return [
-      ...Array.from({ length: firstDay.getDay() }, () => null),
-      ...Array.from({ length: lastDay.getDate() }, (_, index) =>
-        new Date(month.getFullYear(), month.getMonth(), index + 1),
-      ),
-    ];
-  }, [month]);
-
-  function isPeriodDay(key: string) {
-    if (!records.periodStart) return false;
-
-    if (!records.periodEnd) {
-      return key === records.periodStart;
-    }
-
-    return key >= records.periodStart && key <= records.periodEnd;
-  }
-
-  function changeMonth(offset: number) {
-    setMonth(
-      new Date(month.getFullYear(), month.getMonth() + offset, 1),
-    );
-  }
-
-  const selectedMood = records.moods[selectedDate];
-  const selectedSymptoms = records.symptoms[selectedDate] ?? [];
-
-  return (
-    <main className="app-shell subpage">
-      <Link className="back-link" href="/">
-        ← Back to dashboard
-      </Link>
-
-      <p className="eyebrow">YOUR HEALTH CALENDAR</p>
-      <h1>Cycle Calendar</h1>
-
-      <section className="calendar-card">
-        <div className="calendar-top">
-          <button
-            className="calendar-nav"
-            onClick={() => changeMonth(-1)}
-            aria-label="Previous month"
-          >
-            ←
-          </button>
-
-          <h2>
-            {month.toLocaleDateString("en-US", {
-              month: "long",
-              year: "numeric",
-            })}
-          </h2>
-
-          <button
-            className="calendar-nav"
-            onClick={() => changeMonth(1)}
-            aria-label="Next month"
-          >
-            →
-          </button>
-        </div>
-
-        <div className="calendar-weekdays">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <span key={day}>{day}</span>
-          ))}
-        </div>
-
-        <div className="calendar-grid">
-          {calendarDays.map((date, index) => {
-            if (!date) {
-              return (
-                <span className="calendar-day empty" key={`empty-${index}`} />
-              );
-            }
-
-            const key = dateKey(date);
-            const mood = records.moods[key];
-            const symptoms = records.symptoms[key] ?? [];
-
-            return (
-              <button
-                key={key}
-                className={`calendar-day ${
-                  key === todayKey ? "today" : ""
-                } ${key === selectedDate ? "selected-day" : ""} ${
-                  isPeriodDay(key) ? "period-day" : ""
-                }`}
-                onClick={() => setSelectedDate(key)}
-              >
-                <strong>{date.getDate()}</strong>
-
-                {isPeriodDay(key) && <small>Period</small>}
-
-                {mood && <small>♡ {mood}</small>}
-
-                {symptoms.length > 0 && (
-                  <small className="symptom-mark">●</small>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="calendar-legend">
-          <span>🌸 Period</span>
-          <span>🟢 Today</span>
-          <span>♡ Mood</span>
-          <span>● Symptoms</span>
-        </div>
-      </section>
-
-      <section className="card selected-record">
-        <p className="card-label">SELECTED DAY</p>
-        <h2>{selectedDate}</h2>
-
-        {isPeriodDay(selectedDate) && (
-          <p className="record-item">🌸 Period day</p>
-        )}
-
-        {selectedMood && (
-          <p className="record-item">♡ Mood: {selectedMood}</p>
-        )}
-
-        {selectedSymptoms.length > 0 && (
-          <p className="record-item">
-            ● Symptoms: {selectedSymptoms.join(", ")}
-          </p>
-        )}
-
-        {!isPeriodDay(selectedDate) &&
-          !selectedMood &&
-          selectedSymptoms.length === 0 && (
-            <p className="muted">No records for this day.</p>
-          )}
-      </section>
-    </main>
-  );
+export default function KnowledgePage(){
+ const [category,setCategory]=useState("All"),[query,setQuery]=useState("");
+ const filtered=useMemo(()=>articles.filter(item=>(category==="All"||item.category===category)&&(item.question+" "+item.answer).toLowerCase().includes(query.toLowerCase())),[category,query]);
+ return <main className="knowledge-page">
+  <header className="knowledge-hero"><div><p>PERIOD 101 · NO AWKWARD QUESTIONS</p><h1>Everything you wish someone had explained 🌸</h1><span>Clear, shame-free answers about periods, puberty and growing into your body.</span><label><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Ask anything — cramps, tampons, cycle length…"/></label></div><div className="knowledge-art"><span>☁️</span><b>?</b><i>🌷</i></div></header>
+  <section className="quick-facts"><article><span>🩸</span><div><small>A PERIOD OFTEN LASTS</small><strong>3–7 days</strong></div></article><article><span>🌙</span><div><small>CYCLES CAN VARY</small><strong>Different is normal</strong></div></article><article><span>💜</span><div><small>REMEMBER</small><strong>Pain should not rule your life</strong></div></article></section>
+  <nav className="knowledge-categories" aria-label="Knowledge categories">{categories.map(([name,icon])=><button key={name} className={category===name?"active":""} onClick={()=>setCategory(name)}><span>{icon}</span>{name}</button>)}</nav>
+  <div className="knowledge-layout"><section><div className="knowledge-heading"><div><p>{category.toUpperCase()}</p><h2>{filtered.length} questions, honestly answered</h2></div><span>Tap a question to open it</span></div><div className="faq-list">{filtered.map((item,index)=><details key={item.question} open={index===0&&Boolean(query)}><summary><span className="faq-number">{String(index+1).padStart(2,"0")}</span><div><small>{item.tag}</small><strong>{item.question}</strong></div><i>＋</i></summary><div className="faq-answer"><p>{item.answer}</p><a href={item.source} target="_blank" rel="noreferrer">Read the Australian health source ↗</a></div></details>)}{filtered.length===0&&<div className="no-results"><span>🌱</span><h3>We couldn&apos;t find that one yet.</h3><p>Try a shorter phrase, or contact Healthdirect for personal guidance.</p></div>}</div></section>
+   <aside className="knowledge-side"><article className="red-flags"><span>♡</span><p>WHEN TO GET HELP</p><h3>Your pain is real. Trust yourself.</h3><ul><li>Pain stops school, work or normal activities</li><li>Bleeding through protection every 1–2 hours</li><li>Bleeding between periods or after sex</li><li>Feeling faint with very heavy bleeding</li></ul><a href="/pharmacy">Find a GP near me →</a></article><article className="ask-card"><span>☎</span><div><small>NOT SURE WHAT TO DO?</small><strong>Healthdirect nurse</strong><p>Free, confidential health advice, 24/7.</p></div><a href="tel:1800022222">1800 022 222</a></article><article className="source-note"><strong>Evidence, not internet myths.</strong><p>Content is educational and based on Australian health sources. It does not replace personal medical advice.</p></article></aside>
+  </div>
+ </main>
 }
