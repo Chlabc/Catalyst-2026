@@ -14,7 +14,7 @@ export function NavBar() {
       <Container>
         <nav className="flex items-center justify-between py-4">
           <Link href="/" className="text-lg font-semibold text-foreground">
-            MenstraMission
+            Blossom
           </Link>
           <ul className="flex gap-6 text-sm text-text-muted">
             {links.map((link) => (

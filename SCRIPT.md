@@ -1,4 +1,4 @@
-# Video Pitch Script — MenstraMission (rough draft, ~3.5-4 min)
+# Video Pitch Script — Blossom (rough draft, ~3.5-4 min)
 
 Read this out loud once and time it — trim wherever it drags. Swap in your
 real names/story details before filming.
@@ -6,7 +6,7 @@ real names/story details before filming.
 ---
 
 ## 1. Hook (15s)
-"We built MenstraMission because [Name] told us about struggling through
+"We built Blossom because [Name] told us about struggling through
 her first period with basically nowhere to go for a straight answer — no
 judgment-free place that just explained what was happening. That's the gap
 we wanted to close."
@@ -15,7 +15,8 @@ we wanted to close."
 "This is built on a design and research from [Product-thon team name]'s
 MenstraMission project, which won Product-thon. They did the research and
 the blueprint — our job in Forma was to actually build it, and to make
-justified calls on where to improve it."
+justified calls on where to improve it. We renamed it Blossom, which we'll
+get into."
 
 ## 3. What we kept and why (25s)
 "We kept their core idea: menstruation explained through interactive,
@@ -25,6 +26,9 @@ parent's lecture, just clear answers."
 
 ## 4. What we changed and why (70s) — walk the divergence log
 "A few things we changed, and why:
+- We renamed it Blossom — the original name centered on 'mission,' which
+  read narrower once we broadened the audience. Blossom keeps their own
+  growth/biome metaphor without that narrower framing.
 - We widened the audience slightly, from pre-teens only to pre-teens
   through late teens, plus parents and educators — their own research
   already pointed at this as a next step, we just built it in from day one.

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MenstraMission",
+  title: "Blossom",
   description:
     "A safe first point of contact for curious pre-teens learning about menstruation.",
 };

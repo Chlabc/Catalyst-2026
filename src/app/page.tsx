@@ -39,7 +39,7 @@ export default function Home() {
           A safe first stop for questions about your body.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-text-muted">
-          MenstraMission is a straightforward, judgment-free guide to
+          Blossom is a straightforward, judgment-free guide to
           menstruation — built for curious pre-teens, and anyone else who
           wants clear answers.
         </p>

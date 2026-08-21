@@ -1,4 +1,4 @@
-# Divergence Log — MenstraMission
+# Divergence Log — Blossom (originally MenstraMission)
 
 Built on the Figma design and research by the Product-thon team (credit them
 by name here before submission). This log is the heart of our Forma
@@ -6,6 +6,7 @@ submission — update it as you build, not at the end.
 
 | Blueprint element | Kept / Changed / Cut | Why (tied to their research) |
 |---|---|---|
+| Name "MenstraMission" | Renamed to "Blossom" | Broadened audience (see below) meant a name centered on "mission" framing read narrower than the product now is; Blossom keeps the growth/biome metaphor without the narrower framing |
 | Biome-based interactive scenarios | Kept | Core validated concept from their user research |
 | Pre-teen-only audience | Broadened to pre-teen–late teen + parents/educators | Their own "what's next" section flagged this gap |
 | Playful/bright visual tone | Changed to calm, muted, plain-language UI | Serves a broader age range and builds trust on a sensitive health topic |
