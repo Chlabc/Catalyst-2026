@@ -8,7 +8,9 @@ import {
 } from "@/lib/trackerStorage";
 
 const LENGTH_KEY = "blossom_typical_period_length";
+const LAST_SEEN_KEY = "blossom_flower_last_seen_remaining";
 const DEFAULT_LENGTH = 7;
+const FALL_DURATION_MS = 1200;
 
 const PETAL_COLORS = ["var(--primary)", "var(--accent)", "var(--secondary)"];
 
@@ -17,6 +19,7 @@ function petalPoints(count: number, index: number, radius: number, center: numbe
   return {
     x: center + radius * Math.cos(angle),
     y: center + radius * Math.sin(angle),
+    angleDeg: (index / count) * 360,
   };
 }
 
@@ -24,16 +27,24 @@ export function FlowerWidget() {
   const [typicalLength, setTypicalLength] = useState(DEFAULT_LENGTH);
   const [editing, setEditing] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [activeDays, setActiveDays] = useState(0); // how many days into the current period
+  const [activeDays, setActiveDays] = useState(0);
+  // Which petal index is mid-fall right now, if any - rendered with the
+  // fall animation even though it's already excluded from the "still
+  // blooming" count.
+  const [fallingIndex, setFallingIndex] = useState<number | null>(null);
 
   useEffect(() => {
+    let storedLength = DEFAULT_LENGTH;
     try {
       const raw = window.localStorage.getItem(LENGTH_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (raw) setTypicalLength(Number(raw) || DEFAULT_LENGTH);
+      if (raw) storedLength = Number(raw) || DEFAULT_LENGTH;
     } catch {
       // Corrupt/missing storage — just use the default.
     }
+    // localStorage only exists client-side, so this has to run in an
+    // effect; the resulting extra render is intentional and harmless.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTypicalLength(storedLength);
 
     const logs = readLogsFromStorage();
     const streak = computeCurrentStreak(logs);
@@ -45,7 +56,29 @@ export function FlowerWidget() {
     // knows the period ended and resets to full bloom, with no separate
     // "mark as ended" button needed.
     const isActive = Boolean(logs[toKey(today)] || logs[toKey(yesterday)]);
-    setActiveDays(isActive && streak ? streak.length : 0);
+    const days = isActive && streak ? streak.length : 0;
+    setActiveDays(days);
+
+    const remaining = days === 0 ? storedLength : Math.max(storedLength - days, 1);
+
+    // Compare against what we last showed, so a petal that dropped while
+    // the user was elsewhere (e.g. logging a day on /tracker) still gets
+    // its fall animation the next time they land on this page.
+    let lastSeen = remaining;
+    try {
+      const raw = window.localStorage.getItem(LAST_SEEN_KEY);
+      if (raw !== null) lastSeen = Number(raw);
+    } catch {
+      // Ignore, treat as no prior visit.
+    }
+
+    if (remaining < lastSeen) {
+      const droppedIndex = lastSeen - 1;
+      setFallingIndex(droppedIndex);
+      window.setTimeout(() => setFallingIndex(null), FALL_DURATION_MS);
+    }
+
+    window.localStorage.setItem(LAST_SEEN_KEY, String(remaining));
     setLoaded(true);
   }, []);
 
@@ -58,13 +91,8 @@ export function FlowerWidget() {
 
   if (!loaded) return null;
 
-  // Petals still showing = typicalLength minus days already logged, but
-  // never below 1 while a period is still active - that's the "last
-  // petal holds on if your period runs long" behaviour.
   const petalsRemaining =
-    activeDays === 0
-      ? typicalLength
-      : Math.max(typicalLength - activeDays, 1);
+    activeDays === 0 ? typicalLength : Math.max(typicalLength - activeDays, 1);
 
   const size = 220;
   const center = size / 2;
@@ -103,40 +131,62 @@ export function FlowerWidget() {
       </div>
 
       <div className="mx-auto mt-2" style={{ width: size, height: size }}>
-        <svg width={size} height={size}>
+        <svg width={size} height={size} style={{ overflow: "visible" }}>
+          <defs>
+            <radialGradient id="petalShine" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+
           {Array.from({ length: typicalLength }, (_, i) => {
             const isPetal = i < petalsRemaining;
-            const { x, y } = petalPoints(typicalLength, i, petalRadius, center);
-            const angleDeg = (i / typicalLength) * 360;
+            const isFalling = i === fallingIndex;
+            const { x, y, angleDeg } = petalPoints(typicalLength, i, petalRadius, center);
 
-            if (isPetal) {
+            if (isPetal || isFalling) {
               return (
-                <ellipse
-                  key={i}
-                  cx={x}
-                  cy={y}
-                  rx={petalWidth / 2}
-                  ry={petalLength / 2}
-                  fill={PETAL_COLORS[i % PETAL_COLORS.length]}
-                  opacity={0.9}
-                  transform={`rotate(${angleDeg} ${x} ${y})`}
-                />
+                <g key={i}>
+                  <ellipse
+                    cx={x}
+                    cy={y}
+                    rx={petalWidth / 2}
+                    ry={petalLength / 2}
+                    fill={PETAL_COLORS[i % PETAL_COLORS.length]}
+                    opacity={0.92}
+                    transform={`rotate(${angleDeg} ${x} ${y})`}
+                    className={isFalling ? "animate-petal-fall" : ""}
+                    style={
+                      isFalling
+                        ? { transformBox: "fill-box", transformOrigin: "center" }
+                        : undefined
+                    }
+                  />
+                  <ellipse
+                    cx={x}
+                    cy={y}
+                    rx={petalWidth / 2}
+                    ry={petalLength / 2}
+                    fill="url(#petalShine)"
+                    transform={`rotate(${angleDeg} ${x} ${y})`}
+                    className={isFalling ? "animate-petal-fall" : ""}
+                    style={
+                      isFalling
+                        ? { transformBox: "fill-box", transformOrigin: "center" }
+                        : undefined
+                    }
+                  />
+                </g>
               );
             }
 
-            // Dropped petal -> shown as a small resting seed instead.
+            // Settled: shown as a small resting seed instead.
             return (
-              <circle
-                key={i}
-                cx={x}
-                cy={y}
-                r={4}
-                fill="var(--text-muted)"
-                opacity={0.35}
-              />
+              <circle key={i} cx={x} cy={y} r={4} fill="var(--text-muted)" opacity={0.35} />
             );
           })}
           <circle cx={center} cy={center} r={14} fill="var(--secondary)" />
+          <circle cx={center} cy={center} r={14} fill="url(#petalShine)" />
         </svg>
       </div>
 

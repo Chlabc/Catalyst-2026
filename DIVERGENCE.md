@@ -19,7 +19,7 @@ replace sex education" — we've carried that line into our own copy.
 | Pre-teen-only audience → late teens | Broadened | **Our own call, not directly cited** — PADthai's research target is specifically pre-teens before 12-13; extending to late teens is a reasonable adjacent guess, not something their data says |
 | Playful/bright visual tone | Changed to calm, muted, plain-language UI | Serves a broader age range and builds trust on a sensitive health topic |
 | Static, education-only site | Added a period tracker/calendar | Turns a one-time education visit into an ongoing tool |
-| — | Added myth-busting quiz | Reinforces their scenario concept with a progress/reward loop, built from their own interview data on common myths |
+| — | Added, then cut myth-busting quiz | Built as an addition, but later judged redundant with scenarios + library as education formats — cut to keep the product focused rather than shipping a feature that wasn't earning its space |
 | — | Added product library (pads/cups/tampons/discs) | Fills a practical gap the original research pointed at but didn't build |
 | No account, local-only tracker data | Added as an explicit decision | Privacy-first, zero-friction for a young/sensitive-topic audience |
 | General health info / symptom checker / pharmacy locator | Cut | Off-blueprint scope, dilutes focus, not supported by the original research |
@@ -57,7 +57,15 @@ video script's strongest section)_
   symptom tagging. Gave the growth-visual companion a small face. Added
   a static, pre-written help panel (deliberately not an AI chatbot — see
   table above for why) accessible from every page.
-- **Still open:** swap the quiz's placeholder myths for real ones if
-  PADthai's questionnaire data (referenced but not fully quoted in the
-  PDF text) has specific myth data to pull from — check the Figma file
-  or the full PDF's appendix/FigJam section for the underlying detail.
+- 2026-08-21: Started a homepage rework on a new branch, `New-Huey`
+  (branched from `Huey`). Home is now a free-drag widget canvas —
+  Menstrome Island and a new Flower widget are permanent, Tracking and
+  Help are placeholders (for teammates' fuller tracker and helpline
+  modules) that can be hidden and brought back. **Cut the quiz**
+  entirely — team judged it redundant with the scenarios and library as
+  education formats, not adding enough on its own to justify the space.
+  Linked Menstrome Island and the Product Library to each other directly,
+  since the library is conceptually part of the same learning module.
+  Flower widget: petals fall with a real animation (not an instant
+  swap) when a day gets logged.
+

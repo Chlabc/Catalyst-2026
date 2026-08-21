@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { ChevronIcon } from "@/components/icons";
 
-// Same deliberately-not-AI approach as the sitewide HelpPanel - just
-// re-shown as a canvas widget here since the homepage now has its own
-// widget set.
+// PLACEHOLDER: [teammate] is replacing this FAQ list with the real
+// helpline module - a map of nearby support, yoga poses, helplines, and
+// a printable report generated from tracker data. Keep the outer
+// rounded-b-2xl wrapper so it still fits the canvas.
 const FAQS = [
   {
     q: "Is my data private?",
@@ -13,7 +14,7 @@ const FAQS = [
   },
   {
     q: "How do I move these widgets?",
-    a: "Drag the ⠿⠿⠿ handle at the top of any widget. They can't be removed, only rearranged.",
+    a: "Drag the ⠿⠿⠿ handle at the top of any widget. Tracking and Help can be hidden and brought back; the flower and Menstrome Island stay put.",
   },
   {
     q: "What if something feels really wrong?",
@@ -26,7 +27,12 @@ export function HelpWidget() {
 
   return (
     <div className="rounded-b-2xl border border-t-0 border-border bg-surface p-5">
-      <p className="font-semibold text-foreground">Quick help</p>
+      <div className="flex items-center justify-between">
+        <p className="font-semibold text-foreground">Quick help</p>
+        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-medium text-accent">
+          placeholder
+        </span>
+      </div>
       <div className="mt-2 flex flex-col divide-y divide-border">
         {FAQS.map((faq) => {
           const isOpen = expanded === faq.q;

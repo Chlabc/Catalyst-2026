@@ -39,16 +39,6 @@ export function CalendarIcon({ className }: IconProps) {
   );
 }
 
-export function QuizIcon({ className }: IconProps) {
-  return (
-    <svg {...base} className={className}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.35-1 .8-1 1.7" />
-      <circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 export function ChevronIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className}>

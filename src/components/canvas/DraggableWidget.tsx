@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { CloseIcon } from "@/components/icons";
 
 const STORAGE_PREFIX = "blossom_widget_pos_";
 
@@ -13,11 +14,15 @@ export function DraggableWidget({
   id,
   defaultX,
   defaultY,
+  onRemove,
   children,
 }: {
   id: string;
   defaultX: number;
   defaultY: number;
+  // Omit to make a widget permanent (no dismiss button) - Flower and
+  // Learning don't get one, Tracking and Help do.
+  onRemove?: () => void;
   children: React.ReactNode;
 }) {
   const [pos, setPos] = useState<Pos>({ x: defaultX, y: defaultY });
@@ -75,7 +80,11 @@ export function DraggableWidget({
       style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
       className={`absolute left-0 top-0 w-72 ${dragging ? "z-20" : "z-10"}`}
     >
-      <div className={`rounded-2xl transition-shadow ${dragging ? "shadow-xl" : ""}`}>
+      <div
+        className={`rounded-2xl transition-shadow duration-200 ${
+          dragging ? "shadow-xl" : "shadow-[0_1px_2px_rgba(58,46,42,0.04),0_8px_20px_-8px_rgba(58,46,42,0.12)]"
+        }`}
+      >
         {/* A dedicated grab handle, not the whole card — so taps on
             buttons/links/inputs inside a widget still work normally. */}
         <div
@@ -83,11 +92,21 @@ export function DraggableWidget({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
-          className="flex touch-none select-none items-center justify-center gap-1 rounded-t-2xl border border-b-0 border-border bg-surface py-1.5 text-text-muted cursor-grab active:cursor-grabbing"
+          className="relative flex touch-none select-none items-center justify-center gap-1 rounded-t-2xl border border-b-0 border-border bg-surface py-1.5 text-text-muted cursor-grab active:cursor-grabbing"
         >
           <span aria-hidden className="text-xs tracking-widest">
             ⠿⠿⠿
           </span>
+          {onRemove && (
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={onRemove}
+              aria-label="Remove widget"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-text-muted hover:bg-background hover:text-foreground"
+            >
+              <CloseIcon className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
         {children}
       </div>

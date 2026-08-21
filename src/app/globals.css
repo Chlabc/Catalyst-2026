@@ -33,3 +33,30 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* A petal detaching and drifting to the ground, not just disappearing. */
+@keyframes petal-fall {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.92;
+  }
+  30% {
+    transform: translate(4px, 10px) rotate(35deg) scale(1);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-6px, 58px) rotate(200deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+.animate-petal-fall {
+  animation: petal-fall 1.2s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-petal-fall {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}

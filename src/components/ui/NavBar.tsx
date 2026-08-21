@@ -5,7 +5,6 @@ const links = [
   { href: "/scenarios", label: "Learn" },
   { href: "/library", label: "Library" },
   { href: "/tracker", label: "Tracker" },
-  { href: "/quiz", label: "Quiz" },
 ];
 
 export function NavBar() {

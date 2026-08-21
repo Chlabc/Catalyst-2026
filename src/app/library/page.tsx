@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ProductLibrary } from "@/components/library/ProductLibrary";
 
@@ -8,7 +9,12 @@ export default function LibraryPage() {
   return (
     <Container>
       <div className="py-12">
-        <h1 className="text-2xl font-semibold text-foreground">
+        <p className="text-xs font-medium text-secondary">
+          <Link href="/scenarios" className="hover:underline">
+            ← Menstrome Island
+          </Link>
+        </p>
+        <h1 className="mt-1 text-2xl font-semibold text-foreground">
           Product Library
         </h1>
         <p className="mt-2 text-text-muted">

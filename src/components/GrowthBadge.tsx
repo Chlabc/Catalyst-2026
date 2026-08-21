@@ -1,6 +1,6 @@
 // Reusable "biome" progress visual — reuses the inherited blueprint's
 // biome metaphor instead of inventing new visual language. Pass a count
-// (quiz answers correct, tracker entries logged, etc.) and it renders a
+// (tracker entries logged, etc.) and it renders a
 // small growth stage. No images/assets — pure inline SVG so it stays
 // theme-consistent and lightweight.
 

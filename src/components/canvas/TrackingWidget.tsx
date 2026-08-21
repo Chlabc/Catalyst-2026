@@ -9,6 +9,11 @@ function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
+// PLACEHOLDER: this is a minimal calendar so the widget slot exists and
+// shows real data in the meantime. Swap the calendar markup below for
+// [teammate]'s tracker component when it's ready - keep the outer
+// rounded-b-2xl wrapper and the widget's overall shape so it still fits
+// the canvas cleanly.
 export function TrackingWidget() {
   const [logs, setLogs] = useState<Logs>({});
   const [loaded, setLoaded] = useState(false);
@@ -40,12 +45,17 @@ export function TrackingWidget() {
           <CalendarIcon className="h-6 w-6 text-primary" />
           <p className="mt-2 font-semibold text-foreground">Tracking</p>
         </div>
-        <Link
-          href="/tracker"
-          className="text-xs font-medium text-primary hover:underline"
-        >
-          Open →
-        </Link>
+        <div className="flex flex-col items-end gap-1">
+          <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-medium text-accent">
+            placeholder
+          </span>
+          <Link
+            href="/tracker"
+            className="text-xs font-medium text-primary hover:underline"
+          >
+            Open →
+          </Link>
+        </div>
       </div>
 
       <div className="mt-3 grid grid-cols-7 gap-1 text-center text-[10px] text-text-muted">
