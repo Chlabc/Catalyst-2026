@@ -1,10 +1,8 @@
 import { Container } from "@/components/ui/Container";
-import { Card } from "@/components/ui/Card";
+import { ProductLibrary } from "@/components/library/ProductLibrary";
 
-// Owner: Person A (paired with scenarios)
-// Product library: pads/cups/tampons/discs, pros/cons, filterable by
-// comfort/activity level. Data-driven — good candidate for a simple
-// array of objects rendered as cards.
+// Add more products in src/lib/products.ts — this page and the
+// ProductLibrary component don't need to change.
 
 export default function LibraryPage() {
   return (
@@ -14,11 +12,11 @@ export default function LibraryPage() {
           Product Library
         </h1>
         <p className="mt-2 text-text-muted">
-          Plain-language guide to period products.
+          Plain-language guide to period products — filter by what you need.
         </p>
-        <Card className="mt-6">
-          <p className="text-sm text-text-muted">Product entries go here.</p>
-        </Card>
+        <div className="mt-6">
+          <ProductLibrary />
+        </div>
       </div>
     </Container>
   );

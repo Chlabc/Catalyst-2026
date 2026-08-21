@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { MessageGenerator } from "@/components/MessageGenerator";
 import type { ScenarioStep } from "@/lib/scenarios";
 
 export function ScenarioPlayer({
@@ -25,6 +26,7 @@ export function ScenarioPlayer({
       {isEnd ? (
         <div className="mt-2 flex flex-col gap-4">
           <p className="text-secondary">{step.closing}</p>
+          {step.showMessageGenerator && <MessageGenerator />}
           <Button
             variant="secondary"
             className="self-start"
