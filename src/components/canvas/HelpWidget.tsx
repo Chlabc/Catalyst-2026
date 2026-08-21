@@ -33,6 +33,20 @@ export function HelpWidget() {
           placeholder
         </span>
       </div>
+      <p className="mt-2 text-xs leading-relaxed text-text-muted">
+        A calm place to find support. The full help centre will connect nearby
+        pharmacies, helplines, gentle movement, and printable period notes.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {["Nearby support", "Yoga & comfort", "Period summary"].map((item) => (
+          <span
+            key={item}
+            className="rounded-full bg-background px-2.5 py-1 text-[10px] font-medium text-text-muted"
+          >
+            {item}
+          </span>
+        ))}
+      </div>
       <div className="mt-2 flex flex-col divide-y divide-border">
         {FAQS.map((faq) => {
           const isOpen = expanded === faq.q;

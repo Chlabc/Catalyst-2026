@@ -15,14 +15,14 @@ export function DraggableWidget({
   defaultX,
   defaultY,
   onRemove,
+  label,
   children,
 }: {
   id: string;
   defaultX: number;
   defaultY: number;
-  // Omit to make a widget permanent (no dismiss button) - Flower and
-  // Learning don't get one, Tracking and Help do.
   onRemove?: () => void;
+  label?: string;
   children: React.ReactNode;
 }) {
   const [pos, setPos] = useState<Pos>({ x: defaultX, y: defaultY });
@@ -94,17 +94,17 @@ export function DraggableWidget({
           onPointerCancel={onPointerUp}
           className="relative flex touch-none select-none items-center justify-center gap-1 rounded-t-2xl border border-b-0 border-border bg-surface py-1.5 text-text-muted cursor-grab active:cursor-grabbing"
         >
-          <span aria-hidden className="text-xs tracking-widest">
-            ⠿⠿⠿
-          </span>
+          <span aria-hidden className="mr-1 text-xs tracking-widest">⠿⠿⠿</span>
+          {label && <span className="text-[10px] font-medium uppercase tracking-[0.12em]">{label}</span>}
           {onRemove && (
             <button
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onRemove}
               aria-label="Remove widget"
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-text-muted hover:bg-background hover:text-foreground"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-[10px] font-semibold text-text-muted hover:bg-background hover:text-foreground"
             >
-              <CloseIcon className="h-3.5 w-3.5" />
+              <span className="sm:hidden"><CloseIcon className="h-3.5 w-3.5" /></span>
+              <span className="hidden sm:inline">Hide</span>
             </button>
           )}
         </div>

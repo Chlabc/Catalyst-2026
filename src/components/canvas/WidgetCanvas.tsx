@@ -19,6 +19,7 @@ const REMOVABLE = [
 export function WidgetCanvas() {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [loaded, setLoaded] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     try {
@@ -54,27 +55,46 @@ export function WidgetCanvas() {
 
   return (
     <div>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Your island desk</p>
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">Make this space yours</h2>
+        </div>
+        <button
+          onClick={() => setEditing((current) => !current)}
+          className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${editing ? "border-primary bg-primary text-white" : "border-border bg-surface text-foreground hover:border-primary"}`}
+        >
+          {editing ? "Done editing" : "Edit widgets"}
+        </button>
+      </div>
+      {editing && (
+        <div className="mb-4 rounded-2xl border border-primary/30 bg-[#fffaf7] p-4 text-sm text-text-muted">
+          <p className="font-semibold text-foreground">Arrange your view</p>
+          <p className="mt-1">Drag the dotted handle to move a widget. Use Hide to remove Tracking or Quick help; add them back below whenever you need them.</p>
+        </div>
+      )}
       <div
         className="relative w-full overflow-auto rounded-3xl border border-border"
         style={{
-          minHeight: 840,
+          minHeight: 760,
           backgroundColor: "var(--background)",
           backgroundImage:
             "radial-gradient(color-mix(in srgb, var(--border) 70%, transparent) 1.5px, transparent 1.5px)",
           backgroundSize: "22px 22px",
         }}
       >
-        <DraggableWidget id="learning" defaultX={24} defaultY={24}>
+        <DraggableWidget id="learning" label="Learning module" defaultX={24} defaultY={24}>
           <LearningWidget />
         </DraggableWidget>
 
-        <DraggableWidget id="flower" defaultX={344} defaultY={24}>
+        <DraggableWidget id="flower" label="Bloom" defaultX={344} defaultY={24}>
           <FlowerWidget />
         </DraggableWidget>
 
         {!hidden.has("tracking") && (
           <DraggableWidget
             id="tracking"
+            label="Tracking"
             defaultX={24}
             defaultY={420}
             onRemove={() => hide("tracking")}
@@ -86,6 +106,7 @@ export function WidgetCanvas() {
         {!hidden.has("help") && (
           <DraggableWidget
             id="help"
+            label="Quick help"
             defaultX={344}
             defaultY={420}
             onRemove={() => hide("help")}
@@ -97,7 +118,7 @@ export function WidgetCanvas() {
 
       {hiddenList.length > 0 && (
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-text-muted">Hidden — add back:</span>
+          <span className="text-xs font-medium text-text-muted">Widgets you hid:</span>
           {hiddenList.map((w) => (
             <button
               key={w.id}

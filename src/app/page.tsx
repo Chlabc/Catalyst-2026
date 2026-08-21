@@ -17,9 +17,8 @@ export default function Home() {
 
       <div className="px-4 pb-16 sm:px-8">
         <p className="mb-3 text-xs text-text-muted">
-          Drag any widget by its ⠿⠿⠿ handle to rearrange. The flower and
-          Menstrome Island stay put — everything else you can hide and bring
-          back.
+          Learning modules and Bloom are always here. Tracking and Quick help
+          are optional, so your dashboard can stay focused.
         </p>
         <WidgetCanvas />
       </div>
