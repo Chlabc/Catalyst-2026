@@ -11,7 +11,8 @@
     "test:tracker-theme": "node scripts/check-tracker-theme-playwright.mjs",
     "test:menstrome-hotspots": "node scripts/check-menstrome-hotspots.mjs",
     "test:home-faq": "node scripts/check-home-faq-structural.mjs",
-    "test:tracker-local-first": "node --experimental-strip-types scripts/check-tracker-local-first.ts"
+    "test:tracker-local-first": "node --experimental-strip-types scripts/check-tracker-local-first.ts",
+    "test:checkin-streak": "node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-checkin-streak.ts"
   },
   "dependencies": {
     "jspdf": "^4.2.1",

@@ -26,6 +26,7 @@ import { CycleDashboard, DailyCareSection } from "./CycleDashboard";
 import { CycleCalendar } from "./CycleCalendar";
 import { LogTodayPanel } from "./LogTodayPanel";
 import { PhaseBlurb } from "./PhaseBlurb";
+import { CheckInStreakCard } from "./CheckInStreakCard";
 
 type SaveStatus = "loading" | "saved" | "saving" | "offline" | "demo";
 
@@ -254,6 +255,13 @@ export function TrackerShell() {
         </header>
 
         <main className="mt-4">
+          <div className="mb-4">
+            <CheckInStreakCard
+              logs={displayTrackerState.logs}
+              today={today}
+              onLogToday={() => openLogFor(today)}
+            />
+          </div>
           {/* Left: glance only. Right: month + log, daily care, phase guide. */}
           <div className="md:grid md:grid-cols-[minmax(360px,430px)_minmax(300px,1fr)] md:items-start md:gap-8">
             <div>
