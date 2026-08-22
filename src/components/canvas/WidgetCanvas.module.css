@@ -11,6 +11,12 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  /* Let widget drag handles receive events under this strip; children re-enable. */
+  pointer-events: none;
+}
+
+.sceneHeader > * {
+  pointer-events: auto;
 }
 
 .greeting {

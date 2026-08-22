@@ -59,19 +59,21 @@ export function WidgetCanvas() {
 
   return (
     <div className="relative">
-      <div className="relative z-20 flex justify-end">
+      {/* Full-width toolbar must not steal pointer events from widgets
+          underneath (Tracking often sits under this top-right strip). */}
+      <div className="pointer-events-none relative z-20 flex justify-end">
         <button
           type="button"
           onClick={() => setEditing((current) => !current)}
           aria-expanded={editing}
           data-testid="edit-widgets"
-          className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm backdrop-blur-md transition-colors ${editing ? "border-primary bg-primary text-white" : "border-white/60 bg-white/55 text-foreground hover:border-primary hover:bg-white/80"}`}
+          className={`pointer-events-auto rounded-full border px-4 py-2 text-sm font-semibold shadow-sm backdrop-blur-md transition-colors ${editing ? "border-primary bg-primary text-white" : "border-white/60 bg-white/55 text-foreground hover:border-primary hover:bg-white/80"}`}
         >
           {editing ? "Done editing" : "Edit widgets"}
         </button>
       </div>
       {editing && (
-        <div className="relative z-20 ml-auto mt-3 max-w-md rounded-2xl border border-white/60 bg-white/70 p-4 text-sm text-text-muted shadow-sm backdrop-blur-md">
+        <div className="pointer-events-auto relative z-20 ml-auto mt-3 max-w-md rounded-2xl border border-white/60 bg-white/70 p-4 text-sm text-text-muted shadow-sm backdrop-blur-md">
           <p className="font-semibold text-foreground">Arrange your view</p>
           <p className="mt-1">
             Drag the dotted handle to move Learning, Tracking, Find Help, or FAQ.
@@ -130,8 +132,8 @@ export function WidgetCanvas() {
           <DraggableWidget
             id="faq"
             label="FAQ"
-            defaultX={720}
-            defaultY={120}
+            defaultX={980}
+            defaultY={560}
             onRemove={() => hide("faq")}
             handleClassName="border-border bg-surface"
             className={styles.widget}

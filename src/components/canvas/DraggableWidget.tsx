@@ -87,7 +87,7 @@ export function DraggableWidget({
     <div
       data-widget-id={id}
       style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
-      className={`absolute left-0 top-0 w-80 ${dragging ? "z-20" : "z-10"} ${className}`}
+      className={`absolute left-0 top-0 w-80 ${dragging ? "z-30" : "z-10"} ${className}`}
     >
       <div
         className={`rounded-2xl transition-shadow duration-200 ${dragging ? "shadow-xl" : "shadow-[0_1px_2px_rgba(58,46,42,0.04),0_8px_20px_-8px_rgba(58,46,42,0.12)]"
