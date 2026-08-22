@@ -1,10 +1,12 @@
 import { Container } from "@/components/ui/Container";
 import { Greeting } from "@/components/Greeting";
 import { WidgetCanvas } from "@/components/canvas/WidgetCanvas";
+import { WelcomeGate } from "@/components/WelcomeGate";
 
 export default function Home() {
   return (
     <>
+      <WelcomeGate />
       <Container>
         <div className="py-8 sm:py-10">
           <div className="relative overflow-hidden rounded-[2rem] border-2 border-primary/20 bg-primary-soft px-6 py-8 sm:px-10 sm:py-11">

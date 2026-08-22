@@ -74,3 +74,7 @@ video script's strongest section)_
   reward-based and low-cognitive-load learning direction, while avoiding a
   dense "health library" on the first screen. The fact is deliberately
   general health education, not personal medical advice.
+- 2026-08-22: Added a once-only welcome screen before the island. Its short,
+  task-based promise (learn, grow, get support) makes the purpose clear before
+  the user meets a busy customisable canvas; it is dismissed permanently after
+  entering so returning users arrive directly at their desk.
