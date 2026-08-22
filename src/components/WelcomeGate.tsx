@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { WELCOME_CHANGED_EVENT } from "@/lib/navTutorial";
 
 export const WELCOME_KEY = "blossom_has_seen_welcome";
 
@@ -26,6 +27,7 @@ export function WelcomeGate() {
       // The page remains usable even when the preference cannot be saved.
     }
     setIsOpen(false);
+    window.dispatchEvent(new Event(WELCOME_CHANGED_EVENT));
   }
 
   useEffect(() => {

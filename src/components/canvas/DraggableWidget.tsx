@@ -151,6 +151,7 @@ export function DraggableWidget({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
+          data-testid={`widget-drag-handle-${id}`}
           className={`relative flex touch-none select-none items-center justify-center gap-1.5 rounded-t-2xl border-2 border-b-0 py-2 text-text-muted cursor-grab active:cursor-grabbing ${handleClassName}`}
         >
           <span aria-hidden className="mr-1 text-sm tracking-widest">⠿⠿⠿</span>
