@@ -69,3 +69,8 @@ video script's strongest section)_
   Flower widget: petals fall with a real animation (not an instant
   swap) when a day gets logged.
 
+- 2026-08-23: Ported New-Huey’s once-only **WelcomeGate** onto `eeva` Home
+  (`blossom_has_seen_welcome`). First visit explains Learn / Grow / Get
+  support, then “Enter my island” dismisses it; later visits skip to the
+  canvas. Did not merge the rest of New-Huey’s homepage.
+
