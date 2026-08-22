@@ -65,9 +65,8 @@ export function WidgetCanvas() {
 
   return (
     <div className="relative">
-      {/* Full-width toolbar must not steal pointer events from widgets
-          underneath (Tracking often sits under this top-right strip). */}
-      <div className="pointer-events-none relative z-20 flex justify-end">
+      {/* Overlay: must not push the canvas down when the panel opens. */}
+      <div className="pointer-events-none absolute right-0 top-0 z-40 flex flex-col items-end gap-3">
         <button
           type="button"
           onClick={() => setEditing((current) => !current)}
@@ -77,58 +76,58 @@ export function WidgetCanvas() {
         >
           {editing ? "Done editing" : "Edit widgets"}
         </button>
-      </div>
-      {editing && (
-        <div
-          className="pointer-events-auto relative z-20 ml-auto mt-3 w-full max-w-md rounded-2xl border border-white/60 bg-white/80 p-4 text-sm text-text-muted shadow-sm backdrop-blur-md"
-          data-testid="widget-select-panel"
-        >
-          <p className="font-semibold text-foreground">Choose widgets</p>
-          <p className="mt-1">
-            Tick widgets to show them. Drag the dotted handles to move them.
-            Learning stays on for this page.
-          </p>
-          <ul className="mt-3 flex flex-col gap-2">
-            {REQUIRED_WIDGETS.map((widget) => (
-              <li key={widget.id}>
-                <label className="flex items-center justify-between gap-3 rounded-xl border border-secondary/25 bg-secondary-soft/70 px-3 py-2 text-foreground">
-                  <span className="font-medium">{widget.label}</span>
-                  <span className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-text-muted">Always on</span>
-                    <input
-                      type="checkbox"
-                      checked
-                      disabled
-                      aria-disabled="true"
-                      data-testid={`widget-select-${widget.id}`}
-                      className="h-4 w-4 accent-secondary"
-                    />
-                  </span>
-                </label>
-              </li>
-            ))}
-            {OPTIONAL_WIDGETS.map((widget) => {
-              const selected = !hidden.has(widget.id);
-              return (
+        {editing && (
+          <div
+            className="pointer-events-auto w-[min(100vw-2rem,24rem)] rounded-2xl border border-white/70 bg-white/90 p-4 text-sm text-text-muted shadow-[0_16px_40px_-12px_rgba(40,24,36,0.35)] backdrop-blur-md"
+            data-testid="widget-select-panel"
+          >
+            <p className="font-semibold text-foreground">Choose widgets</p>
+            <p className="mt-1">
+              Tick widgets to show them. Drag the dotted handles to move them.
+              Learning stays on for this page.
+            </p>
+            <ul className="mt-3 flex flex-col gap-2">
+              {REQUIRED_WIDGETS.map((widget) => (
                 <li key={widget.id}>
-                  <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-white/70 bg-white/70 px-3 py-2 text-foreground">
+                  <label className="flex items-center justify-between gap-3 rounded-xl border border-secondary/25 bg-secondary-soft/70 px-3 py-2 text-foreground">
                     <span className="font-medium">{widget.label}</span>
-                    <input
-                      type="checkbox"
-                      checked={selected}
-                      data-testid={`widget-select-${widget.id}`}
-                      onChange={(event) =>
-                        toggleOptional(widget.id, event.target.checked)
-                      }
-                      className="h-4 w-4 accent-primary"
-                    />
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-text-muted">Always on</span>
+                      <input
+                        type="checkbox"
+                        checked
+                        disabled
+                        aria-disabled="true"
+                        data-testid={`widget-select-${widget.id}`}
+                        className="h-4 w-4 accent-secondary"
+                      />
+                    </span>
                   </label>
                 </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+              ))}
+              {OPTIONAL_WIDGETS.map((widget) => {
+                const selected = !hidden.has(widget.id);
+                return (
+                  <li key={widget.id}>
+                    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-white/70 bg-white/70 px-3 py-2 text-foreground">
+                      <span className="font-medium">{widget.label}</span>
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        data-testid={`widget-select-${widget.id}`}
+                        onChange={(event) =>
+                          toggleOptional(widget.id, event.target.checked)
+                        }
+                        className="h-4 w-4 accent-primary"
+                      />
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+      </div>
       <div className={styles.canvas}>
         <div className={styles.centerpiece}>
           <FlowerWidget />
