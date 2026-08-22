@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <BlossomThemeProvider>
           <NavBar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 overflow-x-hidden">{children}</main>
         </BlossomThemeProvider>
         <Script id="blossom-theme-init" strategy="beforeInteractive">
           {`try{var theme=localStorage.getItem("blossom_home_scene");document.documentElement.dataset.blossomTheme=theme==="macaron"?"macaron":"beach"}catch(e){document.documentElement.dataset.blossomTheme="beach"}`}

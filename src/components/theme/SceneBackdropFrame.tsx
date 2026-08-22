@@ -26,7 +26,7 @@ export function SceneBackdropFrame({
 
   return (
     <div
-      className={`${sceneBackdropClassName(sceneStyles, backdrop)} w-full ${className}`.trim()}
+      className={`${sceneBackdropClassName(sceneStyles, backdrop)} w-full overflow-x-hidden ${className}`.trim()}
       data-testid={testId}
       data-blossom-scene={backdrop.themeKey}
     >

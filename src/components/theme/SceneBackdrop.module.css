@@ -4,6 +4,7 @@
   position: relative;
   isolation: isolate;
   min-height: 100vh;
+  overflow-x: hidden;
   transition: background 400ms ease;
 }
 
