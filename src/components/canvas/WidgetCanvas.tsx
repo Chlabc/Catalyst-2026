@@ -65,22 +65,23 @@ export function WidgetCanvas() {
 
   return (
     <div className="relative">
-      {/* Overlay: must not push the canvas down when the panel opens. */}
-      <div className="pointer-events-none absolute right-0 top-0 z-40 flex flex-col items-end gap-3">
-        <button
-          type="button"
-          onClick={() => setEditing((current) => !current)}
-          aria-expanded={editing}
-          data-testid="edit-widgets"
-          className={`pointer-events-auto rounded-full border px-4 py-2 text-sm font-semibold shadow-sm backdrop-blur-md transition-colors ${editing ? "border-primary bg-primary text-white" : "border-white/60 bg-white/55 text-foreground hover:border-primary hover:bg-white/80"}`}
-        >
-          {editing ? "Done editing" : "Edit widgets"}
-        </button>
-        {editing && (
-          <div
-            className="pointer-events-auto w-[min(100vw-2rem,24rem)] rounded-2xl border border-white/70 bg-white/90 p-4 text-sm text-text-muted shadow-[0_16px_40px_-12px_rgba(40,24,36,0.35)] backdrop-blur-md"
-            data-testid="widget-select-panel"
+      {/* Button stays in flow (spacing like before). Panel overlays the canvas. */}
+      <div className="pointer-events-none relative z-40 flex justify-end">
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setEditing((current) => !current)}
+            aria-expanded={editing}
+            data-testid="edit-widgets"
+            className={`pointer-events-auto rounded-full border px-4 py-2 text-sm font-semibold shadow-sm backdrop-blur-md transition-colors ${editing ? "border-primary bg-primary text-white" : "border-white/60 bg-white/55 text-foreground hover:border-primary hover:bg-white/80"}`}
           >
+            {editing ? "Done editing" : "Edit widgets"}
+          </button>
+          {editing && (
+            <div
+              className="pointer-events-auto absolute right-0 top-full z-40 mt-3 w-[min(100vw-2rem,24rem)] rounded-2xl border border-white/70 bg-white/90 p-4 text-sm text-text-muted shadow-[0_16px_40px_-12px_rgba(40,24,36,0.35)] backdrop-blur-md"
+              data-testid="widget-select-panel"
+            >
             <p className="font-semibold text-foreground">Choose widgets</p>
             <p className="mt-1">
               Tick widgets to show them. Drag the dotted handles to move them.
@@ -125,8 +126,9 @@ export function WidgetCanvas() {
                 );
               })}
             </ul>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
       <div className={styles.canvas}>
         <div className={styles.centerpiece}>

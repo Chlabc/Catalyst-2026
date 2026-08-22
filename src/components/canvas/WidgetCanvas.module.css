@@ -50,7 +50,7 @@
   position: absolute;
   z-index: 5;
   top: 24px;
-  left: 53%;
+  left: 50%;
   width: 560px;
   transform: translateX(-50%);
   filter: drop-shadow(0 18px 18px rgb(71 85 90 / 10%));
