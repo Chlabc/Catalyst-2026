@@ -48,7 +48,7 @@ try {
   await page.getByTestId("report-download").click();
   const download = await downloadPromise;
   const name = download.suggestedFilename();
-  assert.match(name, /blossom-cycle-report-.*\.pdf/);
+  assert.match(name, /bloom-cycle-report-.*\.pdf/);
   const path = `${scratch}/${name}`;
   await download.saveAs(path);
 

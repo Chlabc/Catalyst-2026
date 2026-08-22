@@ -1,4 +1,4 @@
-# Divergence Log — Blossom (originally MenstraMission)
+# Divergence Log — Bloom (originally MenstraMission)
 
 Built on the Figma design and research by **Team PADthai** (Ann — UX/UI
 Design; Morn — Politics & Chinese Studies; Nana — Environmental Science;
@@ -13,7 +13,7 @@ replace sex education" — we've carried that line into our own copy.
 
 | Blueprint element | Kept / Changed / Cut | Why (tied to their research) |
 |---|---|---|
-| Name "MenstraMission" | Renamed to "Blossom" | Broadened audience (see below) meant a name centered on "mission" framing read narrower than the product now is; Blossom keeps the growth/biome metaphor without the narrower framing |
+| Name "MenstraMission" | Renamed to "Bloom" (via Blossom) | Broadened audience (see below) meant a name centered on "mission" framing read narrower than the product now is; Bloom keeps the growth/biome metaphor without the narrower framing |
 | Biome-based interactive scenarios | Kept | Core validated concept from their user research |
 | Pre-teen-only audience → parents/educators | Broadened | **Confirmed by their research**: their "Future Expansion" slide explicitly lists "single-father, parents, educator/schools" as target users |
 | Pre-teen-only audience → late teens | Broadened | **Our own call, not directly cited** — PADthai's research target is specifically pre-teens before 12-13; extending to late teens is a reasonable adjacent guess, not something their data says |
@@ -73,4 +73,7 @@ video script's strongest section)_
   (`blossom_has_seen_welcome`). First visit explains Learn / Grow / Get
   support, then “Enter my island” dismisses it; later visits skip to the
   canvas. Did not merge the rest of New-Huey’s homepage.
+- 2026-08-23: Renamed the product Blossom → **Bloom** in user-facing copy
+  (wordmark, tab title, welcome gate, Find Help, health-report PDF). Internal
+  storage keys stay `blossom_*` so existing local data is not reset.
 

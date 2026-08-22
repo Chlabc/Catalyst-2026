@@ -69,7 +69,7 @@ export function WelcomeGate() {
         />
         <div className="relative">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary-dark">
-            Welcome to Blossom
+            Welcome to Bloom
           </p>
           <h1
             id="welcome-title"

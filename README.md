@@ -1,4 +1,4 @@
-# Blossom
+# Bloom
 
 Built for CISSA Catalyst's Forma track — implementing and improving on the
 "MenstraMission" Product-thon blueprint. See `DIVERGENCE.md` for what we

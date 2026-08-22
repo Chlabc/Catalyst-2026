@@ -243,7 +243,7 @@ export function NearbySupport({
           </button>
         }
         title="Find support near you"
-        subtitle="With your permission, Blossom can use your location to look for nearby healthcare services. Your location is not stored."
+        subtitle="With your permission, Bloom can use your location to look for nearby healthcare services. Your location is not stored."
       />
 
       <Card className="mt-6">

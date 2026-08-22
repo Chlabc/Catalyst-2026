@@ -229,7 +229,7 @@ function Landing({
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-dark">A good place to start</p>
         <h2 className="mt-2 text-2xl font-semibold text-foreground">I need help with something</h2>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-text-muted">
-          Choose what sounds closest to find a simple next step. Blossom will
+          Choose what sounds closest to find a simple next step. Bloom will
           not try to diagnose you.
         </p>
         <div className="mt-5">

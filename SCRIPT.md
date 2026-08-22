@@ -1,4 +1,4 @@
-# Video Pitch Script — Blossom (rough draft, ~3.5-4 min)
+# Video Pitch Script — Bloom (rough draft, ~3.5-4 min)
 
 Read this out loud once and time it — trim wherever it drags. Swap in your
 real names/story details before filming.
@@ -6,7 +6,7 @@ real names/story details before filming.
 ---
 
 ## 1. Hook (15s)
-"We built Blossom because [Name] told us about struggling through
+"We built Bloom because [Name] told us about struggling through
 her first period with basically nowhere to go for a straight answer — no
 judgment-free place that just explained what was happening. That's the gap
 we wanted to close."
@@ -16,7 +16,7 @@ we wanted to close."
 Nana, and Pam — whose MenstraMission project won Product-thon. They did
 the research and the blueprint, including the 'Menstrome Island' biome
 world — our job in Forma was to actually build it, and to make justified
-calls on where to improve it. We renamed the product Blossom, which
+calls on where to improve it. We renamed the product Bloom, which
 we'll get into."
 
 ## 3. What we kept and why (25s)
@@ -27,8 +27,8 @@ parent's lecture, just clear answers."
 
 ## 4. What we changed and why (70s) — walk the divergence log
 "A few things we changed, and why:
-- We renamed it Blossom — the original name centered on 'mission,' which
-  read narrower once we broadened the audience. Blossom keeps their own
+- We renamed it Bloom — the original name centered on 'mission,' which
+  read narrower once we broadened the audience. Bloom keeps their own
   growth/biome metaphor without that narrower framing.
 - We widened the audience — their own 'Future Expansion' slide named
   parents and educators as a next step, so we built that in from day one.

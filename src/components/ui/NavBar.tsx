@@ -19,7 +19,7 @@ export function NavBar() {
             className="flex shrink-0 items-center gap-2 text-lg font-semibold tracking-tight text-foreground"
           >
             <DropletIcon className="h-5 w-5 text-primary" />
-            Blossom
+            Bloom
           </Link>
           <ul className="flex gap-4 overflow-x-auto text-sm sm:gap-8">
             {NAV_LINKS.map((link) => {
