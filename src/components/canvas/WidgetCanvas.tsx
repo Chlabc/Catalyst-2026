@@ -8,17 +8,19 @@ import { TrackingWidget } from "./TrackingWidget";
 import { HelpWidget } from "./HelpWidget";
 import { FaqWidget } from "./FaqWidget";
 import styles from "./WidgetCanvas.module.css";
+import {
+  HIDDEN_WIDGETS_KEY,
+  OPTIONAL_WIDGETS,
+  REQUIRED_WIDGETS,
+  isRequiredWidget,
+  sanitizeHiddenWidgets,
+} from "@/lib/widgetVisibility";
 
-const HIDDEN_KEY = "blossom_hidden_widgets";
-
-// The flower is the permanent centrepiece. The surrounding tool widgets
-// can be hidden and restored without affecting their saved positions.
-const REMOVABLE = [
-  { id: "learning", label: "Learning" },
-  { id: "tracking", label: "Tracking" },
-  { id: "help", label: "Find Help" },
-  { id: "faq", label: "FAQ" },
-];
+function persistHidden(ids: Set<string>) {
+  const sanitized = sanitizeHiddenWidgets([...ids]);
+  window.localStorage.setItem(HIDDEN_WIDGETS_KEY, JSON.stringify(sanitized));
+  return new Set(sanitized);
+}
 
 export function WidgetCanvas() {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
@@ -27,35 +29,39 @@ export function WidgetCanvas() {
 
   useEffect(() => {
     try {
-      const raw = window.localStorage.getItem(HIDDEN_KEY);
+      const raw = window.localStorage.getItem(HIDDEN_WIDGETS_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      const sanitized = sanitizeHiddenWidgets(parsed);
+      if (JSON.stringify(parsed) !== JSON.stringify(sanitized)) {
+        window.localStorage.setItem(HIDDEN_WIDGETS_KEY, JSON.stringify(sanitized));
+      }
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (raw) setHidden(new Set(JSON.parse(raw)));
+      setHidden(new Set(sanitized));
     } catch {
-      // Corrupt/missing storage — just show everything.
+      // Corrupt/missing storage — show all optional widgets.
     }
     setLoaded(true);
   }, []);
 
   function hide(id: string) {
-    setHidden((prev) => {
-      const next = new Set(prev).add(id);
-      window.localStorage.setItem(HIDDEN_KEY, JSON.stringify([...next]));
-      return next;
-    });
+    if (isRequiredWidget(id)) return;
+    setHidden((prev) => persistHidden(new Set(prev).add(id)));
   }
 
   function show(id: string) {
     setHidden((prev) => {
       const next = new Set(prev);
       next.delete(id);
-      window.localStorage.setItem(HIDDEN_KEY, JSON.stringify([...next]));
-      return next;
+      return persistHidden(next);
     });
   }
 
-  if (!loaded) return null;
+  function toggleOptional(id: string, selected: boolean) {
+    if (selected) show(id);
+    else hide(id);
+  }
 
-  const hiddenList = REMOVABLE.filter((w) => hidden.has(w.id));
+  if (!loaded) return null;
 
   return (
     <div className="relative">
@@ -73,12 +79,54 @@ export function WidgetCanvas() {
         </button>
       </div>
       {editing && (
-        <div className="pointer-events-auto relative z-20 ml-auto mt-3 max-w-md rounded-2xl border border-white/60 bg-white/70 p-4 text-sm text-text-muted shadow-sm backdrop-blur-md">
-          <p className="font-semibold text-foreground">Arrange your view</p>
+        <div
+          className="pointer-events-auto relative z-20 ml-auto mt-3 w-full max-w-md rounded-2xl border border-white/60 bg-white/80 p-4 text-sm text-text-muted shadow-sm backdrop-blur-md"
+          data-testid="widget-select-panel"
+        >
+          <p className="font-semibold text-foreground">Choose widgets</p>
           <p className="mt-1">
-            Drag the dotted handle to move Learning, Tracking, Find Help, or FAQ.
-            Use Hide to remove a tool and add it back below whenever you need it.
+            Tick widgets to show them. Drag the dotted handles to move them.
+            Learning stays on for this page.
           </p>
+          <ul className="mt-3 flex flex-col gap-2">
+            {REQUIRED_WIDGETS.map((widget) => (
+              <li key={widget.id}>
+                <label className="flex items-center justify-between gap-3 rounded-xl border border-secondary/25 bg-secondary-soft/70 px-3 py-2 text-foreground">
+                  <span className="font-medium">{widget.label}</span>
+                  <span className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-text-muted">Always on</span>
+                    <input
+                      type="checkbox"
+                      checked
+                      disabled
+                      aria-disabled="true"
+                      data-testid={`widget-select-${widget.id}`}
+                      className="h-4 w-4 accent-secondary"
+                    />
+                  </span>
+                </label>
+              </li>
+            ))}
+            {OPTIONAL_WIDGETS.map((widget) => {
+              const selected = !hidden.has(widget.id);
+              return (
+                <li key={widget.id}>
+                  <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-white/70 bg-white/70 px-3 py-2 text-foreground">
+                    <span className="font-medium">{widget.label}</span>
+                    <input
+                      type="checkbox"
+                      checked={selected}
+                      data-testid={`widget-select-${widget.id}`}
+                      onChange={(event) =>
+                        toggleOptional(widget.id, event.target.checked)
+                      }
+                      className="h-4 w-4 accent-primary"
+                    />
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
       <div className={styles.canvas}>
@@ -86,19 +134,16 @@ export function WidgetCanvas() {
           <FlowerWidget />
         </div>
 
-        {!hidden.has("learning") && (
-          <DraggableWidget
-            id="learning"
-            label="Learning module"
-            defaultX={8}
-            defaultY={122}
-            onRemove={() => hide("learning")}
-            handleClassName="border-secondary/30 bg-secondary-soft"
-            className={styles.widget}
-          >
-            <LearningWidget />
-          </DraggableWidget>
-        )}
+        <DraggableWidget
+          id="learning"
+          label="Learning module"
+          defaultX={8}
+          defaultY={122}
+          handleClassName="border-secondary/30 bg-secondary-soft"
+          className={styles.widget}
+        >
+          <LearningWidget />
+        </DraggableWidget>
 
         {!hidden.has("tracking") && (
           <DraggableWidget
@@ -106,7 +151,6 @@ export function WidgetCanvas() {
             label="Tracking"
             defaultX={896}
             defaultY={292}
-            onRemove={() => hide("tracking")}
             handleClassName="border-primary/30 bg-primary-soft"
             className={`${styles.widget} ${styles.trackingWidget}`}
           >
@@ -120,7 +164,6 @@ export function WidgetCanvas() {
             label="Quick help"
             defaultX={76}
             defaultY={594}
-            onRemove={() => hide("help")}
             handleClassName="border-accent/30 bg-accent-soft"
             className={styles.widget}
           >
@@ -134,7 +177,6 @@ export function WidgetCanvas() {
             label="FAQ"
             defaultX={980}
             defaultY={560}
-            onRemove={() => hide("faq")}
             handleClassName="border-border bg-surface"
             className={styles.widget}
           >
@@ -142,26 +184,6 @@ export function WidgetCanvas() {
           </DraggableWidget>
         )}
       </div>
-
-      {hiddenList.length > 0 && (
-        <div
-          className="relative z-20 mt-4 flex flex-wrap items-center justify-end gap-2"
-          data-testid="hidden-widgets"
-        >
-          <span className="text-xs font-medium text-foreground/65">Hidden:</span>
-          {hiddenList.map((w) => (
-            <button
-              type="button"
-              key={w.id}
-              data-testid={`restore-widget-${w.id}`}
-              onClick={() => show(w.id)}
-              className="rounded-full border border-white/60 bg-white/55 px-3 py-1 text-xs text-foreground/70 shadow-sm backdrop-blur-md transition-colors hover:border-primary hover:bg-white/80 hover:text-foreground"
-            >
-              + {w.label}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
