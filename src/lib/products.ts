@@ -36,7 +36,7 @@ export const products: Product[] = [
     description: "A reusable silicone cup worn inside. Rinse and reuse.",
     pros: ["Reusable — cheaper over time", "Can be worn up to 12 hours", "Less waste"],
     cons: ["Learning curve to insert/remove", "Needs cleaning between cycles"],
-    goodFor: ["Overnight", "Longer wear"],
+    goodFor: ["Overnight", "Sports", "Longer wear"],
   },
   {
     id: "disc",
@@ -54,6 +54,6 @@ export const products: Product[] = [
     description: "Regular-feeling underwear with built-in absorbent layers.",
     pros: ["Comfortable, no insertion", "Reusable", "Good as backup with another product"],
     cons: ["Needs handwashing/laundering care", "Higher upfront cost"],
-    goodFor: ["First period", "Light days", "Backup"],
+    goodFor: ["First period", "Overnight", "Light days", "Backup"],
   },
 ];

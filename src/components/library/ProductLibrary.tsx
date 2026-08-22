@@ -5,8 +5,21 @@ import { Card } from "@/components/ui/Card";
 import { ChevronIcon } from "@/components/icons";
 import { products } from "@/lib/products";
 
-const FILTERS = ["All", "First period", "Sports", "Overnight", "Light days"] as const;
-type Filter = (typeof FILTERS)[number];
+export const LIBRARY_FILTERS = [
+  "All",
+  "First period",
+  "Sports",
+  "Overnight",
+  "Light days",
+] as const;
+export type LibraryFilter = (typeof LIBRARY_FILTERS)[number];
+
+const FILTERS = LIBRARY_FILTERS;
+type Filter = LibraryFilter;
+
+export function isLibraryFilter(value: string | undefined): value is Filter {
+  return Boolean(value && (FILTERS as readonly string[]).includes(value));
+}
 
 const SITUATIONS: { label: string; filter: Filter; blurb: string }[] = [
   {
@@ -26,8 +39,14 @@ const SITUATIONS: { label: string; filter: Filter; blurb: string }[] = [
   },
 ];
 
-export function ProductLibrary() {
-  const [filter, setFilter] = useState<Filter>("All");
+export function ProductLibrary({
+  initialFilter = "All",
+}: {
+  initialFilter?: string;
+}) {
+  const [filter, setFilter] = useState<Filter>(
+    isLibraryFilter(initialFilter) ? initialFilter : "All",
+  );
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   const activeSituation = SITUATIONS.find((s) => s.filter === filter);
@@ -51,6 +70,12 @@ export function ProductLibrary() {
 
   return (
     <div>
+      {isLibraryFilter(initialFilter) && initialFilter !== "All" && (
+        <p className="mb-4 text-sm text-text-muted" data-testid="library-from-island">
+          Showing {initialFilter} options — same categories as the island
+          mini-game.
+        </p>
+      )}
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
         {SITUATIONS.map((s) => (
           <button
