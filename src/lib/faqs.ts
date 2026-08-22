@@ -15,7 +15,7 @@ export const FAQS: FaqEntry[] = [
   },
   {
     q: "What's Menstrome Island?",
-    a: "It's the Learn section — short interactive scenarios you click through, based on real situations.",
+    a: "It's the Learn section — seven towns on an island. Each town is a short story, a few facts, one decision, and a badge. We are not trying to replace sex education.",
   },
   {
     q: "What if something feels really wrong?",

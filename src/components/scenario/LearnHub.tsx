@@ -3,14 +3,18 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Card } from "@/components/ui/Card";
-import { COMPLETED_SCENARIOS_KEY } from "./ScenarioPath";
 import { MenstromeIslandMap } from "./MenstromeIslandMap";
 import { BiomeRegionScene } from "./BiomeRegionScene";
-import { comingSoonZones, type ScenarioLevel } from "@/lib/scenarios";
+import {
+  COMPLETED_SCENARIOS_KEY,
+  SEX_ED_DISCLAIMER,
+  comingSoonZones,
+  type IslandTown,
+} from "@/lib/scenarios";
 
 type ViewMode = "map" | "list";
 
-export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
+export function LearnHub({ levels }: { levels: IslandTown[] }) {
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [activeId, setActiveId] = useState<string | null>(null);
   const [view, setView] = useState<ViewMode>("map");
@@ -56,10 +60,15 @@ export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
   if (!loaded) return null;
 
   if (activeLevel) {
+    const already = completed.has(activeLevel.id);
+    const islandComplete = already
+      ? completed.size === levels.length
+      : completed.size + 1 === levels.length;
     return (
       <BiomeRegionScene
         level={activeLevel}
-        completed={completed.has(activeLevel.id)}
+        completed={already}
+        islandComplete={islandComplete}
         onComplete={() => markComplete(activeLevel.id)}
         onBack={backToIsland}
       />
@@ -82,11 +91,12 @@ export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
               Explore Menstrome Island
             </p>
             <p className="mt-0.5 text-sm text-text-muted">
-              This is the PADthai island biome — tap a glowing pin to enter that
-              region.
+              Seven towns. Same path each time: a scenario, a few facts, one
+              decision, a reward. Suggested order starts at Bloodbury and ends
+              at Divursity.
             </p>
             <p className="mt-1 text-xs text-text-muted">
-              {completed.size} of {levels.length} regions explored
+              {completed.size} of {levels.length} towns explored
             </p>
           </div>
         </div>
@@ -118,6 +128,29 @@ export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
         </div>
       </div>
 
+      <p
+        className="rounded-2xl border border-white/70 bg-white/75 px-4 py-3 text-sm leading-relaxed text-foreground"
+        data-testid="island-disclaimer"
+      >
+        {SEX_ED_DISCLAIMER} This island is a first, friendly look — not a
+        replacement for class, a parent, or a clinician.
+      </p>
+
+      {completed.size === levels.length && (
+        <div
+          className="rounded-2xl border border-secondary/30 bg-secondary-soft px-4 py-3"
+          data-testid="island-complete-banner"
+        >
+          <p className="text-sm font-semibold text-foreground">
+            You finished Menstrome Island
+          </p>
+          <p className="mt-1 text-sm text-text-muted">
+            You&apos;ve learned the basics. The Product Library has the full
+            plain-language guide whenever you need it.
+          </p>
+        </div>
+      )}
+
       {view === "map" ? (
         <MenstromeIslandMap
           levels={levels}
@@ -131,7 +164,9 @@ export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
           className="flex flex-col gap-3"
           data-testid="menstrome-list-fallback"
         >
-          {levels.map((level) => {
+          {[...levels]
+            .sort((a, b) => a.visitOrder - b.visitOrder)
+            .map((level) => {
             const isDone = completed.has(level.id);
             return (
               <Card key={level.id} className="overflow-hidden p-0">
@@ -152,7 +187,9 @@ export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
                   <div className="flex flex-1 items-start justify-between gap-3 p-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-secondary">
-                        {level.map.label}
+                        {level.visitOrder}. {level.map.label}
+                        {level.visitOrder === 1 ? " · start here" : ""}
+                        {level.finale ? " · finish" : ""}
                         {isDone ? " · done" : ""}
                       </p>
                       <h3 className="mt-1 text-lg font-semibold text-foreground">
@@ -162,7 +199,7 @@ export function LearnHub({ levels }: { levels: ScenarioLevel[] }) {
                         {level.teaser}
                       </p>
                       <p className="mt-3 text-sm font-semibold text-primary">
-                        Travel here →
+                        Visit town →
                       </p>
                     </div>
                     {isDone && (

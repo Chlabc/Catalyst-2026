@@ -29,8 +29,8 @@ const levelBlocks = [
 ];
 
 assert.ok(
-  levelBlocks.length >= 3,
-  `expected >= 3 hotspot levels, got ${levelBlocks.length}`,
+  levelBlocks.length >= 7,
+  `expected >= 7 hotspot towns, got ${levelBlocks.length}`,
 );
 
 const ids = levelBlocks.map((m) => m[1]);
@@ -45,8 +45,16 @@ for (const match of levelBlocks) {
   assert.ok(label.length > 0, `${id} missing map label`);
 }
 
-for (const id of ["first-period", "sleepover", "cramper", "bloodbury"]) {
-  assert.ok(ids.includes(id), `playable level ${id} missing map anchor`);
+for (const id of [
+  "bloodbury",
+  "cylendra",
+  "cramper",
+  "stainvale",
+  "flowstate",
+  "normain",
+  "divursity",
+]) {
+  assert.ok(ids.includes(id), `playable town ${id} missing map anchor`);
 }
 
 const regionArts = [

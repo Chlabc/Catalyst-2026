@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { BookIcon } from "@/components/icons";
 import { scenarioLevels } from "@/lib/scenarios";
 import { COMPLETED_SCENARIOS_KEY } from "@/components/scenario/ScenarioPath";
+import { ISLAND_MAP_SRC } from "@/components/scenario/MenstromeIslandMap";
 
 export function LearningWidget() {
   const [completedCount, setCompletedCount] = useState(0);
@@ -27,20 +28,30 @@ export function LearningWidget() {
   return (
     <Link
       href="/scenarios"
-      className="block rounded-b-2xl border-2 border-t-0 border-secondary/30 bg-secondary-soft p-5 transition-colors hover:brightness-[0.98]"
+      className="block overflow-hidden rounded-b-2xl border-2 border-t-0 border-secondary/30 bg-white/90 backdrop-blur-sm transition-colors hover:brightness-[0.98]"
     >
-      <BookIcon className="h-6 w-6 text-secondary" />
-      <p className="mt-3 text-base font-semibold text-foreground">Menstrome Island</p>
-      <p className="mt-1 text-sm text-text-muted">
-        Travel the biome · {completedCount} of {scenarioLevels.length} regions explored
-      </p>
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/60">
-        <div
-          className="h-full rounded-full bg-secondary"
-          style={{
-            width: `${(completedCount / scenarioLevels.length) * 100}%`,
-          }}
+      <div className="relative h-36 w-full bg-[#7ec8e8]">
+        <Image
+          src={ISLAND_MAP_SRC}
+          alt="Menstrome Island"
+          fill
+          className="object-contain object-center"
+          sizes="320px"
         />
+      </div>
+      <div className="p-4">
+        <p className="text-base font-semibold text-foreground">Menstrome Island</p>
+        <p className="mt-1 text-sm text-text-muted">
+          Travel the towns · {completedCount} of {scenarioLevels.length} explored
+        </p>
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/60">
+          <div
+            className="h-full rounded-full bg-secondary"
+            style={{
+              width: `${(completedCount / scenarioLevels.length) * 100}%`,
+            }}
+          />
+        </div>
       </div>
     </Link>
   );

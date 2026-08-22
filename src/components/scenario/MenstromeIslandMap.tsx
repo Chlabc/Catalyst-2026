@@ -3,8 +3,8 @@
 import Image from "next/image";
 import type { ComingSoonZone, ScenarioLevel } from "@/lib/scenarios";
 
-/** High-res PADthai Menstrome Island (from Track2.pdf / Figma). */
-export const ISLAND_MAP_SRC = "/menstrome/island-playable.png";
+/** Labeled Menstrome Island art (swap this path when new map assets land). */
+export const ISLAND_MAP_SRC = "/menstrome/regions/bloodbury-biome.png";
 
 export function MenstromeIslandMap({
   levels,
@@ -26,9 +26,9 @@ export function MenstromeIslandMap({
     >
       <Image
         src={ISLAND_MAP_SRC}
-        alt="Menstrome Island. Click a biome region to travel there."
-        width={1600}
-        height={1600}
+        alt="Menstrome Island. Tap a numbered town to visit."
+        width={971}
+        height={635}
         className="h-auto w-full select-none"
         priority
       />
@@ -44,7 +44,7 @@ export function MenstromeIslandMap({
             key={level.id}
             type="button"
             data-hotspot={level.id}
-            aria-label={`Travel to ${level.map.label}: ${level.title}${isDone ? ", completed" : ""}`}
+            aria-label={`Visit ${level.map.label}: ${level.title}${isDone ? ", completed" : ""}`}
             aria-pressed={isActive}
             onClick={() => onSelect(level.id)}
             className={`group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#7ec8e8] ${
@@ -57,7 +57,7 @@ export function MenstromeIslandMap({
           >
             {/* Large tap target over the biome */}
             <span
-              className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/0 group-hover:bg-white/15 sm:h-28 sm:w-28"
+              className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/0 group-hover:bg-white/20 sm:h-20 sm:w-20"
               aria-hidden
             />
             <span
@@ -67,14 +67,13 @@ export function MenstromeIslandMap({
                   : "border-white bg-primary text-white group-hover:bg-primary-dark"
               }`}
             >
-              {isDone ? "✓" : "✦"}
+              {isDone ? "✓" : level.visitOrder}
             </span>
-            <span className="relative max-w-[9rem] rounded-2xl bg-white/95 px-3 py-1.5 text-center text-xs font-bold leading-tight text-foreground shadow-md">
-              {level.map.label}
-              <span className="mt-0.5 block text-[10px] font-semibold text-primary">
-                Enter biome
+            {(level.visitOrder === 1 || level.finale) && (
+              <span className="relative rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold text-primary shadow-md">
+                {level.visitOrder === 1 ? "Start here" : "Finish here"}
               </span>
-            </span>
+            )}
           </button>
         );
       })}
