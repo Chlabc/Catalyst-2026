@@ -3,6 +3,11 @@ import path from "path";
 import type { TrackerState } from "../_types/tracker";
 import { emptyTrackerState, normalizeTrackerState } from "./storage";
 
+/**
+ * Dev-only optional cache. Gitignored. Writable in `next dev`, not on Vercel.
+ * Client code must treat localStorage as the real store — never let this file
+ * overwrite a visitor's logs.
+ */
 const STORE_PATH = path.join(
   process.cwd(),
   "src",

@@ -10,7 +10,8 @@
     "test:theme-backdrop": "node --experimental-strip-types scripts/check-scene-backdrop.ts",
     "test:tracker-theme": "node scripts/check-tracker-theme-playwright.mjs",
     "test:menstrome-hotspots": "node scripts/check-menstrome-hotspots.mjs",
-    "test:home-faq": "node scripts/check-home-faq-structural.mjs"
+    "test:home-faq": "node scripts/check-home-faq-structural.mjs",
+    "test:tracker-local-first": "node --experimental-strip-types scripts/check-tracker-local-first.ts"
   },
   "dependencies": {
     "jspdf": "^4.2.1",

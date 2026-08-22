@@ -268,15 +268,34 @@ export function readTrackerState(): TrackerState {
   }
 }
 
+export const TRACKER_STATE_EVENT = "blossom-tracker-state";
+
+export function hasTrackerData(state: TrackerState): boolean {
+  return Object.keys(state.logs).length > 0 || state.cycles.length > 0;
+}
+
+/** Browser localStorage is the source of truth. Never replace a user's logs with an empty server file. */
+export function preferLocalTrackerState(
+  local: TrackerState,
+  remote: TrackerState,
+): TrackerState {
+  if (hasTrackerData(local)) return local;
+  if (hasTrackerData(remote)) return remote;
+  return local;
+}
+
 export function writeTrackerState(state: TrackerState): void {
   if (typeof window === "undefined") {
     return;
   }
 
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  window.dispatchEvent(new Event(TRACKER_STATE_EVENT));
 }
 
 export async function readTrackerStateFromBackend(): Promise<TrackerState> {
+  const local = readTrackerState();
+
   try {
     const response = await fetch(API_URL, {
       method: "GET",
@@ -284,37 +303,47 @@ export async function readTrackerStateFromBackend(): Promise<TrackerState> {
     });
 
     if (!response.ok) {
-      throw new Error("Unable to load tracker state.");
+      return local;
     }
 
-    const state = normalizeTrackerState(await response.json());
-    writeTrackerState(state);
+    const remote = normalizeTrackerState(await response.json());
+    const chosen = preferLocalTrackerState(local, remote);
 
-    return state;
+    if (chosen === remote && hasTrackerData(remote)) {
+      writeTrackerState(remote);
+    }
+
+    return chosen;
   } catch {
-    return readTrackerState();
+    return local;
   }
 }
 
 export async function writeTrackerStateToBackend(
   state: TrackerState,
 ): Promise<TrackerState> {
-  writeTrackerState(state);
+  const normalized = normalizeTrackerState(state);
+  writeTrackerState(normalized);
 
-  const response = await fetch(API_URL, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(state),
-  });
+  // Optional file store works in `next dev` (writable disk). On Vercel the
+  // serverless filesystem is read-only, so PUT fails — localStorage still wins.
+  try {
+    const response = await fetch(API_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(normalized),
+    });
 
-  if (!response.ok) {
-    throw new Error("Unable to save tracker state.");
+    if (!response.ok) {
+      return normalized;
+    }
+
+    await response.json().catch(() => undefined);
+  } catch {
+    // Ignore — this device already has the log.
   }
 
-  const savedState = normalizeTrackerState(await response.json());
-  writeTrackerState(savedState);
-
-  return savedState;
+  return normalized;
 }
