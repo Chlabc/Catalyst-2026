@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { PageHeader, PAGE_BODY_CLASS } from "@/components/ui/PageHeader";
 import type { HelpServiceType } from "@/lib/helpResources";
 
 export function FirstPeriodGuide({
@@ -17,15 +18,13 @@ export function FirstPeriodGuide({
 
   return (
     <>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
-        My period started — what do I do now?
-      </h1>
-      <p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">
-        It can feel a little confusing the first time. Here are a few simple
-        things you can do.
-      </p>
+      <PageHeader
+        eyebrow="Find Help"
+        title="My period started — what do I do now?"
+        subtitle="It can feel a little confusing the first time. Here are a few simple things you can do."
+      />
 
-      <div className="mt-8 grid gap-5">
+      <div className={`${PAGE_BODY_CLASS} grid gap-5`}>
         <GuideCard number="1" title="Manage the bleeding">
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl bg-primary-soft p-4">

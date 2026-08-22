@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DraggableWidget } from "./DraggableWidget";
 import { FlowerWidget } from "./FlowerWidget";
 import { LearningWidget } from "./LearningWidget";
@@ -17,16 +17,31 @@ import {
   sanitizeHiddenWidgets,
 } from "@/lib/widgetVisibility";
 
+const BASE_WIDGET_Z = 10;
+
 function persistHidden(ids: Set<string>) {
   const sanitized = sanitizeHiddenWidgets([...ids]);
   window.localStorage.setItem(HIDDEN_WIDGETS_KEY, JSON.stringify(sanitized));
   return new Set(sanitized);
 }
 
+function isInteractiveCanvasTarget(target: EventTarget | null) {
+  if (!(target instanceof Element)) return false;
+  // Keep the panel open while using widgets, the flower, or the edit chrome.
+  return Boolean(
+    target.closest("[data-testid='widget-select-panel']") ||
+      target.closest("[data-testid='edit-widgets']") ||
+      target.closest("[data-widget-id]") ||
+      target.closest("[data-canvas-centerpiece]"),
+  );
+}
+
 export function WidgetCanvas() {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [loaded, setLoaded] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [zById, setZById] = useState<Record<string, number>>({});
+  const zCounterRef = useRef(BASE_WIDGET_Z);
 
   useEffect(() => {
     try {
@@ -43,6 +58,46 @@ export function WidgetCanvas() {
     }
     setLoaded(true);
   }, []);
+
+  function bringToFront(id: string) {
+    setZById((current) => {
+      const top = Math.max(
+        BASE_WIDGET_Z,
+        ...Object.values(current),
+        zCounterRef.current,
+      );
+      if (current[id] === top) return current;
+      const nextZ = top + 1;
+      zCounterRef.current = nextZ;
+      return { ...current, [id]: nextZ };
+    });
+  }
+
+  function widgetZ(id: string) {
+    return zById[id] ?? BASE_WIDGET_Z;
+  }
+
+  // Dismiss the selection panel on empty-background clicks / Escape.
+  // Clicks on widgets, the flower, or the panel itself keep it open.
+  useEffect(() => {
+    if (!editing) return;
+
+    function onPointerDown(event: PointerEvent) {
+      if (isInteractiveCanvasTarget(event.target)) return;
+      setEditing(false);
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setEditing(false);
+    }
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [editing]);
 
   function hide(id: string) {
     if (isRequiredWidget(id)) return;
@@ -86,7 +141,7 @@ export function WidgetCanvas() {
             <p className="font-semibold text-foreground">Choose widgets</p>
             <p className="mt-1">
               Tick widgets to show them. Drag the dotted handles to move them.
-              Learning stays on for this page.
+              Learning stays on for this page. Click empty space to close.
             </p>
             <ul className="mt-3 flex flex-col gap-2">
               {REQUIRED_WIDGETS.map((widget) => (
@@ -131,8 +186,8 @@ export function WidgetCanvas() {
           )}
         </div>
       </div>
-      <div className={styles.canvas}>
-        <div className={styles.centerpiece}>
+      <div className={styles.canvas} data-widget-canvas>
+        <div className={styles.centerpiece} data-canvas-centerpiece>
           <FlowerWidget />
         </div>
 
@@ -141,6 +196,8 @@ export function WidgetCanvas() {
           label="Learning module"
           defaultX={8}
           defaultY={122}
+          zIndex={widgetZ("learning")}
+          onActivate={() => bringToFront("learning")}
           handleClassName="border-secondary/30 bg-secondary-soft"
           className={styles.widget}
         >
@@ -153,6 +210,8 @@ export function WidgetCanvas() {
             label="Tracking"
             defaultX={896}
             defaultY={292}
+            zIndex={widgetZ("tracking")}
+            onActivate={() => bringToFront("tracking")}
             handleClassName="border-primary/30 bg-primary-soft"
             className={`${styles.widget} ${styles.trackingWidget}`}
           >
@@ -166,6 +225,8 @@ export function WidgetCanvas() {
             label="Quick help"
             defaultX={76}
             defaultY={594}
+            zIndex={widgetZ("help")}
+            onActivate={() => bringToFront("help")}
             handleClassName="border-accent/30 bg-accent-soft"
             className={styles.widget}
           >
@@ -179,10 +240,12 @@ export function WidgetCanvas() {
             label="FAQ"
             defaultX={980}
             defaultY={560}
+            zIndex={widgetZ("faq")}
+            onActivate={() => bringToFront("faq")}
             handleClassName="border-border bg-surface"
             className={styles.widget}
           >
-            <FaqWidget />
+            <FaqWidget showOpenLink />
           </DraggableWidget>
         )}
 
@@ -192,10 +255,12 @@ export function WidgetCanvas() {
             label="Health report"
             defaultX={520}
             defaultY={560}
+            zIndex={widgetZ("report")}
+            onActivate={() => bringToFront("report")}
             handleClassName="border-primary/30 bg-primary-soft"
             className={styles.widget}
           >
-            <ReportWidget />
+            <ReportWidget showOpenLink />
           </DraggableWidget>
         )}
       </div>

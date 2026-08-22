@@ -19,6 +19,7 @@ import { NearbySupport } from "@/components/help/NearbySupport";
 import { SupportResourceCard } from "@/components/help/SupportResourceCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { PageHeader, PAGE_BODY_CLASS } from "@/components/ui/PageHeader";
 import {
   HELP_CATEGORIES,
   DIRECT_HELP_SERVICES,
@@ -87,17 +88,7 @@ export function HelpFlow({
   }
 
   return (
-    <div className="py-12">
-      {step !== "landing" && (
-        <button type="button" onClick={goBack} className="text-sm font-semibold text-primary hover:text-primary-dark hover:underline">
-          ← Back
-        </button>
-      )}
-
-      <p className={`${step === "landing" ? "" : "mt-6"} text-xs font-bold uppercase tracking-[0.18em] text-accent`}>
-        Find Help
-      </p>
-
+    <div className="pb-12 pt-6">
       {step === "landing" && (
         <Landing onConcern={() => navigate("categories")} onService={(service) => openNearby(service)} />
       )}
@@ -106,6 +97,7 @@ export function HelpFlow({
         <ChoiceStep
           title="What's happening with your period?"
           description="Choose the option that sounds closest. It is okay if you are not sure yet."
+          onBack={goBack}
         >
           <div className="grid gap-4 sm:grid-cols-2">
             {HELP_CATEGORIES.map((category) => (
@@ -145,6 +137,7 @@ export function HelpFlow({
         <ChoiceStep
           title="How is the pain affecting you right now?"
           description="Choose the answer that best matches how you feel. This does not diagnose the cause."
+          onBack={goBack}
         >
           <div className="grid gap-3 sm:grid-cols-3">
             {PAIN_LEVELS.map((level) => (
@@ -226,13 +219,13 @@ function Landing({
 }) {
   return (
     <>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">How can we help today?</h1>
-      <p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">
-        Start with what is happening with your period, or go straight to a
-        pharmacy or doctor if you already know what you need.
-      </p>
+      <PageHeader
+        eyebrow="Find Help"
+        title="How can we help today?"
+        subtitle="Start with what is happening with your period, or go straight to a pharmacy or doctor if you already know what you need."
+      />
 
-      <Card className="mt-8 border-primary/30 bg-primary-soft sm:p-8">
+      <Card className={`${PAGE_BODY_CLASS} border-primary/30 bg-primary-soft sm:p-8`}>
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary-dark">A good place to start</p>
         <h2 className="mt-2 text-2xl font-semibold text-foreground">I need help with something</h2>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-text-muted">
@@ -264,16 +257,28 @@ function Landing({
   );
 }
 
-function ChoiceStep({ title, description, children }: {
+function ChoiceStep({ title, description, children, onBack }: {
   title: string;
   description: string;
   children: React.ReactNode;
+  onBack?: () => void;
 }) {
   return (
     <>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{title}</h1>
-      <p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">{description}</p>
-      <div className="mt-8">{children}</div>
+      <PageHeader
+        eyebrow={
+          onBack ? (
+            <button type="button" onClick={onBack} className="hover:underline">
+              ← Back
+            </button>
+          ) : (
+            "Find Help"
+          )
+        }
+        title={title}
+        subtitle={description}
+      />
+      <div className={PAGE_BODY_CLASS}>{children}</div>
     </>
   );
 }
@@ -287,17 +292,20 @@ function PainResults({
 }) {
   return (
     <>
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Your next steps</h1>
-        <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-dark">
-          {painLevel}
-        </span>
-      </div>
-      <p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">
-        These are general options, not a diagnosis. Choose the support that feels right for you, and seek medical advice if you are worried.
-      </p>
+      <PageHeader
+        eyebrow="Find Help"
+        title={
+          <>
+            Your next steps
+            <span className="ml-3 align-middle rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-dark">
+              {painLevel}
+            </span>
+          </>
+        }
+        subtitle="These are general options, not a diagnosis. Choose the support that feels right for you, and seek medical advice if you are worried."
+      />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className={`${PAGE_BODY_CLASS} grid gap-4 sm:grid-cols-2`}>
         <SupportResourceCard title="What you can do now">
           <p>
             Consider resting, using a comfortably warm heat pack, gentle movement, or relaxation if those feel helpful. A pharmacist or doctor can advise you about suitable pain relief, especially before starting a new medicine.

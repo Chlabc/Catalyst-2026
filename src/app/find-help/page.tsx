@@ -1,6 +1,7 @@
 import { HelpFlow } from "@/components/help/HelpFlow";
 import { Container } from "@/components/ui/Container";
 import { SceneBackdropFrame } from "@/components/theme/SceneBackdropFrame";
+import { PAGE_SECTION_CLASS } from "@/components/ui/PageHeader";
 import {
   isHelpServiceType,
   type HelpServiceType,
@@ -27,7 +28,7 @@ export default async function FindHelpPage({ searchParams }: FindHelpPageProps) 
 
   return (
     <SceneBackdropFrame testId="find-help-scene-backdrop">
-      <Container>
+      <Container className={PAGE_SECTION_CLASS}>
         <HelpFlow
           initialStep={view === "nearby" ? "nearby" : "landing"}
           initialService={initialService}

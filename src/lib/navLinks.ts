@@ -1,3 +1,5 @@
+import { WIDGET_TABS } from "./tabManager";
+
 export type NavLink = {
   href: string;
   label: string;
@@ -7,10 +9,7 @@ export type NavLink = {
 
 export const NAV_LINKS: NavLink[] = [
   { href: "/", label: "Home", exact: true },
-  { href: "/scenarios", label: "Learn" },
-  { href: "/library", label: "Library" },
-  { href: "/tracker", label: "Tracker" },
-  { href: "/find-help", label: "Find Help" },
+  ...WIDGET_TABS.map((tab) => ({ href: tab.href, label: tab.label })),
 ];
 
 /** Homepage-only active for Home; prefix match for other routes. */

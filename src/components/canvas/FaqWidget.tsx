@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ChevronIcon } from "@/components/icons";
 import { FAQS } from "@/lib/faqs";
 
-export function FaqWidget() {
+export function FaqWidget({ showOpenLink = false }: { showOpenLink?: boolean }) {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   return (
@@ -50,6 +51,15 @@ export function FaqWidget() {
           );
         })}
       </div>
+
+      {showOpenLink && (
+        <Link
+          href="/faq"
+          className="mt-4 block text-center text-sm font-semibold text-primary hover:underline"
+        >
+          Open FAQ tab →
+        </Link>
+      )}
     </div>
   );
 }

@@ -16,7 +16,7 @@ import {
   type ReportRangePreset,
 } from "@/lib/report/cycleReportData";
 
-export function ReportWidget() {
+export function ReportWidget({ showOpenLink = false }: { showOpenLink?: boolean }) {
   const [preset, setPreset] = useState<ReportRangePreset>("90d");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -152,6 +152,15 @@ export function ReportWidget() {
       <p className="mt-3 text-[11px] leading-snug text-text-muted">
         Not a diagnosis. Take it with a trusted adult to a GP or pharmacist.
       </p>
+
+      {showOpenLink && (
+        <Link
+          href="/report"
+          className="mt-3 block text-center text-sm font-semibold text-primary hover:underline"
+        >
+          Open report tab →
+        </Link>
+      )}
     </div>
   );
 }

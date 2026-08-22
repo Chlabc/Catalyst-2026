@@ -5,23 +5,18 @@ import { LearnHub } from "@/components/scenario/LearnHub";
 import { DropletIcon } from "@/components/icons";
 import { SceneBackdropFrame } from "@/components/theme/SceneBackdropFrame";
 import { scenarioLevels } from "@/lib/scenarios";
+import { PageHeader, PAGE_BODY_CLASS, PAGE_SECTION_CLASS } from "@/components/ui/PageHeader";
 
 export default function ScenariosPage() {
   return (
     <SceneBackdropFrame testId="scenarios-scene-backdrop">
-      <Container>
-        <div className="py-10 sm:py-12">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            Menstrome Island
-          </h1>
-          <p className="mt-2 max-w-2xl text-base text-text-muted">
-            A navigable biome from the PADthai blueprint. Travel into a region,
-            look around, then choose what you&apos;d do — not a quiz at the
-            bottom of a list.
-          </p>
-          <div className="mt-6">
-            <LearnHub levels={scenarioLevels} />
-          </div>
+      <Container className={PAGE_SECTION_CLASS}>
+        <PageHeader
+          title="Menstrome Island"
+          subtitle="A navigable biome from the PADthai blueprint. Travel into a region, look around, then choose what you'd do — not a quiz at the bottom of a list."
+        />
+        <div className={PAGE_BODY_CLASS}>
+          <LearnHub levels={scenarioLevels} />
 
           <Link href="/library" className="mt-6 block">
             <Card className="flex items-center gap-4 transition-all hover:-translate-y-0.5 hover:shadow-md">

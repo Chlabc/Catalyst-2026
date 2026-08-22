@@ -39,39 +39,34 @@ export function Greeting() {
   }
 
   if (!loaded) {
-    return (
-      <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-        Welcome
-      </h1>
-    );
+    return <>Welcome</>;
   }
 
   if (editing || !name) {
     return (
-      <div>
-        <p className="mb-2 text-sm font-semibold text-foreground/75">{timeGreeting()}</p>
-        <div className="flex flex-wrap items-center gap-2">
+      <span className="inline-flex flex-wrap items-center gap-2">
+        <span>{timeGreeting()}</span>
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && save()}
           placeholder="What should we call you?"
           aria-label="Your name"
-          className="min-w-0 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-base text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
+          className="min-w-0 rounded-full border border-white/70 bg-white/70 px-3 py-1 text-lg font-medium text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
         />
         <button
+          type="button"
           onClick={save}
-          className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          className="rounded-full bg-primary px-3 py-1 text-sm font-medium text-white hover:opacity-90"
         >
           Save
         </button>
-        </div>
-      </div>
+      </span>
     );
   }
 
   return (
-    <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+    <>
       {timeGreeting()}, {name}
       <button
         type="button"
@@ -79,10 +74,10 @@ export function Greeting() {
           setDraft(name);
           setEditing(true);
         }}
-        className="ml-2 text-xs font-normal text-foreground/60 underline decoration-foreground/25 underline-offset-2 hover:text-foreground"
+        className="ml-2 align-middle text-xs font-normal text-foreground/60 underline decoration-foreground/25 underline-offset-2 hover:text-foreground"
       >
         change
       </button>
-    </h1>
+    </>
   );
 }

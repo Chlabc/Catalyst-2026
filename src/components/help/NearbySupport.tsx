@@ -4,6 +4,7 @@ import { FormEvent, useRef, useState } from "react";
 import { ProviderResultCard } from "@/components/help/ProviderResultCard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/PageHeader";
 import {
   DIRECT_HELP_SERVICES,
   HELP_SERVICES,
@@ -234,22 +235,18 @@ export function NearbySupport({
   }[service];
 
   return (
-    <div className="pb-12 pt-16 sm:pt-14">
-      <button
-        type="button"
-        onClick={onBack}
-        className="inline-flex rounded-full bg-surface px-3 py-2 text-sm font-semibold text-primary shadow-sm hover:text-primary-dark hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25"
-      >
-        ← Back
-      </button>
+    <div className="pb-12 pt-6">
+      <PageHeader
+        eyebrow={
+          <button type="button" onClick={onBack} className="hover:underline">
+            ← Back
+          </button>
+        }
+        title="Find support near you"
+        subtitle="With your permission, Blossom can use your location to look for nearby healthcare services. Your location is not stored."
+      />
 
-      <p className="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-accent">Find Help</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">Find support near you</h1>
-      <p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">
-        With your permission, Blossom can use your location to look for nearby healthcare services. Your location is not stored.
-      </p>
-
-      <Card className="mt-8">
+      <Card className="mt-6">
         <fieldset disabled={isBusy}>
           <legend className="text-base font-semibold text-foreground">What kind of support do you need?</legend>
           <div className="mt-4 grid gap-2 sm:grid-cols-2">

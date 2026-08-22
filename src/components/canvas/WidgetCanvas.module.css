@@ -1,16 +1,23 @@
 .shell {
-  width: min(100%, 76rem);
+  /* Full-width drag canvas; greeting stays 56rem so it lines up with other tabs. */
+  width: 100%;
   margin-inline: auto;
-  padding: 2rem 2rem 4rem;
+  padding: 2.5rem 1.25rem 3rem;
+}
+
+@media (min-width: 640px) {
+  .shell {
+    padding-top: 3rem;
+  }
 }
 
 .sceneHeader {
   position: relative;
   z-index: 20;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  /* Match Container px-6 so the greeting lines up with other tabs. */
+  padding-inline: 1.5rem;
   /* Let widget drag handles receive events under this strip; children re-enable. */
   pointer-events: none;
 }
@@ -21,7 +28,6 @@
 
 .greeting {
   max-width: 34rem;
-  padding-block: 0.5rem;
   text-shadow: 0 1px 0 rgb(255 255 255 / 48%);
 }
 
@@ -39,7 +45,7 @@
 .canvas {
   position: relative;
   min-height: 900px;
-  margin-top: -2rem;
+  overflow: hidden;
 }
 
 .widget {

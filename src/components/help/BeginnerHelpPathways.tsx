@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { PageHeader, PAGE_BODY_CLASS } from "@/components/ui/PageHeader";
 import type { HelpServiceType } from "@/lib/helpResources";
 
 export type HeavyBleedingChoice =
@@ -186,11 +187,21 @@ export function TrustedAdultSupport({ onNearby }: { onNearby: (service: HelpServ
 }
 
 function Question({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
-  return <><h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{title}</h1><p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">{description}</p><div className="mt-8">{children}</div></>;
+  return (
+    <>
+      <PageHeader eyebrow="Find Help" title={title} subtitle={description} />
+      <div className={PAGE_BODY_CLASS}>{children}</div>
+    </>
+  );
 }
 
 function ResultIntro({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
-  return <><h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{title}</h1><p className="mt-2 max-w-2xl text-base leading-relaxed text-text-muted">{description}</p><div className="mt-8 grid gap-4 sm:grid-cols-2">{children}</div></>;
+  return (
+    <>
+      <PageHeader eyebrow="Find Help" title={title} subtitle={description} />
+      <div className={`${PAGE_BODY_CLASS} grid gap-4 sm:grid-cols-2`}>{children}</div>
+    </>
+  );
 }
 
 function OptionGrid({ children, columns = "two" }: { children: React.ReactNode; columns?: "two" | "three" }) {
