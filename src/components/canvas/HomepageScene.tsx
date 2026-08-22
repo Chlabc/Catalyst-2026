@@ -5,11 +5,17 @@ import {
   useBlossomTheme,
   type BlossomTheme,
 } from "@/components/theme/BlossomThemeProvider";
+import {
+  sceneBackdropClassName,
+  selectSceneBackdrop,
+} from "@/components/theme/selectSceneBackdrop";
+import sceneStyles from "@/components/theme/SceneBackdrop.module.css";
 import { WidgetCanvas } from "./WidgetCanvas";
 import styles from "./WidgetCanvas.module.css";
 
 export function HomepageScene() {
   const { theme: scene, setTheme } = useBlossomTheme();
+  const backdrop = selectSceneBackdrop(scene, "scene");
 
   function chooseScene(nextScene: BlossomTheme) {
     setTheme(nextScene);
@@ -17,7 +23,8 @@ export function HomepageScene() {
 
   return (
     <section
-      className={`${styles.scene} ${scene === "beach" ? styles.beach : styles.macaron}`}
+      className={sceneBackdropClassName(sceneStyles, backdrop)}
+      data-blossom-scene={backdrop.themeKey}
       aria-label="Your cycle space"
     >
       <div className={styles.shell}>

@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useBlossomTheme } from "@/components/theme/BlossomThemeProvider";
+import {
+  sceneBackdropClassName,
+  selectSceneBackdrop,
+} from "@/components/theme/selectSceneBackdrop";
+import sceneStyles from "@/components/theme/SceneBackdrop.module.css";
 import type { DailyLog, TrackerState } from "../_types/tracker";
 import {
   getCyclePrediction,
@@ -24,6 +30,8 @@ type TrackerView = "today" | "calendar" | "insights" | "learn";
 type SaveStatus = "loading" | "saved" | "saving" | "offline" | "demo";
 
 export function TrackerShell() {
+  const { theme } = useBlossomTheme();
+  const backdrop = selectSceneBackdrop(theme, "backdrop");
   const today = useMemo(() => toIsoDate(new Date()), []);
   const [trackerState, setTrackerState] =
     useState<TrackerState>(emptyTrackerState);
@@ -195,8 +203,12 @@ export function TrackerShell() {
   }
 
   return (
-    <div className="min-h-screen w-screen overflow-x-hidden bg-[#FFF7FB] text-[#161219]">
-      <div className="mx-0 min-h-screen w-screen max-w-full bg-[#FFF7FB] pb-24 shadow-[0_0_0_1px_rgba(22,18,25,0.06)] md:mx-auto md:max-w-5xl md:px-6 md:pb-10">
+    <div
+      className={`${sceneBackdropClassName(sceneStyles, backdrop)} w-screen overflow-x-hidden text-[#161219]`}
+      data-testid="tracker-scene-backdrop"
+      data-blossom-scene={backdrop.themeKey}
+    >
+      <div className="relative z-10 mx-0 min-h-screen w-screen max-w-full bg-transparent pb-24 md:mx-auto md:max-w-5xl md:px-6 md:pb-10">
         <TrackerHeader
           activeView={activeView}
           date={today}

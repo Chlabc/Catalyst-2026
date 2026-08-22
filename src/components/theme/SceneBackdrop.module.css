@@ -1,0 +1,140 @@
+/* Shared Beach / Macaron scene backdrop used by homepage and /tracker. */
+
+.backdrop {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  transition: background 400ms ease;
+}
+
+.scene {
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - 73px);
+  overflow: hidden;
+  transition: background 400ms ease;
+}
+
+.beach,
+:global(html[data-blossom-theme="beach"]) .backdrop,
+:global(html[data-blossom-theme="beach"]) .scene {
+  background:
+    radial-gradient(circle at 15% 12%, rgb(255 248 207 / 92%) 0 2rem, rgb(255 244 198 / 42%) 4.5rem, rgb(255 250 225 / 14%) 8.5rem, transparent 13rem),
+    radial-gradient(ellipse 78% 16% at 53% 38%, rgb(248 252 238 / 58%), rgb(211 240 239 / 18%) 55%, transparent 82%),
+    radial-gradient(ellipse 95% 32% at 46% 100%, rgb(255 239 211 / 52%), transparent 72%),
+    linear-gradient(168deg, #fff9e9 0%, #e4f5f7 18%, #d4eef3 42%, #e8eee4 58%, #f1dcb9 75%, #fae8ca 100%);
+}
+
+.backdrop::before,
+.backdrop::after,
+.scene::before,
+.scene::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.beach::before,
+:global(html[data-blossom-theme="beach"]) .backdrop::before,
+:global(html[data-blossom-theme="beach"]) .scene::before {
+  top: 25%;
+  left: -12%;
+  width: 124%;
+  height: 15%;
+  border-radius: 47% 53% 45% 55% / 13% 10% 34% 29%;
+  background:
+    radial-gradient(ellipse 78% 34% at 14% 22%, rgb(218 245 245 / 58%) 0 38%, transparent 70%),
+    radial-gradient(ellipse 72% 31% at 78% 42%, rgb(118 203 217 / 26%) 0 42%, transparent 76%),
+    radial-gradient(ellipse 85% 28% at 38% 76%, rgb(87 184 201 / 18%) 0 42%, transparent 73%),
+    linear-gradient(168deg, rgb(184 232 238 / 72%) 0%, rgb(126 207 219 / 66%) 46%, rgb(174 222 222 / 50%) 78%, rgb(225 237 221 / 38%) 100%);
+  box-shadow:
+    inset 0 2.5rem 3.5rem rgb(239 251 246 / 18%),
+    0 1.8rem 3.5rem rgb(78 159 171 / 7%);
+  transform: rotate(-0.65deg);
+}
+
+.beach::after,
+:global(html[data-blossom-theme="beach"]) .backdrop::after,
+:global(html[data-blossom-theme="beach"]) .scene::after {
+  top: 31%;
+  left: -14%;
+  width: 130%;
+  height: 75%;
+  border-radius: 48% 52% 0 0 / 9% 12% 0 0;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 420'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg transform='translate(92 222) rotate(-12)' stroke='%23c98f82' stroke-width='4' opacity='.72'%3E%3Cpath d='M0 18C7 1 29-5 42 5C49 11 49 24 41 31C30 40 8 35 0 18Z' fill='%23f7cfc1'/%3E%3Cpath d='M7 20C17 12 27 9 40 9M13 28C23 20 31 18 43 18' opacity='.55'/%3E%3C/g%3E%3Cg transform='translate(850 206)' stroke='%23c96f69' stroke-width='4' opacity='.76'%3E%3Cellipse cx='0' cy='8' rx='22' ry='15' fill='%23ef9c91'/%3E%3Ccircle cx='-9' cy='2' r='2.3' fill='%236f5351' stroke='none'/%3E%3Ccircle cx='9' cy='2' r='2.3' fill='%236f5351' stroke='none'/%3E%3Cpath d='M-20 8L-36 0M-19 14L-34 22M20 8L36 0M19 14L34 22M-14 21L-20 31M14 21L20 31'/%3E%3Cpath d='M-37 0L-43-7M36 0L43-7'/%3E%3C/g%3E%3Cg fill='%23b98d79' opacity='.42'%3E%3Cellipse cx='735' cy='335' rx='10' ry='6' transform='rotate(16 735 335)'/%3E%3Cellipse cx='766' cy='346' rx='7' ry='4' transform='rotate(-9 766 346)'/%3E%3Cellipse cx='704' cy='351' rx='6' ry='3.5' transform='rotate(25 704 351)'/%3E%3C/g%3E%3Cpath d='M175 340C181 327 196 324 205 334C198 346 184 350 175 340Z' fill='%23f2b9a8' stroke='%23c98f82' stroke-width='3' opacity='.55'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(ellipse 24% 5% at 12% 1%, transparent 54%, rgb(255 255 248 / 38%) 57% 64%, transparent 69%),
+    radial-gradient(ellipse 34% 6% at 48% 0%, transparent 55%, rgb(255 255 250 / 31%) 58% 65%, transparent 70%),
+    radial-gradient(ellipse 27% 5% at 84% 2%, transparent 52%, rgb(255 255 247 / 35%) 56% 64%, transparent 70%),
+    radial-gradient(ellipse 47% 13% at 20% 0%, rgb(255 255 245 / 30%) 0 16%, transparent 70%),
+    radial-gradient(ellipse 58% 12% at 75% 1%, rgb(255 255 248 / 24%) 0 14%, transparent 67%),
+    radial-gradient(circle, rgb(170 126 93 / 7%) 0 0.55px, transparent 0.8px) 0 0 / 8px 8px,
+    radial-gradient(circle, rgb(255 255 255 / 16%) 0 0.5px, transparent 0.75px) 3px 4px / 11px 11px,
+    linear-gradient(172deg, rgb(231 242 223 / 52%) 0%, rgb(246 224 190 / 48%) 14%, rgb(250 231 200 / 28%) 58%, transparent 100%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, no-repeat;
+  background-size: 100% 100%, auto, auto, auto, auto, auto, 8px 8px, 11px 11px, auto;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 20%);
+  opacity: 0.9;
+  transform: rotate(0.9deg);
+}
+
+.macaron,
+:global(html[data-blossom-theme="macaron"]) .backdrop,
+:global(html[data-blossom-theme="macaron"]) .scene {
+  background:
+    radial-gradient(ellipse 54% 42% at 8% 18%, rgb(255 202 211 / 60%) 0%, rgb(255 218 219 / 30%) 48%, transparent 78%),
+    radial-gradient(ellipse 52% 44% at 92% 13%, rgb(202 224 255 / 62%) 0%, rgb(224 233 255 / 28%) 52%, transparent 80%),
+    radial-gradient(ellipse 58% 52% at 78% 86%, rgb(218 202 242 / 58%) 0%, rgb(232 218 247 / 25%) 54%, transparent 82%),
+    radial-gradient(ellipse 48% 38% at 18% 88%, rgb(255 220 185 / 48%) 0%, rgb(255 234 204 / 21%) 55%, transparent 83%),
+    radial-gradient(ellipse 42% 34% at 51% 48%, rgb(255 249 218 / 42%) 0%, transparent 78%),
+    linear-gradient(142deg, #fff8ef 0%, #fbedf0 34%, #f4effb 66%, #edf5fc 100%);
+}
+
+.macaron::before,
+:global(html[data-blossom-theme="macaron"]) .backdrop::before,
+:global(html[data-blossom-theme="macaron"]) .scene::before {
+  inset: -14% -10%;
+  border-radius: 44% 56% 62% 38% / 51% 38% 62% 49%;
+  background:
+    radial-gradient(ellipse 28% 22% at 22% 48%, rgb(255 238 189 / 35%) 0 42%, transparent 76%),
+    radial-gradient(ellipse 31% 26% at 74% 37%, rgb(255 215 224 / 30%) 0 44%, transparent 78%),
+    radial-gradient(ellipse 30% 24% at 55% 80%, rgb(196 220 250 / 28%) 0 43%, transparent 77%);
+  filter: blur(16px);
+  opacity: 0.86;
+  transform: rotate(-4deg);
+}
+
+.macaron::after,
+:global(html[data-blossom-theme="macaron"]) .backdrop::after,
+:global(html[data-blossom-theme="macaron"]) .scene::after {
+  inset: 0;
+  background:
+    radial-gradient(circle, rgb(111 83 101 / 7%) 0 0.45px, transparent 0.75px) 0 0 / 7px 7px,
+    radial-gradient(circle, rgb(255 255 255 / 24%) 0 0.5px, transparent 0.8px) 2px 3px / 10px 10px,
+    linear-gradient(118deg, rgb(255 255 255 / 14%), transparent 36%, rgb(255 255 255 / 10%) 68%, transparent);
+  mix-blend-mode: soft-light;
+  opacity: 0.42;
+}
+
+@media (max-width: 1100px) {
+  .beach::before,
+  :global(html[data-blossom-theme="beach"]) .backdrop::before,
+  :global(html[data-blossom-theme="beach"]) .scene::before {
+    top: 15%;
+    height: 12%;
+  }
+
+  .beach::after,
+  :global(html[data-blossom-theme="beach"]) .backdrop::after,
+  :global(html[data-blossom-theme="beach"]) .scene::after {
+    top: 22%;
+    height: 81%;
+  }
+}
+
+@media (max-width: 640px) {
+  .scene {
+    min-height: calc(100vh - 65px);
+  }
+}
