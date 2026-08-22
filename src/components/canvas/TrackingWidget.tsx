@@ -7,6 +7,7 @@ import { toIsoDate } from "@/app/tracker/_lib/dateUtils";
 import {
   readTrackerState,
   TRACKER_STORAGE_KEY,
+  TRACKER_STATE_EVENT,
 } from "@/app/tracker/_lib/storage";
 import {
   getWidgetCalendarMarks,
@@ -50,11 +51,13 @@ export function TrackingWidget() {
     }
 
     window.addEventListener("storage", onStorage);
+    window.addEventListener(TRACKER_STATE_EVENT, refresh);
     window.addEventListener("focus", refresh);
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       window.removeEventListener("storage", onStorage);
+      window.removeEventListener(TRACKER_STATE_EVENT, refresh);
       window.removeEventListener("focus", refresh);
       document.removeEventListener("visibilitychange", onVisibility);
     };

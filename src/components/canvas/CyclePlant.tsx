@@ -35,8 +35,12 @@ export function CyclePlant({
   fallingPetal: number | null;
   fallenPetals: number;
 }) {
-  const progress = Math.max(0.16, Math.min(follicularProgress, 1));
   const flowerOpen = phase !== "follicular";
+  // Stem dash-offset is a follicular grow-in. An open bloom (period / ovulate /
+  // luteal) must use a full stem — otherwise Day 1 looks like a floating head.
+  const progress = flowerOpen
+    ? 1
+    : Math.max(0.16, Math.min(follicularProgress, 1));
   const petalCount = flowerOpen ? Math.max(0, Math.min(visiblePetals, 7)) : 0;
   const fallenCount = phase === "menstrual" ? Math.max(0, Math.min(fallenPetals, 7)) : 0;
   const luteal = phase === "luteal";

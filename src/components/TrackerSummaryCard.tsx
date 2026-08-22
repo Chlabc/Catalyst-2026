@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { CalendarIcon } from "@/components/icons";
-import { readLogsFromStorage, computeCurrentStreak } from "@/lib/trackerStorage";
+import { computeCurrentStreak } from "@/lib/trackerStorage";
+import { readTrackerState } from "@/app/tracker/_lib/storage";
+import { periodDaysAsLogs } from "@/app/tracker/_lib/widgetCalendarMarks";
 
 export function TrackerSummaryCard() {
   const [loaded, setLoaded] = useState(false);
@@ -13,7 +15,7 @@ export function TrackerSummaryCard() {
   );
 
   useEffect(() => {
-    const logs = readLogsFromStorage();
+    const logs = periodDaysAsLogs(readTrackerState());
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStreak(computeCurrentStreak(logs));
     setLoaded(true);
