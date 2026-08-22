@@ -74,6 +74,10 @@ if (report.logCount !== 2) throw new Error("logCount " + report.logCount);
 if (report.bytes.length < 800) throw new Error("pdf too small " + report.bytes.length);
 const text = Buffer.from(report.bytes).toString("latin1");
 if (!text.includes("%PDF")) throw new Error("missing PDF header");
+if (!text.includes("Symptom pattern")) throw new Error("missing symptom chart");
+if (!text.includes("Mood pattern")) throw new Error("missing mood chart");
+if (!text.includes("Flow mix")) throw new Error("missing flow mix");
+if (!text.includes("Check-in calendar")) throw new Error("missing calendar diagram");
 
 const emptyReport = buildCycleReportPdf({
   state: emptyTrackerState,

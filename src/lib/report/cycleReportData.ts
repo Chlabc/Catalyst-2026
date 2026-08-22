@@ -76,7 +76,8 @@ export function summarizeLogs(logs: DailyLog[]) {
         .map(([symptom, level]) => `${symptom}:${level}`),
     ),
   );
-  return { periodDays, symptoms, moods, pain, logCount: logs.length };
+  const flow = countMap(logs.map((log) => log.periodFlow));
+  return { periodDays, symptoms, moods, pain, flow, logCount: logs.length };
 }
 
 export function formatPain(log: DailyLog): string {
