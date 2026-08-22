@@ -12,19 +12,39 @@ export const REPORT_RANGE_PRESETS: {
   { id: "all", label: "All logs" },
 ];
 
+function maxIso(a: string, b: string): string {
+  return a >= b ? a : b;
+}
+
+function minIso(a: string, b: string): string {
+  return a <= b ? a : b;
+}
+
 export function resolveReportRange(
   preset: ReportRangePreset,
   today: Date = new Date(),
-  earliestLog?: string,
+  logDates: { earliest?: string; latest?: string } = {},
 ): { fromIso: string; toIso: string } {
-  const toIso = toIsoDate(today);
+  const todayIso = toIsoDate(today);
+  const toIso = logDates.latest ? maxIso(todayIso, logDates.latest) : todayIso;
   if (preset === "30d") {
     return { fromIso: addDays(toIso, -29), toIso };
   }
   if (preset === "90d") {
     return { fromIso: addDays(toIso, -89), toIso };
   }
-  return { fromIso: earliestLog ?? toIso, toIso };
+  const fromIso = logDates.earliest
+    ? minIso(logDates.earliest, toIso)
+    : toIso;
+  return { fromIso, toIso };
+}
+
+export function logDateBounds(
+  logs: Record<string, { date: string }>,
+): { earliest?: string; latest?: string } {
+  const dates = Object.keys(logs).sort();
+  if (dates.length === 0) return {};
+  return { earliest: dates[0], latest: dates[dates.length - 1] };
 }
 
 export function filterLogsInRange(
@@ -67,8 +87,3 @@ export function formatPain(log: DailyLog): string {
   return entries.map(([symptom, level]) => `${symptom} ${level}`).join(", ");
 }
 
-export function earliestLogDate(
-  logs: Record<string, { date: string }>,
-): string | undefined {
-  return Object.keys(logs).sort()[0];
-}

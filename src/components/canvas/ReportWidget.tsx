@@ -1,12 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { readTrackerState } from "@/app/tracker/_lib/storage";
+import {
+  emptyTrackerState,
+  readTrackerState,
+  readTrackerStateFromBackend,
+} from "@/app/tracker/_lib/storage";
+import type { TrackerState } from "@/app/tracker/_types/tracker";
 import {
   REPORT_RANGE_PRESETS,
-  earliestLogDate,
   filterLogsInRange,
+  logDateBounds,
   resolveReportRange,
   type ReportRangePreset,
 } from "@/lib/report/cycleReportData";
@@ -15,35 +20,47 @@ export function ReportWidget() {
   const [preset, setPreset] = useState<ReportRangePreset>("90d");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [trackerState, setTrackerState] =
+    useState<TrackerState>(emptyTrackerState);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    readTrackerStateFromBackend()
+      .then((state) => {
+        if (!cancelled) setTrackerState(state);
+      })
+      .catch(() => {
+        if (!cancelled) setTrackerState(readTrackerState());
+      })
+      .finally(() => {
+        if (!cancelled) setHydrated(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const preview = useMemo(() => {
-    const state = readTrackerState();
-    const range = resolveReportRange(
-      preset,
-      new Date(),
-      earliestLogDate(state.logs),
-    );
-    const logs = filterLogsInRange(state, range.fromIso, range.toIso);
+    const range = resolveReportRange(preset, new Date(), logDateBounds(trackerState.logs));
+    const logs = filterLogsInRange(trackerState, range.fromIso, range.toIso);
     return { range, logCount: logs.length };
-  }, [preset]);
+  }, [preset, trackerState]);
 
-  const empty = preview.logCount === 0;
+  const empty = hydrated && preview.logCount === 0;
 
   async function download() {
     setBusy(true);
     setError(null);
     try {
-      const [{ buildCycleReportPdf }, { readTrackerState: readState }] =
+      const [{ buildCycleReportPdf }, { readTrackerStateFromBackend: readState }] =
         await Promise.all([
           import("@/lib/report/buildCycleReportPdf"),
           import("@/app/tracker/_lib/storage"),
         ]);
-      const state = readState();
-      const range = resolveReportRange(
-        preset,
-        new Date(),
-        earliestLogDate(state.logs),
-      );
+      const state = await readState();
+      setTrackerState(state);
+      const range = resolveReportRange(preset, new Date(), logDateBounds(state.logs));
       const report = buildCycleReportPdf({
         state,
         fromIso: range.fromIso,
@@ -60,8 +77,10 @@ export function ReportWidget() {
       link.rel = "noopener";
       document.body.appendChild(link);
       link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
+      window.setTimeout(() => {
+        link.remove();
+        URL.revokeObjectURL(url);
+      }, 2000);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not build PDF.");
     } finally {
@@ -99,8 +118,9 @@ export function ReportWidget() {
       </label>
 
       <p className="mt-2 text-xs text-text-muted">
-        {preview.range.fromIso} → {preview.range.toIso} · {preview.logCount}{" "}
-        check-ins
+        {hydrated
+          ? `${preview.range.fromIso} → ${preview.range.toIso} · ${preview.logCount} check-ins`
+          : "Loading check-ins…"}
       </p>
 
       {empty && (
@@ -116,7 +136,7 @@ export function ReportWidget() {
       <button
         type="button"
         data-testid="report-download"
-        disabled={busy || empty}
+        disabled={busy || !hydrated || empty}
         onClick={() => void download()}
         className="mt-4 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
