@@ -148,38 +148,82 @@ export const bloodburyScenario: ScenarioStep[] = [
   },
 ];
 
+export type MapAnchor = {
+  /** Percent from the left edge of the island map image (0–100). */
+  xPercent: number;
+  /** Percent from the top edge of the island map image (0–100). */
+  yPercent: number;
+  /** Short zone label shown on the map pin. */
+  label: string;
+};
+
 export type ScenarioLevel = {
   id: string;
   title: string;
   teaser: string;
   steps: ScenarioStep[];
+  map: MapAnchor;
+  /** Illustrated region backdrop from PADthai assets under /public/menstrome. */
+  regionArt: string;
+  /** Shown when you first enter the region, before the branching story. */
+  arriveBlurb: string;
+};
+
+export type ComingSoonZone = {
+  id: string;
+  label: string;
+  xPercent: number;
+  yPercent: number;
 };
 
 // Level ids "cramper" and "bloodbury" match the island names from
 // PADthai's own Menstrome Island biome map — see DIVERGENCE.md.
+// Map anchors are percent positions on public/menstrome/island-playable.png
+// (illustrated island from PADthai Track2.pdf / Figma).
 export const scenarioLevels: ScenarioLevel[] = [
   {
     id: "first-period",
     title: "Your first period at school",
     teaser: "It happens somewhere you didn't expect. What now?",
     steps: firstPeriodScenario,
+    map: { xPercent: 74, yPercent: 76, label: "School" },
+    regionArt: "/menstrome/regions/school-zoom.png",
+    arriveBlurb:
+      "You arrive at the school side of the island. Something in your underwear doesn't feel right — this is where the mission begins.",
   },
   {
     id: "sleepover",
     title: "Your period at a sleepover",
     teaser: "Away from home, with no supplies on hand.",
     steps: sleepoverScenario,
+    map: { xPercent: 50, yPercent: 80, label: "Village" },
+    regionArt: "/menstrome/regions/village-zoom.png",
+    arriveBlurb:
+      "You reach the village by the docks. Away from your usual supplies, a familiar cramp of worry starts.",
   },
   {
     id: "cramper",
     title: "Cramper",
     teaser: "Pain hits mid-session at practice. Push through or speak up?",
     steps: crampsScenario,
+    map: { xPercent: 32, yPercent: 52, label: "Cramper" },
+    regionArt: "/menstrome/regions/cramper-zoom.png",
+    arriveBlurb:
+      "Practice is in full swing on the green hills of Cramper. Then the cramps arrive — hard.",
   },
   {
     id: "bloodbury",
     title: "Bloodbury",
     teaser: "A heavier flow morning. What's your move?",
     steps: bloodburyScenario,
+    map: { xPercent: 62, yPercent: 36, label: "Bloodbury" },
+    regionArt: "/menstrome/regions/bloodbury-biome.png",
+    arriveBlurb:
+      "You enter Bloodbury — the castle over the lava fields. Today's flow is heavier than usual.",
   },
+];
+
+/** Labeled Figma zones without a playable scenario yet — non-interactive pins. */
+export const comingSoonZones: ComingSoonZone[] = [
+  { id: "moodswing", label: "Moodswing", xPercent: 30, yPercent: 24 },
 ];

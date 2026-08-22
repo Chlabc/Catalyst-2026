@@ -1,29 +1,26 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
-import { ScenarioPath } from "@/components/scenario/ScenarioPath";
+import { LearnHub } from "@/components/scenario/LearnHub";
 import { DropletIcon } from "@/components/icons";
 import { SceneBackdropFrame } from "@/components/theme/SceneBackdropFrame";
 import { scenarioLevels } from "@/lib/scenarios";
-
-// Add more levels by extending scenarioLevels in src/lib/scenarios.ts —
-// this page and ScenarioPath don't need to change.
 
 export default function ScenariosPage() {
   return (
     <SceneBackdropFrame testId="scenarios-scene-backdrop">
       <Container>
-        <div className="py-12">
+        <div className="py-10 sm:py-12">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            Learning modules
+            Menstrome Island
           </h1>
-          <p className="mt-2 text-base text-text-muted">
-            Menstrome Island is the world these scenarios live in. Choose a
-            situation, explore what you could do, and learn without being tested.
-            Not a replacement for sex ed, just somewhere to start.
+          <p className="mt-2 max-w-2xl text-base text-text-muted">
+            A navigable biome from the PADthai blueprint. Travel into a region,
+            look around, then choose what you&apos;d do — not a quiz at the
+            bottom of a list.
           </p>
           <div className="mt-6">
-            <ScenarioPath levels={scenarioLevels} />
+            <LearnHub levels={scenarioLevels} />
           </div>
 
           <Link href="/library" className="mt-6 block">
