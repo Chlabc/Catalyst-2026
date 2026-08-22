@@ -39,10 +39,10 @@ assert.match(ui, /WELCOME_KEY/);
 log("OK NavTutorial Skip / Got it / toggle / WelcomeGate gating");
 
 const canvas = readFileSync(join(root, "src/components/canvas/WidgetCanvas.tsx"), "utf8");
-assert.match(canvas, /Replay tour/);
-assert.match(canvas, /data-testid="replay-tour"/);
+assert.doesNotMatch(canvas, /Replay tour/);
+assert.doesNotMatch(canvas, /replay-tour/);
 assert.match(canvas, /NavTutorial/);
-log("OK Replay tour on Edit widgets panel");
+log("OK Edit widgets has no Replay tour; Show tour lives next to it");
 
 const page = readFileSync(join(root, "src/app/page.tsx"), "utf8");
 assert.match(page, /WelcomeGate/);

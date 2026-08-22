@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { WELCOME_KEY } from "@/components/WelcomeGate";
 import {
   NAV_TUTORIAL_STEPS,
-  REPLAY_NAV_TUTORIAL_EVENT,
   WELCOME_CHANGED_EVENT,
   hasSeenNavTutorial,
   persistNavTutorialSeen,
@@ -62,18 +62,11 @@ export function NavTutorial({
     function onWelcomeChanged() {
       setWelcomeDone(readWelcomeDone());
     }
-    function onReplay() {
-      editingBeforeRef.current = editing;
-      setStepIndex(0);
-      setForced(true);
-    }
     window.addEventListener(WELCOME_CHANGED_EVENT, onWelcomeChanged);
-    window.addEventListener(REPLAY_NAV_TUTORIAL_EVENT, onReplay);
     return () => {
       window.removeEventListener(WELCOME_CHANGED_EVENT, onWelcomeChanged);
-      window.removeEventListener(REPLAY_NAV_TUTORIAL_EVENT, onReplay);
     };
-  }, [editing]);
+  }, []);
 
   const finish = useCallback(() => {
     persistNavTutorialSeen();
@@ -222,10 +215,9 @@ function TourLayer({
     tipTop = Math.max(8, (rect?.top ?? 200) - 190);
   }
 
-  return (
+  const layer = (
     <div
-      className="fixed inset-0"
-      style={{ zIndex: 80 }}
+      className="pointer-events-none fixed inset-0 z-[100]"
       data-testid="nav-tutorial"
       role="dialog"
       aria-modal="true"
@@ -233,7 +225,7 @@ function TourLayer({
     >
       <div
         data-testid="nav-tutorial-overlay"
-        className="absolute inset-0 cursor-default"
+        className="pointer-events-auto absolute inset-0 cursor-default"
         onClick={(event) => event.stopPropagation()}
         aria-hidden
       />
@@ -252,7 +244,7 @@ function TourLayer({
       )}
       <div
         data-testid="nav-tutorial-tooltip"
-        className="absolute z-[61] rounded-2xl border-2 border-primary/25 bg-white p-4 shadow-xl"
+        className="pointer-events-auto absolute z-[101] rounded-2xl border-2 border-primary/25 bg-white p-4 shadow-xl"
         style={{ top: tipTop, left: tipLeft, width: tipWidth }}
       >
         <p className="text-[11px] font-semibold uppercase tracking-wide text-secondary">
@@ -295,4 +287,7 @@ function TourLayer({
       </div>
     </div>
   );
+
+  if (typeof document === "undefined") return layer;
+  return createPortal(layer, document.body);
 }

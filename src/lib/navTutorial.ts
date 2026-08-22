@@ -1,6 +1,5 @@
 export const NAV_TUTORIAL_KEY = "blossom_has_seen_nav_tutorial";
 export const WELCOME_CHANGED_EVENT = "blossom-welcome-changed";
-export const REPLAY_NAV_TUTORIAL_EVENT = "blossom-replay-nav-tutorial";
 
 export type NavTutorialStep = {
   id: string;

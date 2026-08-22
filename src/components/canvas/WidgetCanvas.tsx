@@ -10,7 +10,6 @@ import { FaqWidget } from "./FaqWidget";
 import { ReportWidget } from "./ReportWidget";
 import styles from "./WidgetCanvas.module.css";
 import { NavTutorial } from "@/components/NavTutorial";
-import { REPLAY_NAV_TUTORIAL_EVENT } from "@/lib/navTutorial";
 import {
   HIDDEN_WIDGETS_KEY,
   OPTIONAL_WIDGETS,
@@ -146,16 +145,6 @@ export function WidgetCanvas() {
               Tick widgets to show them. Drag the dotted handles to move them.
               Learning stays on for this page. Click empty space to close.
             </p>
-            <button
-              type="button"
-              data-testid="replay-tour"
-              onClick={() =>
-                window.dispatchEvent(new Event(REPLAY_NAV_TUTORIAL_EVENT))
-              }
-              className="mt-3 w-full rounded-full border-2 border-secondary/30 bg-secondary-soft px-3 py-2 text-sm font-semibold text-foreground hover:border-secondary"
-            >
-              Replay tour
-            </button>
             <ul className="mt-3 flex flex-col gap-2">
               {REQUIRED_WIDGETS.map((widget) => (
                 <li key={widget.id}>

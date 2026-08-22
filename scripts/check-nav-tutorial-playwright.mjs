@@ -1,6 +1,6 @@
 /**
  * Browser checks: WelcomeGate then Home coach-mark tour, Skip persist,
- * overlay click does not close, leave-/ persist, Replay tour.
+ * overlay click does not close, leave-/ persist, Show tour.
  */
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
@@ -91,8 +91,7 @@ try {
     await page.evaluate(() => localStorage.getItem("blossom_has_seen_welcome")),
     "true",
   );
-  await page.getByTestId("edit-widgets").click();
-  await page.getByTestId("replay-tour").click();
+  await page.getByTestId("toggle-tour").click();
   await page.getByTestId("nav-tutorial").waitFor();
   assert.equal(
     await page.evaluate(() => localStorage.getItem("blossom_has_seen_welcome")),
@@ -113,11 +112,8 @@ try {
   }
   await page.waitForTimeout(200);
   assert.equal(await page.getByTestId("nav-tutorial").count(), 0);
-  if ((await page.getByTestId("replay-tour").count()) === 0) {
-    await page.getByTestId("edit-widgets").click();
-  }
-  await page.getByTestId("replay-tour").waitFor();
-  note("OK Replay tour keeps WelcomeGate seen; canvas still editable");
+  await page.getByTestId("toggle-tour").waitFor();
+  note("OK Show tour keeps WelcomeGate seen; canvas still editable");
 
   writeFileSync(`${scratch}/nav-tutorial-playwright.log`, log.join("\n") + "\n");
 } finally {
