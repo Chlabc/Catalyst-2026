@@ -175,12 +175,12 @@ export function LearnHub({ levels }: { levels: IslandTown[] }) {
                   onClick={() => enterRegion(level.id)}
                   className="flex w-full flex-col text-left sm:flex-row"
                 >
-                  <div className="relative h-28 w-full shrink-0 sm:h-auto sm:w-40">
+                  <div className="relative h-28 w-full shrink-0 bg-[#fff8ee] sm:h-auto sm:w-40">
                     <Image
                       src={level.regionArt}
                       alt=""
                       fill
-                      className="object-cover"
+                      className="object-contain p-2"
                       sizes="160px"
                     />
                   </div>

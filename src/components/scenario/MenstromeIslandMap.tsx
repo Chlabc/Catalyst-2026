@@ -3,8 +3,8 @@
 import Image from "next/image";
 import type { ComingSoonZone, ScenarioLevel } from "@/lib/scenarios";
 
-/** Labeled Menstrome Island art (swap this path when new map assets land). */
-export const ISLAND_MAP_SRC = "/menstrome/regions/bloodbury-biome.png";
+/** Cropped c8 island (empty water trimmed). Unique filename to bust image cache. */
+export const ISLAND_MAP_SRC = "/menstrome/c8-island-tight.png";
 
 export function MenstromeIslandMap({
   levels,
@@ -27,14 +27,13 @@ export function MenstromeIslandMap({
       <Image
         src={ISLAND_MAP_SRC}
         alt="Menstrome Island. Tap a numbered town to visit."
-        width={971}
-        height={635}
+        width={1640}
+        height={1332}
         className="h-auto w-full select-none"
         priority
       />
 
-      {/* Soft vignette so pins stay readable over bright water */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/5" />
 
       {levels.map((level) => {
         const isDone = completed.has(level.id);

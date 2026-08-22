@@ -7,8 +7,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const mapPath = join(root, "public/menstrome/island-playable.png");
-assert.equal(existsSync(mapPath), true, "public/menstrome/island-playable.png missing");
+const mapPath = join(root, "public/menstrome/c8-island-tight.png");
+assert.equal(existsSync(mapPath), true, "public/menstrome/c8-island-tight.png missing");
 assert.equal(
   existsSync(join(root, "public/menstrome/island-legend.png")),
   true,
@@ -70,7 +70,7 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      mapPath: "public/menstrome/island-playable.png",
+      mapPath: "public/menstrome/c8-island-tight.png",
       hotspots: levelBlocks.map(([, id, x, y, label]) => ({
         id,
         xPercent: Number(x),

@@ -112,8 +112,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "What a period actually is",
     teaser: "You wake up and see blood. Before anything else — what IS this?",
     visitOrder: 1,
-    map: { xPercent: 21, yPercent: 58, label: "Bloodbury" },
-    regionArt: "/menstrome/regions/bloodbury-castle.png",
+    map: { xPercent: 13, yPercent: 80, label: "Bloodbury" },
+    regionArt: "/menstrome/towns/bloodbury.png",
     scenario:
       "You wake up and see blood. Before anything else — what IS this, actually?",
     facts: [
@@ -158,8 +158,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "The cycle and tracking",
     teaser: "Your period showed up and you have no idea when the next one is coming.",
     visitOrder: 2,
-    map: { xPercent: 39, yPercent: 54, label: "Cylendra" },
-    regionArt: "/menstrome/regions/moodswing-zoom.png",
+    map: { xPercent: 36, yPercent: 67, label: "Cylendra" },
+    regionArt: "/menstrome/towns/cylendra.png",
     scenario:
       "Your period showed up and you have no idea when the next one is coming.",
     facts: [
@@ -189,8 +189,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "Pain and symptoms",
     teaser: "A dull ache — is it normal, or worth worrying about?",
     visitOrder: 3,
-    map: { xPercent: 43, yPercent: 28, label: "Cramper" },
-    regionArt: "/menstrome/regions/cramper-zoom.png",
+    map: { xPercent: 32, yPercent: 30, label: "Cramper" },
+    regionArt: "/menstrome/towns/cramper.png",
     scenario:
       "You've got a dull ache and don't know if it's normal or worth worrying about.",
     facts: [
@@ -238,8 +238,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "Leaks and stains — zero shame",
     teaser: "You stand up and realise you've bled through your clothes.",
     visitOrder: 4,
-    map: { xPercent: 64, yPercent: 58, label: "Stainvale" },
-    regionArt: "/menstrome/regions/school-bathroom.png",
+    map: { xPercent: 18, yPercent: 58, label: "Stainvale" },
+    regionArt: "/menstrome/towns/stainvale.png",
     scenario: "You stand up and realize you've bled through your clothes.",
     facts: [
       "This happens to almost everyone at some point. It feels bigger than it looks.",
@@ -295,8 +295,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "Daily life, school, activity",
     teaser: "PE is today and your period just started. Do you skip it?",
     visitOrder: 5,
-    map: { xPercent: 66, yPercent: 32, label: "FlowState" },
-    regionArt: "/menstrome/regions/school-zoom.png",
+    map: { xPercent: 78, yPercent: 12, label: "FlowState" },
+    regionArt: "/menstrome/towns/flowstate.png",
     scenario:
       "You have PE today and your period just started. Do you skip it?",
     facts: [
@@ -344,8 +344,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "Normalising and talking about it",
     teaser: "You want to tell a parent or guardian — but how do you bring it up?",
     visitOrder: 6,
-    map: { xPercent: 53, yPercent: 44, label: "Normain" },
-    regionArt: "/menstrome/regions/sleepover-bedroom.png",
+    map: { xPercent: 62, yPercent: 65, label: "Normain" },
+    regionArt: "/menstrome/towns/normain.png",
     scenario:
       "You want to tell your mum, dad, or guardian you got your period but don't know how to bring it up.",
     facts: [
@@ -400,8 +400,8 @@ export const scenarioLevels: IslandTown[] = [
     theme: "Products and different bodies",
     teaser: "Pads, tampons, cups, period underwear — what is any of this for?",
     visitOrder: 7,
-    map: { xPercent: 84, yPercent: 40, label: "Divursity" },
-    regionArt: "/menstrome/regions/village-zoom.png",
+    map: { xPercent: 85, yPercent: 44, label: "Divursity" },
+    regionArt: "/menstrome/towns/divursity.png",
     scenario:
       "You're standing in a shop looking at pads, tampons, cups, and period underwear, and have no idea what any of them are for.",
     facts: [
