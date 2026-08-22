@@ -131,26 +131,31 @@ export function FlowerWidget() {
         ? Math.min(cycleDay / 13, 1)
         : 0.2
       : 1;
-  const phaseName = phase === "menstrual"
-    ? "Menstrual phase"
-    : phase === "follicular"
-      ? "Follicular phase"
-      : phase === "ovulation"
-        ? "Ovulation"
-        : "Luteal phase";
-  const description = phase === "menstrual"
-    ? petalsRemaining === 1 && activeDays >= PETAL_COUNT
-      ? "Your last petal is holding on until bleeding is marked as finished."
-      : `${petalsRemaining} petal${petalsRemaining === 1 ? "" : "s"} still blooming today.`
-    : phase === "follicular"
-      ? "New growth is beginning."
-      : phase === "ovulation"
-        ? "Your bloom is open and thriving."
-        : "Your bloom is relaxing after its peak.";
+  const emptyBloom = cycleDay === 0 && !isBleeding;
+  const phaseName = emptyBloom
+    ? "Ready when you are"
+    : phase === "menstrual"
+      ? "Menstrual phase"
+      : phase === "follicular"
+        ? "Follicular phase"
+        : phase === "ovulation"
+          ? "Ovulation"
+          : "Luteal phase";
+  const description = emptyBloom
+    ? "Log a day in Tracker and your bloom will start to grow."
+    : phase === "menstrual"
+      ? petalsRemaining === 1 && activeDays >= PETAL_COUNT
+        ? "Your last petal is holding on until bleeding is marked as finished."
+        : `${petalsRemaining} petal${petalsRemaining === 1 ? "" : "s"} still blooming today.`
+      : phase === "follicular"
+        ? "New growth is beginning."
+        : phase === "ovulation"
+          ? "Your bloom is open and thriving."
+          : "Your bloom is relaxing after its peak.";
   const earlySprout = phase === "follicular" && follicularProgress <= 0.35;
 
   return (
-    <div className={`${styles.hero} ${earlySprout ? styles.earlyHero : ""}`}>
+    <div className={styles.hero}>
       <div className={styles.heading}>
         <p className="text-sm font-semibold text-foreground/70">
           Your bloom{cycleDay > 0 && ` · Day ${cycleDay}`}

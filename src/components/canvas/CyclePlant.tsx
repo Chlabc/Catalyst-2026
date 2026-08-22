@@ -44,6 +44,8 @@ export function CyclePlant({
   const petalCount = flowerOpen ? Math.max(0, Math.min(visiblePetals, 7)) : 0;
   const fallenCount = phase === "menstrual" ? Math.max(0, Math.min(fallenPetals, 7)) : 0;
   const luteal = phase === "luteal";
+  // Early follicular is a real short sprout, not a cropped tall plant.
+  const sproutCloseUp = phase === "follicular" && progress < 0.45;
   const stemPath = luteal
     ? "M160 319 C149 277 166 239 157 199 C151 169 170 143 190 122"
     : "M160 319 C149 277 165 238 156 199 C149 166 166 136 160 104";
@@ -53,7 +55,7 @@ export function CyclePlant({
 
   return (
     <svg
-      viewBox="0 0 320 360"
+      viewBox={sproutCloseUp ? "48 208 224 152" : "0 0 320 360"}
       role="img"
       aria-label={`${phase} cycle plant`}
       className={styles.plant}
@@ -115,6 +117,8 @@ export function CyclePlant({
           strokeWidth="10"
           strokeLinecap="round"
           pathLength="1"
+          strokeDasharray="1"
+          strokeDashoffset={1 - progress}
           className={styles.stem}
           style={{ "--growth": progress } as CSSProperties}
         />
@@ -126,6 +130,8 @@ export function CyclePlant({
           strokeLinecap="round"
           opacity="0.7"
           pathLength="1"
+          strokeDasharray="1"
+          strokeDashoffset={1 - progress}
           className={styles.stem}
           style={{ "--growth": progress } as CSSProperties}
         />

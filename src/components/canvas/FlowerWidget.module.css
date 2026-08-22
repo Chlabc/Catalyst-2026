@@ -7,11 +7,7 @@
 .heading {
   position: relative;
   z-index: 1;
-  margin-bottom: -1.75rem;
-}
-
-.earlyHero .heading {
-  transform: translateY(4.5rem);
+  margin-bottom: 0.35rem;
 }
 
 .plantViewport {
@@ -27,33 +23,16 @@
 }
 
 .earlySprout {
-  height: min(15.75rem, 48vw);
-  aspect-ratio: auto;
-  overflow: hidden;
-}
-
-.earlySprout .plantInner {
-  bottom: auto;
-  height: auto;
-  width: 100%;
-  aspect-ratio: 8 / 9;
-  transform: translateY(-52%);
+  width: min(22rem, 86vw);
+  aspect-ratio: 5 / 4;
 }
 
 @media (max-width: 640px) {
-  .heading {
-    margin-bottom: -1rem;
-  }
-
-  .earlyHero .heading {
-    transform: translateY(3.5rem);
-  }
-
   .plantViewport {
     width: min(28rem, 94vw);
   }
 
   .earlySprout {
-    height: min(14.5rem, 52vw);
+    width: min(20rem, 90vw);
   }
 }

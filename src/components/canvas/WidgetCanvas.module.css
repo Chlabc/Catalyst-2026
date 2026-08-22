@@ -82,33 +82,10 @@
     align-items: center;
   }
 
-  .canvas {
-    display: grid;
-    min-height: 0;
-    margin-top: 1.5rem;
-    gap: 1rem;
-  }
-
+  /* Keep the free-drag canvas at tablet widths. Do not switch to grid or
+     `transform: none` — that is what made widgets undraggable. */
   .centerpiece {
-    position: relative;
-    inset: auto;
-    order: -1;
     width: min(100%, 24rem);
-    transform: none;
-    justify-self: center;
-    filter: drop-shadow(0 18px 24px rgb(71 85 90 / 12%));
-  }
-
-  .widget {
-    position: relative !important;
-    inset: auto !important;
-    width: min(100%, 32rem) !important;
-    transform: none !important;
-    filter: drop-shadow(0 14px 20px rgb(71 85 90 / 9%));
-  }
-
-  .widget {
-    justify-self: center;
   }
 }
 
@@ -130,9 +107,7 @@
     align-self: flex-end;
   }
 
-  .centerpiece,
-  .widget {
-    width: 100% !important;
-    justify-self: stretch;
+  .centerpiece {
+    width: min(100%, 18rem);
   }
 }
