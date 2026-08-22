@@ -257,7 +257,7 @@ export function WidgetCanvas() {
             defaultY={560}
             zIndex={widgetZ("report")}
             onActivate={() => bringToFront("report")}
-            handleClassName="border-primary/30 bg-primary-soft"
+            handleClassName="border-warning/40 bg-warning-soft"
             className={styles.widget}
           >
             <ReportWidget showOpenLink />

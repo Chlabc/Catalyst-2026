@@ -3,7 +3,7 @@ import { HelpIcon } from "@/components/icons";
 
 export function HelpWidget() {
   return (
-    <div className="rounded-b-2xl border-2 border-t-0 border-accent/30 bg-accent-soft p-5">
+    <div className="rounded-b-2xl border-2 border-t-0 border-accent/30 bg-white/90 p-5 backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <HelpIcon className="h-6 w-6 text-accent" />

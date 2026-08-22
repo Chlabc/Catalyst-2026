@@ -66,6 +66,13 @@
   width: 17rem;
 }
 
+@media (max-width: 935px) {
+  /* Below the 56rem header cap, shell padding is the only inset. */
+  .sceneHeader {
+    padding-inline: 0;
+  }
+}
+
 @media (max-width: 1100px) {
   .shell {
     padding-inline: 1.25rem;

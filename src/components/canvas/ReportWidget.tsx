@@ -90,7 +90,7 @@ export function ReportWidget({ showOpenLink = false }: { showOpenLink?: boolean 
 
   return (
     <div
-      className="rounded-b-2xl border-2 border-t-0 border-primary/25 bg-primary-soft p-5"
+      className="rounded-b-2xl border-2 border-t-0 border-warning/40 bg-white/90 p-5 backdrop-blur-sm"
       data-testid="report-widget"
     >
       <p className="text-base font-semibold text-foreground">Health report</p>
@@ -107,7 +107,7 @@ export function ReportWidget({ showOpenLink = false }: { showOpenLink?: boolean 
           onChange={(event) =>
             setPreset(event.target.value as ReportRangePreset)
           }
-          className="mt-1 w-full rounded-xl border border-primary/20 bg-white/80 px-3 py-2 text-sm font-medium text-foreground"
+          className="mt-1 w-full rounded-xl border border-warning/30 bg-white/80 px-3 py-2 text-sm font-medium text-foreground"
         >
           {REPORT_RANGE_PRESETS.map((option) => (
             <option key={option.id} value={option.id}>
@@ -138,7 +138,7 @@ export function ReportWidget({ showOpenLink = false }: { showOpenLink?: boolean 
         data-testid="report-download"
         disabled={busy || !hydrated || empty}
         onClick={() => void download()}
-        className="mt-4 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-4 w-full rounded-xl bg-warning px-4 py-2.5 text-sm font-semibold text-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? "Building PDF…" : "Download PDF"}
       </button>
@@ -156,7 +156,7 @@ export function ReportWidget({ showOpenLink = false }: { showOpenLink?: boolean 
       {showOpenLink && (
         <Link
           href="/report"
-          className="mt-3 block text-center text-sm font-semibold text-primary hover:underline"
+          className="mt-3 block text-center text-sm font-semibold text-foreground underline decoration-warning underline-offset-2 hover:text-foreground/80"
         >
           Open report tab →
         </Link>

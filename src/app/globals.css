@@ -16,6 +16,7 @@
   --primary-soft: #ffe2dc;
   --secondary-soft: #dbf1fa;
   --accent-soft: #ece2f7;
+  --warning-soft: #fff4d6;
   --cream: #fff8ee;
 }
 
@@ -33,6 +34,7 @@
   --color-primary-soft: var(--primary-soft);
   --color-secondary-soft: var(--secondary-soft);
   --color-accent-soft: var(--accent-soft);
+  --color-warning-soft: var(--warning-soft);
   --color-cream: var(--cream);
   --font-sans: var(--font-nunito);
   --font-display: var(--font-fredoka);
