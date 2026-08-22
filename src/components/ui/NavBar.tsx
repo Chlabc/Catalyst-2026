@@ -20,7 +20,7 @@ export function NavBar() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 border-b border-white/60 bg-surface/80 shadow-[0_5px_20px_-18px_rgba(61,46,58,0.5)] backdrop-blur-md">
       <Container>
         <nav className="flex items-center justify-between gap-3 py-4">
           <Link
@@ -53,7 +53,7 @@ export function NavBar() {
                 onClick={openHelp}
                 className="block border-b-2 border-transparent py-1 font-medium text-primary transition-colors hover:border-primary hover:text-primary-dark"
               >
-                Help
+                FAQ
               </button>
             </li>
           </ul>

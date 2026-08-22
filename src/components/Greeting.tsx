@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 
 const KEY = "blossom_user_name";
 
+function timeGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 // Local-only nickname, no account. Consistent with the tracker's
 // no-login stance — this is personalization without collecting anything.
 export function Greeting() {
@@ -33,7 +40,7 @@ export function Greeting() {
 
   if (!loaded) {
     return (
-      <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+      <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
         Welcome
       </h1>
     );
@@ -41,13 +48,16 @@ export function Greeting() {
 
   if (editing || !name) {
     return (
-      <div className="flex flex-wrap items-center gap-2">
+      <div>
+        <p className="mb-2 text-sm font-semibold text-foreground/75">{timeGreeting()}</p>
+        <div className="flex flex-wrap items-center gap-2">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && save()}
           placeholder="What should we call you?"
-          className="rounded-full border border-border bg-surface px-4 py-2 text-lg text-foreground"
+          aria-label="Your name"
+          className="min-w-0 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-base text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
         />
         <button
           onClick={save}
@@ -55,19 +65,21 @@ export function Greeting() {
         >
           Save
         </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-      Welcome back, {name}
+    <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+      {timeGreeting()}, {name}
       <button
+        type="button"
         onClick={() => {
           setDraft(name);
           setEditing(true);
         }}
-        className="ml-3 text-sm font-normal text-text-muted underline hover:text-foreground"
+        className="ml-2 text-xs font-normal text-foreground/60 underline decoration-foreground/25 underline-offset-2 hover:text-foreground"
       >
         change
       </button>

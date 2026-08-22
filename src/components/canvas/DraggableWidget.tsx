@@ -17,6 +17,7 @@ export function DraggableWidget({
   onRemove,
   label,
   handleClassName = "border-border bg-surface",
+  className = "",
   children,
 }: {
   id: string;
@@ -29,6 +30,7 @@ export function DraggableWidget({
   // and body is invisible. Must be literal classes (not built from a
   // variable) so Tailwind's static scan picks them up.
   handleClassName?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   const [pos, setPos] = useState<Pos>({ x: defaultX, y: defaultY });
@@ -84,7 +86,7 @@ export function DraggableWidget({
   return (
     <div
       style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
-      className={`absolute left-0 top-0 w-80 ${dragging ? "z-20" : "z-10"}`}
+      className={`absolute left-0 top-0 w-80 ${dragging ? "z-20" : "z-10"} ${className}`}
     >
       <div
         className={`rounded-2xl transition-shadow duration-200 ${dragging ? "shadow-xl" : "shadow-[0_1px_2px_rgba(58,46,42,0.04),0_8px_20px_-8px_rgba(58,46,42,0.12)]"

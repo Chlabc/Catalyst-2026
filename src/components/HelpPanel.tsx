@@ -48,11 +48,11 @@ export function HelpPanel() {
         <div className="absolute right-full top-1/2 mr-3 w-80 -translate-y-1/2 rounded-2xl border-2 border-border bg-surface p-4 shadow-xl">
           <div className="flex items-center justify-between">
             <p className="text-base font-semibold text-foreground">
-              Help &amp; FAQ
+              FAQ
             </p>
             <button
               onClick={() => setOpen(false)}
-              aria-label="Close help"
+              aria-label="Close FAQ"
               className="text-text-muted hover:text-foreground"
             >
               <CloseIcon className="h-4 w-4" />
@@ -90,13 +90,13 @@ export function HelpPanel() {
 
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "Close help" : "Open help"}
+        aria-label={open ? "Close FAQ" : "Open FAQ"}
         className={`flex flex-col items-center gap-1.5 rounded-l-2xl border-2 border-r-0 border-border bg-primary px-2.5 py-4 text-white shadow-lg transition-colors hover:bg-primary/90 ${open ? "border-transparent" : ""
           }`}
       >
         <HelpIcon className="h-5 w-5" />
         <span className="text-xs font-semibold tracking-wide [writing-mode:vertical-rl]">
-          Help
+          FAQ
         </span>
       </button>
     </div>

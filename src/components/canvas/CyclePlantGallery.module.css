@@ -1,0 +1,162 @@
+.page {
+  min-height: calc(100vh - 73px);
+  padding: 2.5rem clamp(1rem, 4vw, 4rem) 5rem;
+  color: var(--foreground);
+  transition: background 250ms ease;
+}
+
+.neutral {
+  background: #f4f1ed;
+}
+
+.beach {
+  background:
+    linear-gradient(to bottom, #dff6fb 0 44%, #9ed9e2 44% 61%, #f5dfbc 61% 100%);
+}
+
+.macaron {
+  background:
+    radial-gradient(circle at 8% 14%, #ffdadd 0 9rem, transparent 9.1rem),
+    radial-gradient(circle at 91% 18%, #d8e8ff 0 11rem, transparent 11.1rem),
+    radial-gradient(circle at 80% 85%, #e6dcf8 0 15rem, transparent 15.1rem),
+    linear-gradient(145deg, #fff5eb, #fdf0f3 48%, #f7effd);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+.eyebrow {
+  color: var(--primary-dark);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 0.35rem;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.intro {
+  max-width: 42rem;
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.themePicker {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.8rem;
+  border: 1px solid rgb(255 255 255 / 72%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 68%);
+  box-shadow: 0 10px 30px -24px rgb(61 46 58 / 50%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.themeOptions {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.themeOptions button {
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.themeOptions button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 2px 8px rgb(61 46 58 / 10%);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 1.25rem;
+  max-width: 90rem;
+  margin: 2.5rem auto 0;
+}
+
+.preview {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 78%);
+  border-radius: 1.75rem;
+  background: rgb(255 255 255 / 62%);
+  box-shadow: 0 16px 36px -28px rgb(61 46 58 / 48%);
+}
+
+.plantFrame {
+  width: min(100%, 17rem);
+  height: 19rem;
+  margin-inline: auto;
+  padding: 0.5rem 0.4rem 0;
+}
+
+.caption {
+  padding: 1rem 1.25rem 1.2rem;
+  border-top: 1px solid rgb(255 255 255 / 72%);
+  background: rgb(255 255 255 / 44%);
+}
+
+.caption h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.caption p {
+  margin-top: 0.3rem;
+  color: var(--foreground);
+  font-size: 0.85rem;
+}
+
+.caption span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+@media (max-width: 720px) {
+  .page {
+    min-height: calc(100vh - 65px);
+    padding-top: 1.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .themePicker {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .themeOptions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    transition: none;
+  }
+}

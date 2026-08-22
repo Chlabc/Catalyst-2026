@@ -41,9 +41,27 @@
 
 body {
   background: var(--background);
-  background-image: radial-gradient(circle at 80% 0%, rgba(166, 136, 209, 0.14), transparent 28rem), linear-gradient(135deg, rgba(79, 179, 217, 0.08), transparent 45%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 350ms ease, background-image 350ms ease;
+}
+
+html[data-blossom-theme="beach"] body {
+  background-color: #fff8eb;
+  background-image:
+    radial-gradient(ellipse at 82% 4%, rgb(198 234 239 / 34%), transparent 34rem),
+    radial-gradient(ellipse at 8% 92%, rgb(246 218 177 / 26%), transparent 38rem),
+    linear-gradient(145deg, #fffaf0 0%, #f7f3e7 48%, #edf7f5 100%);
+}
+
+html[data-blossom-theme="macaron"] body {
+  background-color: #fff5f1;
+  background-image:
+    radial-gradient(ellipse at 10% 12%, rgb(255 210 218 / 34%), transparent 31rem),
+    radial-gradient(ellipse at 88% 8%, rgb(215 223 255 / 36%), transparent 34rem),
+    radial-gradient(ellipse at 72% 88%, rgb(225 211 244 / 28%), transparent 38rem),
+    linear-gradient(145deg, #fff8ef 0%, #fbf0f3 50%, #f5f0fb 100%);
 }
 
 h1,
@@ -51,68 +69,4 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display), var(--font-sans), Arial, Helvetica, sans-serif;
-}
-
-/* A petal wilting, detaching, and drifting to the ground - not just
-   disappearing. The saturate/brightness dip in the middle third reads
-   as the petal losing color before it lets go. */
-@keyframes petal-fall {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-    opacity: 0.92;
-    filter: saturate(1) brightness(1);
-  }
-
-  20% {
-    transform: translate(1px, 2px) rotate(8deg) scale(0.98);
-    opacity: 0.85;
-    filter: saturate(0.7) brightness(0.92);
-  }
-
-  45% {
-    transform: translate(3px, 12px) rotate(35deg) scale(0.92);
-    opacity: 0.7;
-    filter: saturate(0.55) brightness(0.85);
-  }
-
-  100% {
-    transform: translate(-6px, 58px) rotate(200deg) scale(0.7);
-    opacity: 0;
-    filter: saturate(0.4) brightness(0.8);
-  }
-}
-
-.animate-petal-fall {
-  animation: petal-fall 1.2s cubic-bezier(0.45, 0, 0.55, 1) forwards;
-}
-
-@keyframes plant-grow {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.88);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.plant-grow,
-.plant-sprout {
-  transform-box: fill-box;
-  transform-origin: center bottom;
-  animation: plant-grow 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-petal-fall {
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-  }
-
-  .plant-grow,
-  .plant-sprout {
-    animation-duration: 0.01ms;
-  }
 }

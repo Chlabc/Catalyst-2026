@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Fredoka, Nunito, Geist_Mono } from "next/font/google";
 import { NavBar } from "@/components/ui/NavBar";
 import { HelpPanel } from "@/components/HelpPanel";
+import { BlossomThemeProvider } from "@/components/theme/BlossomThemeProvider";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -30,12 +32,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${fredoka.variable} ${nunito.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <NavBar />
-        <main className="flex-1">{children}</main>
-        <HelpPanel />
+        <BlossomThemeProvider>
+          <NavBar />
+          <main className="flex-1">{children}</main>
+          <HelpPanel />
+        </BlossomThemeProvider>
+        <Script id="blossom-theme-init" strategy="beforeInteractive">
+          {`try{var theme=localStorage.getItem("blossom_home_scene");document.documentElement.dataset.blossomTheme=theme==="macaron"?"macaron":"beach"}catch(e){document.documentElement.dataset.blossomTheme="beach"}`}
+        </Script>
       </body>
     </html>
   );
