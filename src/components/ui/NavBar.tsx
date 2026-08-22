@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "./Container";
-import { DropletIcon } from "@/components/icons";
+import { BloomIcon } from "@/components/icons";
 import { isNavLinkActive, NAV_LINKS } from "@/lib/navLinks";
 
 export function NavBar() {
@@ -18,7 +18,7 @@ export function NavBar() {
             data-testid="blossom-wordmark"
             className="flex shrink-0 items-center gap-2 text-lg font-semibold tracking-tight text-foreground"
           >
-            <DropletIcon className="h-5 w-5 text-primary" />
+            <BloomIcon className="h-6 w-6 text-primary" />
             Bloom
           </Link>
           <ul className="flex gap-4 overflow-x-auto text-sm sm:gap-8">

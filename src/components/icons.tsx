@@ -30,6 +30,35 @@ export function DropletIcon({ className }: IconProps) {
   );
 }
 
+/** IconPark twotone bloom — used as the Bloom wordmark. */
+export function BloomIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      className={className}
+      aria-hidden
+    >
+      <path
+        fill="currentColor"
+        fillOpacity={0.28}
+        stroke="currentColor"
+        strokeWidth={4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m17 11 7-7 7 7 7-1s1 4.239 1 7c0 10-8.5 15-15 15S9 27 9 17c0-2.761 1-7 1-7z"
+      />
+      <path
+        stroke="currentColor"
+        strokeWidth={4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m6 32 12 10m24-10L30 42m-6-10v12"
+      />
+    </svg>
+  );
+}
+
 export function CalendarIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className}>
