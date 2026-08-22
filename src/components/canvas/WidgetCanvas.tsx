@@ -7,6 +7,7 @@ import { LearningWidget } from "./LearningWidget";
 import { TrackingWidget } from "./TrackingWidget";
 import { HelpWidget } from "./HelpWidget";
 import { FaqWidget } from "./FaqWidget";
+import { ReportWidget } from "./ReportWidget";
 import styles from "./WidgetCanvas.module.css";
 import {
   HIDDEN_WIDGETS_KEY,
@@ -182,6 +183,19 @@ export function WidgetCanvas() {
             className={styles.widget}
           >
             <FaqWidget />
+          </DraggableWidget>
+        )}
+
+        {!hidden.has("report") && (
+          <DraggableWidget
+            id="report"
+            label="Health report"
+            defaultX={520}
+            defaultY={560}
+            handleClassName="border-primary/30 bg-primary-soft"
+            className={styles.widget}
+          >
+            <ReportWidget />
           </DraggableWidget>
         )}
       </div>

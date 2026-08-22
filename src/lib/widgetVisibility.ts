@@ -6,6 +6,7 @@ export const OPTIONAL_WIDGETS = [
   { id: "tracking", label: "Tracking" },
   { id: "help", label: "Find Help" },
   { id: "faq", label: "FAQ" },
+  { id: "report", label: "Health report" },
 ] as const;
 
 const REQUIRED_IDS = new Set<string>(REQUIRED_WIDGETS.map((w) => w.id));
