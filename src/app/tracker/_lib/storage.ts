@@ -12,7 +12,8 @@ import type {
   TrackerState,
 } from "../_types/tracker";
 
-const STORAGE_KEY = "menstramission.tracker.v1";
+export const TRACKER_STORAGE_KEY = "menstramission.tracker.v1";
+const STORAGE_KEY = TRACKER_STORAGE_KEY;
 const API_URL = "/tracker/api/state";
 
 export const emptyTrackerState: TrackerState = {

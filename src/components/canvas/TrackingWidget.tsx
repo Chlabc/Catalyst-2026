@@ -1,28 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { CalendarIcon } from "@/components/icons";
-import { readLogsFromStorage, toKey, type Logs } from "@/lib/trackerStorage";
+import { toIsoDate } from "@/app/tracker/_lib/dateUtils";
+import {
+  readTrackerState,
+  TRACKER_STORAGE_KEY,
+} from "@/app/tracker/_lib/storage";
+import {
+  getWidgetCalendarMarks,
+  type WidgetCalendarMarks,
+} from "@/app/tracker/_lib/widgetCalendarMarks";
 
 function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
-// PLACEHOLDER: this is a minimal calendar so the widget slot exists and
-// shows real data in the meantime. Swap the calendar markup below for
-// [teammate]'s tracker component when it's ready - keep the outer
-// rounded-b-2xl wrapper and the widget's overall shape so it still fits
-// the canvas cleanly.
+function emptyMarks(): WidgetCalendarMarks {
+  return { periodKeys: new Set(), logKeys: new Set() };
+}
+
+function readMarks(): WidgetCalendarMarks {
+  return getWidgetCalendarMarks(readTrackerState());
+}
+
 export function TrackingWidget() {
-  const [logs, setLogs] = useState<Logs>({});
+  const [marks, setMarks] = useState<WidgetCalendarMarks>(emptyMarks);
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLogs(readLogsFromStorage());
-    setLoaded(true);
+  const refresh = useCallback(() => {
+    setMarks(readMarks());
   }, []);
+
+  useEffect(() => {
+    refresh();
+    setLoaded(true);
+
+    function onStorage(event: StorageEvent) {
+      if (event.key === TRACKER_STORAGE_KEY || event.key === null) {
+        refresh();
+      }
+    }
+
+    function onVisibility() {
+      if (document.visibilityState === "visible") {
+        refresh();
+      }
+    }
+
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [refresh]);
 
   if (!loaded) return null;
 
@@ -31,7 +67,11 @@ export function TrackingWidget() {
   const month = today.getMonth();
   const total = daysInMonth(year, month);
   const firstWeekday = new Date(year, month, 1).getDay();
-  const todayKey = toKey(today);
+  const todayKey = toIsoDate(today);
+  const monthLabel = new Intl.DateTimeFormat("en", {
+    month: "long",
+    year: "numeric",
+  }).format(today);
 
   const cells: (Date | null)[] = [
     ...Array(firstWeekday).fill(null),
@@ -40,21 +80,11 @@ export function TrackingWidget() {
 
   return (
     <div className="rounded-b-2xl border-2 border-t-0 border-primary/30 bg-primary-soft p-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div>
           <CalendarIcon className="h-6 w-6 text-primary" />
           <p className="mt-2 text-base font-semibold text-foreground">Tracking</p>
-        </div>
-        <div className="flex flex-col items-end gap-1">
-          <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-accent">
-            placeholder
-          </span>
-          <Link
-            href="/tracker"
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            Open →
-          </Link>
+          <p className="mt-0.5 text-xs text-text-muted">{monthLabel}</p>
         </div>
       </div>
 
@@ -64,25 +94,59 @@ export function TrackingWidget() {
         ))}
         {cells.map((date, i) => {
           if (!date) return <div key={`empty-${i}`} />;
-          const key = toKey(date);
-          const isLogged = Boolean(logs[key]);
+          const key = toIsoDate(date);
+          const isPeriod = marks.periodKeys.has(key);
+          const isLogged = marks.logKeys.has(key);
           const isToday = key === todayKey;
+
+          let cellClass = "text-foreground";
+          if (isLogged && !isPeriod) {
+            cellClass = "bg-secondary/25 text-foreground";
+          }
+          if (isPeriod) {
+            cellClass = "bg-primary text-white";
+          }
+          if (isToday && !isPeriod && !isLogged) {
+            cellClass = "border border-primary text-foreground";
+          } else if (isToday) {
+            cellClass = `${cellClass} ring-2 ring-primary/40 ring-offset-1 ring-offset-primary-soft`;
+          }
+
           return (
             <div
               key={key}
-              className={`flex aspect-square items-center justify-center rounded-full text-xs ${
-                isLogged
-                  ? "bg-primary text-white"
-                  : isToday
-                    ? "border border-primary text-foreground"
-                    : "text-foreground"
-              }`}
+              title={
+                isPeriod
+                  ? "Period log"
+                  : isLogged
+                    ? "Daily log"
+                    : isToday
+                      ? "Today"
+                      : undefined
+              }
+              className={`flex aspect-square items-center justify-center rounded-full text-xs ${cellClass}`}
             >
               {date.getDate()}
             </div>
           );
         })}
       </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-medium text-text-muted">
+        <span className="inline-flex items-center gap-1">
+          <span className="h-2 w-2 rounded-full bg-primary" /> Period
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="h-2 w-2 rounded-full bg-secondary/40" /> Logged
+        </span>
+      </div>
+
+      <Link
+        href="/tracker"
+        className="mt-4 flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+      >
+        Open tracker
+      </Link>
     </div>
   );
 }
