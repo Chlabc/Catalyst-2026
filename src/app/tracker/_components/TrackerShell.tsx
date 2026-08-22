@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useBlossomTheme } from "@/components/theme/BlossomThemeProvider";
 import {
   sceneBackdropClassName,
@@ -20,20 +22,20 @@ import {
   writeTrackerStateToBackend,
 } from "../_lib/storage";
 import { presentationTrackerState } from "../_lib/sampleData";
-import { CycleDashboard } from "./CycleDashboard";
+import { CycleDashboard, DailyCareSection } from "./CycleDashboard";
 import { CycleCalendar } from "./CycleCalendar";
 import { LogTodayPanel } from "./LogTodayPanel";
 import { PhaseBlurb } from "./PhaseBlurb";
-import { PatternsCard } from "./PatternsCard";
-import { InsightsHistory } from "./InsightsHistory";
 
 type SaveStatus = "loading" | "saved" | "saving" | "offline" | "demo";
 
 /**
- * Single Blossom tracker page: keeps Aira dashboard, calendar, log sheet,
- * and insights — without the nested 4-tab mini-app chrome.
+ * Tracker keeps the glance + phase guide up top.
+ * Compact one-month calendar + day log sit in the bottom-right.
+ * Insights / patterns live on Health report (/report).
  */
 export function TrackerShell() {
+  const router = useRouter();
   const { theme } = useBlossomTheme();
   const backdrop = selectSceneBackdrop(theme, "backdrop");
   const today = useMemo(() => toIsoDate(new Date()), []);
@@ -46,8 +48,6 @@ export function TrackerShell() {
   const [isPresentationMode, setIsPresentationMode] = useState(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("loading");
   const [phaseGuideOpen, setPhaseGuideOpen] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(true);
-  const [insightsOpen, setInsightsOpen] = useState(false);
   const displayTrackerState = isPresentationMode
     ? presentationTrackerState
     : trackerState;
@@ -193,12 +193,11 @@ export function TrackerShell() {
     });
   }
 
-  function showCalendar() {
-    setCalendarOpen(true);
+  function focusCalendarMonth() {
     window.requestAnimationFrame(() => {
       document
-        .getElementById("tracker-calendar-section")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        .getElementById("tracker-month-corner")
+        ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   }
 
@@ -221,10 +220,17 @@ export function TrackerShell() {
                 Your cycle
               </h1>
               <p className="mt-1 text-sm text-text-muted">
-                Private check-ins on this device — no account needed.
+                Private check-ins on this device — patterns &amp; PDF live under{" "}
+                <Link
+                  href="/report"
+                  className="font-semibold text-primary hover:underline"
+                >
+                  Health report
+                </Link>
+                .
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col items-end gap-1">
               <span
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/80 px-3 py-1 text-xs font-semibold text-text-muted"
                 title={saveStatusLabel(saveStatus)}
@@ -237,22 +243,19 @@ export function TrackerShell() {
               <button
                 type="button"
                 onClick={loadPresentationData}
-                className="rounded-full border border-border bg-surface/80 px-3 py-1 text-xs font-semibold text-text-muted transition hover:border-primary hover:text-foreground"
-                aria-label="Load presentation data"
-                title={
-                  isPresentationMode
-                    ? "Presentation data loaded"
-                    : "Load demo view"
-                }
+                className="text-[11px] font-medium text-text-muted/80 underline-offset-2 hover:text-foreground hover:underline"
+                aria-label="Load sample presentation data"
+                title="Fills the tracker with sample cycle logs for demos — not saved as your real data until you edit"
               >
-                Demo
+                {isPresentationMode ? "Sample data on" : "Load sample data"}
               </button>
             </div>
           </div>
         </header>
 
         <main className="mt-4">
-          <div className="md:grid md:grid-cols-[minmax(360px,430px)_minmax(320px,1fr)] md:items-start md:gap-8">
+          {/* Left: glance only. Right: month + log, daily care, phase guide. */}
+          <div className="md:grid md:grid-cols-[minmax(360px,430px)_minmax(300px,1fr)] md:items-start md:gap-8">
             <div>
               <DateStrip
                 today={today}
@@ -266,8 +269,9 @@ export function TrackerShell() {
                 selectedLog={displayTrackerState.logs[selectedDate]}
                 isToday={selectedDate === today}
                 settings={displayTrackerState.settings}
+                showDailyCare={false}
                 onOpenLog={() => openLogFor(selectedDate)}
-                onOpenCalendar={showCalendar}
+                onOpenCalendar={focusCalendarMonth}
                 onTogglePhaseGuide={() => {
                   setPhaseGuideOpen(true);
                   window.requestAnimationFrame(() => {
@@ -280,110 +284,54 @@ export function TrackerShell() {
                   });
                 }}
               />
+              <div className="mt-3">
+                <PhaseBlurb
+                  prediction={selectedPrediction}
+                  forceOpen={phaseGuideOpen}
+                  onOpenChange={setPhaseGuideOpen}
+                />
+              </div>
             </div>
-            <div className="pt-2 md:pt-4">
-              <PhaseBlurb
-                prediction={selectedPrediction}
-                forceOpen={phaseGuideOpen}
-                onOpenChange={setPhaseGuideOpen}
-              />
-              <PatternsCard
-                trackerState={effectiveTrackerState}
+
+            <div
+              id="tracker-month-corner"
+              className="flex flex-col gap-3 pt-4 md:pt-0"
+              data-testid="tracker-month-corner"
+            >
+              <CycleCalendar
+                compact
+                monthDate={visibleMonth}
+                selectedDate={selectedDate}
                 prediction={prediction}
-                onOpenInsights={() => {
-                  setInsightsOpen(true);
-                  window.requestAnimationFrame(() => {
-                    document
-                      .getElementById("tracker-insights-section")
-                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  });
+                logs={displayTrackerState.logs}
+                trackerState={effectiveTrackerState}
+                onSelectDate={setSelectedDate}
+                onNavigateMonth={moveMonth}
+                onGoToToday={() => {
+                  setSelectedDate(today);
+                  setVisibleMonth(new Date());
                 }}
+                onOpenLog={() => openLogFor(selectedDate)}
+                onOpenLearn={() => router.push("/scenarios")}
               />
+              <DailyCareSection
+                stacked
+                prediction={selectedPrediction}
+                selectedLog={displayTrackerState.logs[selectedDate]}
+                onOpenLog={() => openLogFor(selectedDate)}
+                onOpenCalendar={focusCalendarMonth}
+                onTogglePhaseGuide={() => setPhaseGuideOpen(true)}
+              />
+              <p className="text-xs text-text-muted">
+                Patterns &amp; PDF export:{" "}
+                <Link
+                  href="/report"
+                  className="font-semibold text-primary hover:underline"
+                >
+                  Health report
+                </Link>
+              </p>
             </div>
-          </div>
-
-          <div
-            id="tracker-calendar-section"
-            className="mt-6 border-t border-border/80 pt-4"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-primary-dark">
-                  Calendar
-                </p>
-                <h2 className="mt-1 text-xl font-semibold text-foreground">
-                  Month view
-                </h2>
-              </div>
-              <button
-                type="button"
-                data-testid="toggle-calendar-on-today"
-                aria-expanded={calendarOpen}
-                onClick={() => setCalendarOpen((current) => !current)}
-                className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary"
-              >
-                {calendarOpen ? "Hide calendar" : "Show calendar"}
-              </button>
-            </div>
-            {calendarOpen && (
-              <div className="mt-3" data-testid="calendar-on-today">
-                <CycleCalendar
-                  monthDate={visibleMonth}
-                  selectedDate={selectedDate}
-                  prediction={prediction}
-                  logs={displayTrackerState.logs}
-                  trackerState={effectiveTrackerState}
-                  onSelectDate={setSelectedDate}
-                  onNavigateMonth={moveMonth}
-                  onSelectMonth={setVisibleMonth}
-                  onGoToToday={() => {
-                    setSelectedDate(today);
-                    setVisibleMonth(new Date());
-                  }}
-                  onClose={() => setCalendarOpen(false)}
-                  onOpenLog={() => openLogFor(selectedDate)}
-                  onOpenLearn={() => {
-                    setPhaseGuideOpen(true);
-                    setCalendarOpen(false);
-                  }}
-                />
-              </div>
-            )}
-          </div>
-
-          <div
-            id="tracker-insights-section"
-            className="mt-6 border-t border-border/80 pt-4"
-          >
-            <div className="flex items-center justify-between gap-3 px-0">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-primary-dark">
-                  Insights
-                </p>
-                <h2 className="mt-1 text-xl font-semibold text-foreground">
-                  Deeper patterns
-                </h2>
-              </div>
-              <button
-                type="button"
-                data-testid="toggle-insights"
-                aria-expanded={insightsOpen}
-                onClick={() => setInsightsOpen((current) => !current)}
-                className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary"
-              >
-                {insightsOpen ? "Hide insights" : "Show insights"}
-              </button>
-            </div>
-            {insightsOpen && (
-              <div className="mt-3" data-testid="insights-on-today">
-                <InsightsHistory
-                  trackerState={effectiveTrackerState}
-                  prediction={prediction}
-                  onOpenLog={openLogFor}
-                  onOpenCalendar={showCalendar}
-                />
-              </div>
-            )}
           </div>
         </main>
       </div>

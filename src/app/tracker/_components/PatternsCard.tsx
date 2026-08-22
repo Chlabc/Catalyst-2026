@@ -35,15 +35,13 @@ function mostCommon<T extends string>(values: T[]): T | undefined {
   return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
 }
 
-/** Compact insights on the tracker page; optional deeper InsightsHistory below. */
+/** Pattern snapshot — lives on Health report (not the Tracker tab). */
 export function PatternsCard({
   trackerState,
   prediction,
-  onOpenInsights,
 }: {
   trackerState: TrackerState;
   prediction: CyclePrediction;
-  onOpenInsights?: () => void;
 }) {
   const logs = Object.values(trackerState.logs);
   const periodDays = logs.filter((log) => log.periodFlow !== "none").length;
@@ -53,7 +51,7 @@ export function PatternsCard({
 
   return (
     <section
-      className="mx-4 mt-4 rounded-2xl border border-[#E8DCE2] bg-white/85 p-4 shadow-sm sm:mx-0"
+      className="rounded-2xl border border-[#E8DCE2] bg-white/85 p-4 shadow-sm"
       data-testid="patterns-card"
     >
       <div className="flex items-start justify-between gap-3">
@@ -65,24 +63,12 @@ export function PatternsCard({
             Quick snapshot
           </h2>
         </div>
-        <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row">
-          {onOpenInsights && (
-            <button
-              type="button"
-              onClick={onOpenInsights}
-              data-testid="patterns-open-insights"
-              className="rounded-full border border-[#E2C4D0] bg-white px-3 py-1.5 text-xs font-bold text-[#493B42] transition hover:bg-[#FFF7FA]"
-            >
-              More insights
-            </button>
-          )}
-          <Link
-            href="/"
-            className="rounded-full border border-[#E2C4D0] bg-[#FFF7FA] px-3 py-1.5 text-xs font-bold text-[#A43C61] transition hover:bg-[#FFF0F5]"
-          >
-            Health report
-          </Link>
-        </div>
+        <Link
+          href="/tracker"
+          className="rounded-full border border-[#E2C4D0] bg-[#FFF7FA] px-3 py-1.5 text-xs font-bold text-[#A43C61] transition hover:bg-[#FFF0F5]"
+        >
+          Open tracker
+        </Link>
       </div>
 
       <dl className="mt-3 grid grid-cols-2 gap-2 text-sm">
@@ -112,9 +98,8 @@ export function PatternsCard({
 
       <p className="mt-3 text-xs text-[#6E6168]">
         {periodDays} period day{periodDays === 1 ? "" : "s"} logged ·{" "}
-        {logs.length} check-in{logs.length === 1 ? "" : "s"} total. Patterns get
-        clearer over time — download a summary from Home when you need it for a
-        GP or pharmacist.
+        {logs.length} check-in{logs.length === 1 ? "" : "s"} total. Download a PDF
+        below when you want a summary for a GP or pharmacist.
       </p>
     </section>
   );

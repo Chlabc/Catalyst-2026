@@ -12,6 +12,7 @@ import {
   getCyclePrediction,
   phaseLabels,
 } from "@/app/tracker/_lib/cyclePredictions";
+import { PatternsCard } from "@/app/tracker/_components/PatternsCard";
 import {
   REPORT_RANGE_PRESETS,
   filterLogsInRange,
@@ -153,6 +154,10 @@ export function ReportDashboard() {
 
   return (
     <div data-testid="report-dashboard">
+      <div className="mb-6">
+        <PatternsCard trackerState={trackerState} prediction={prediction} />
+      </div>
+
       <div className="flex flex-wrap items-end justify-between gap-3">
         <label className="text-xs font-semibold uppercase tracking-wide text-text-muted">
           Range

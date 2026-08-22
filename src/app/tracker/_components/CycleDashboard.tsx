@@ -24,6 +24,7 @@ export function CycleDashboard({
   onOpenLog,
   onOpenCalendar,
   onTogglePhaseGuide,
+  showDailyCare = true,
 }: {
   prediction: CyclePrediction;
   selectedDate: string;
@@ -32,8 +33,10 @@ export function CycleDashboard({
   settings: TrackerSettings;
   onOpenLog: () => void;
   onOpenCalendar: () => void;
-  /** Opens the inline phase blurb on Today (merged; not a separate Learn tab). */
+  /** Opens the inline phase blurb (merged; not a separate Learn tab). */
   onTogglePhaseGuide: () => void;
+  /** When false, Daily care is rendered elsewhere (e.g. right column). */
+  showDailyCare?: boolean;
 }) {
   const phaseLabel = phaseLabels[prediction.estimatedPhase];
   const hasDailyReminder =
@@ -42,12 +45,6 @@ export function CycleDashboard({
     !selectedLog;
   const hasPrepReminder =
     settings.periodPrepReminder && prediction.daysUntilNextPeriod <= 5;
-  const logCount =
-    (selectedLog?.symptoms.length ?? 0) +
-    (selectedLog?.moods.length ?? 0) +
-    (selectedLog?.energy ? 1 : 0) +
-    (selectedLog?.sleep ? 1 : 0) +
-    (selectedLog && selectedLog.periodFlow !== "none" ? 1 : 0);
 
   return (
     <section className="px-4 pb-4 pt-2 sm:px-0">
@@ -146,57 +143,117 @@ export function CycleDashboard({
         </button>
       )}
 
-      <div className="mt-6">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="text-xs font-bold uppercase text-[#A04464]">Daily care</p>
-            <h2 className="mt-1 text-xl font-bold text-[#241B21]">
-              {selectedLog ? `${logCount} details saved` : "How are you feeling?"}
-            </h2>
-          </div>
-          {selectedLog && (
-            <button
-              type="button"
-              onClick={onOpenLog}
-              className="text-xs font-bold text-[#C2426C] underline underline-offset-4"
-            >
-              Review log
-            </button>
-          )}
-        </div>
-        <div className="mt-3 flex gap-2.5 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <InsightCard
-            tone="bg-[#FFF0F5]"
-            label="Check in"
-            title={selectedLog ? "Update this day's log" : "Log symptoms and mood"}
-            detail={selectedLog && selectedLog.periodFlow !== "none" ? `${selectedLog.periodFlow} flow` : "Takes a moment"}
-            action="+"
-            onClick={onOpenLog}
-          />
-          <InsightCard
-            tone="bg-[#F1E9F7]"
-            label="Phase care"
-            title={`About your ${phaseLabel.toLowerCase()} phase`}
-            detail="Short guide below"
-            onClick={onTogglePhaseGuide}
-          />
-          <InsightCard
-            tone="bg-[#E8F4EF]"
-            label="Calendar"
-            title="See the full month"
-            detail="Predictions & history"
-            onClick={onOpenCalendar}
-          />
-          <InsightCard
-            tone="bg-[#FFF4DE]"
-            label="Body notes"
-            title={selectedLog?.symptoms.length ? selectedLog.symptoms.join(", ") : "Notice what feels different"}
-            detail={selectedLog ? `${selectedLog.moods.length} moods saved` : "Nothing logged"}
-            onClick={onOpenLog}
-          />
-        </div>
-      </div>
+      {showDailyCare && (
+        <DailyCareSection
+          prediction={prediction}
+          selectedLog={selectedLog}
+          onOpenLog={onOpenLog}
+          onOpenCalendar={onOpenCalendar}
+          onTogglePhaseGuide={onTogglePhaseGuide}
+        />
+      )}
     </section>
+  );
+}
+
+/** Daily care cards — can sit in the right column under the month calendar. */
+export function DailyCareSection({
+  prediction,
+  selectedLog,
+  onOpenLog,
+  onOpenCalendar,
+  onTogglePhaseGuide,
+  stacked = false,
+}: {
+  prediction: CyclePrediction;
+  selectedLog?: DailyLog;
+  onOpenLog: () => void;
+  onOpenCalendar: () => void;
+  onTogglePhaseGuide: () => void;
+  /** 2×2 grid for a side column instead of a horizontal scroller. */
+  stacked?: boolean;
+}) {
+  const phaseLabel = phaseLabels[prediction.estimatedPhase];
+  const logCount =
+    (selectedLog?.symptoms.length ?? 0) +
+    (selectedLog?.moods.length ?? 0) +
+    (selectedLog?.energy ? 1 : 0) +
+    (selectedLog?.sleep ? 1 : 0) +
+    (selectedLog && selectedLog.periodFlow !== "none" ? 1 : 0);
+
+  return (
+    <div className="mt-4" data-testid="daily-care-section">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase text-[#A04464]">Daily care</p>
+          <h2 className="mt-1 text-xl font-bold text-[#241B21]">
+            {selectedLog ? `${logCount} details saved` : "How are you feeling?"}
+          </h2>
+        </div>
+        {selectedLog && (
+          <button
+            type="button"
+            onClick={onOpenLog}
+            className="text-xs font-bold text-[#C2426C] underline underline-offset-4"
+          >
+            Review log
+          </button>
+        )}
+      </div>
+      <div
+        className={
+          stacked
+            ? "mt-3 grid grid-cols-2 gap-2.5"
+            : "mt-3 flex gap-2.5 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        }
+      >
+        <InsightCard
+          tone="bg-[#FFF0F5]"
+          label="Check in"
+          title={selectedLog ? "Update this day's log" : "Log symptoms and mood"}
+          detail={
+            selectedLog && selectedLog.periodFlow !== "none"
+              ? `${selectedLog.periodFlow} flow`
+              : "Takes a moment"
+          }
+          action="+"
+          onClick={onOpenLog}
+          stacked={stacked}
+        />
+        <InsightCard
+          tone="bg-[#F1E9F7]"
+          label="Phase care"
+          title={`About your ${phaseLabel.toLowerCase()} phase`}
+          detail="Short guide"
+          onClick={onTogglePhaseGuide}
+          stacked={stacked}
+        />
+        <InsightCard
+          tone="bg-[#E8F4EF]"
+          label="Calendar"
+          title="Jump to month"
+          detail="Predictions & history"
+          onClick={onOpenCalendar}
+          stacked={stacked}
+        />
+        <InsightCard
+          tone="bg-[#FFF4DE]"
+          label="Body notes"
+          title={
+            selectedLog?.symptoms.length
+              ? selectedLog.symptoms.join(", ")
+              : "Notice what feels different"
+          }
+          detail={
+            selectedLog
+              ? `${selectedLog.moods.length} moods saved`
+              : "Nothing logged"
+          }
+          onClick={onOpenLog}
+          stacked={stacked}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -207,6 +264,7 @@ function InsightCard({
   tone,
   action,
   onClick,
+  stacked = false,
 }: {
   label: string;
   title: string;
@@ -214,12 +272,17 @@ function InsightCard({
   tone: string;
   action?: string;
   onClick: () => void;
+  stacked?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-[136px] min-w-[142px] max-w-[158px] flex-col justify-between rounded-[8px] border border-[#E8DCE2] p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#D38AE6] ${tone}`}
+      className={`flex flex-col justify-between rounded-[8px] border border-[#E8DCE2] p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#D38AE6] ${tone} ${
+        stacked
+          ? "min-h-[120px] w-full"
+          : "h-[136px] min-w-[142px] max-w-[158px]"
+      }`}
     >
       <span className="text-[10px] font-bold uppercase tracking-wide opacity-75">
         {label}
