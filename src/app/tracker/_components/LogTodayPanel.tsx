@@ -2,9 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import type {
-  ActivityLevel,
   DailyLog,
-  DischargeType,
   EnergyLevel,
   Mood,
   PeriodFlow,
@@ -19,10 +17,16 @@ type CategoryKey =
   | "mood"
   | "energy"
   | "sleep"
-  | "discharge"
-  | "activity"
   | "medication"
   | "notes";
+
+const PRIMARY_CATEGORY_KEYS: CategoryKey[] = ["period", "symptoms", "mood"];
+const MORE_CATEGORY_KEYS: CategoryKey[] = [
+  "energy",
+  "sleep",
+  "medication",
+  "notes",
+];
 
 const flowOptions: { value: PeriodFlow; label: string; icon: string }[] = [
   { value: "none", label: "No period", icon: "○" },
@@ -65,23 +69,6 @@ const sleepOptions: { value: SleepQuality; label: string; icon: string }[] = [
   { value: "good", label: "Good", icon: "✦" },
 ];
 
-const dischargeOptions: { value: DischargeType; label: string; icon: string }[] =
-  [
-    { value: "none", label: "None", icon: "○" },
-    { value: "sticky", label: "Sticky", icon: "◑" },
-    { value: "creamy", label: "Creamy", icon: "◒" },
-    { value: "watery", label: "Watery", icon: "◇" },
-    { value: "eggWhite", label: "Slippery", icon: "◌" },
-  ];
-
-const activityOptions: { value: ActivityLevel; label: string; icon: string }[] =
-  [
-    { value: "none", label: "None", icon: "○" },
-    { value: "light", label: "Light", icon: "♁" },
-    { value: "moderate", label: "Moderate", icon: "↗" },
-    { value: "intense", label: "Intense", icon: "◆" },
-  ];
-
 export function LogTodayPanel({
   selectedDate,
   log,
@@ -92,6 +79,7 @@ export function LogTodayPanel({
   onChange: (log: DailyLog) => void;
 }) {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>("period");
+  const [showMore, setShowMore] = useState(false);
   const currentLog: DailyLog =
     log ??
     {
@@ -129,69 +117,65 @@ export function LogTodayPanel({
     update({ moods });
   }
 
-  const categories: {
-    key: CategoryKey;
-    title: string;
-    icon: string;
-    summary: string;
-  }[] = [
-    { key: "period", title: "Period", icon: "●", summary: currentLog.periodFlow },
-    {
-      key: "symptoms",
+  const categoryMeta: Record<
+    CategoryKey,
+    { title: string; icon: string; summary: string }
+  > = {
+    period: {
+      title: "Period",
+      icon: "●",
+      summary: currentLog.periodFlow,
+    },
+    symptoms: {
       title: "Symptoms",
       icon: "✿",
       summary: `${currentLog.symptoms.length} logged`,
     },
-    {
-      key: "mood",
+    mood: {
       title: "Mood",
       icon: "☺",
       summary: currentLog.moods.length
         ? `${currentLog.moods.length} selected`
         : "Not logged",
     },
-    {
-      key: "energy",
+    energy: {
       title: "Energy",
       icon: "⚡",
       summary: currentLog.energy ?? "Not logged",
     },
-    {
-      key: "sleep",
+    sleep: {
       title: "Sleep",
       icon: "☾",
       summary: currentLog.sleep ?? "Not logged",
     },
-    {
-      key: "discharge",
-      title: "Discharge",
-      icon: "◇",
-      summary: currentLog.discharge ?? "Not logged",
-    },
-    {
-      key: "activity",
-      title: "Activity",
-      icon: "♁",
-      summary: currentLog.activity ?? "Not logged",
-    },
-    {
-      key: "medication",
+    medication: {
       title: "Medication",
       icon: "▰",
       summary: currentLog.medication ? "Added" : "None",
     },
-    {
-      key: "notes",
+    notes: {
       title: "Notes",
       icon: "▧",
       summary: currentLog.notes ? "Added" : "Add note",
     },
-  ];
+  };
+
+  const visibleKeys = showMore
+    ? [...PRIMARY_CATEGORY_KEYS, ...MORE_CATEGORY_KEYS]
+    : PRIMARY_CATEGORY_KEYS;
+
+  function selectCategory(key: CategoryKey) {
+    if (MORE_CATEGORY_KEYS.includes(key) && !showMore) {
+      setShowMore(true);
+    }
+    setActiveCategory(key);
+  }
 
   return (
     <section
       id="log-panel"
       className="bg-[#FFF9FB] p-4 sm:p-5"
+      data-testid="log-today-panel"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -199,6 +183,9 @@ export function LogTodayPanel({
           <h2 className="mt-1 text-2xl font-bold text-[#2B2B34]">
             {formatLongDate(selectedDate)}
           </h2>
+          <p className="mt-1 text-xs text-[#6B6B78]">
+            Start with period, symptoms, and mood. Open More if you want extras.
+          </p>
         </div>
         <span className="rounded-full bg-[#FFF0F6] px-3 py-1.5 text-xs font-bold text-[#7A1241] ring-1 ring-[#FFD7EA]">
           Private
@@ -206,29 +193,51 @@ export function LogTodayPanel({
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-2.5">
-        {categories.map((category) => (
-          <button
-            key={category.key}
-            type="button"
-            onClick={() => setActiveCategory(category.key)}
-            className={`min-h-24 rounded-[8px] border p-2.5 text-center transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF6B9D] ${
-              activeCategory === category.key
-                ? "border-[#FF6B9D] bg-[#FFF0F6] shadow-[0_12px_32px_rgba(255,107,157,0.14)]"
-                : "border-[#FFE8F1] bg-[#FFFBFD]"
-            }`}
-          >
-            <span className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-white text-xl text-[#D61F69] shadow-sm">
-              {category.icon}
-            </span>
-            <span className="mt-2 block truncate text-xs font-bold text-[#2B2B34]">
-              {category.title}
-            </span>
-            <span className="mt-1 block truncate text-xs font-medium capitalize text-[#6B6B78]">
-              {category.summary}
-            </span>
-          </button>
-        ))}
+        {visibleKeys.map((key) => {
+          const category = categoryMeta[key];
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => selectCategory(key)}
+              data-testid={`log-category-${key}`}
+              className={`min-h-24 rounded-[8px] border p-2.5 text-center transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF6B9D] ${
+                activeCategory === key
+                  ? "border-[#FF6B9D] bg-[#FFF0F6] shadow-[0_12px_32px_rgba(255,107,157,0.14)]"
+                  : "border-[#FFE8F1] bg-[#FFFBFD]"
+              }`}
+            >
+              <span className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-white text-xl text-[#D61F69] shadow-sm">
+                {category.icon}
+              </span>
+              <span className="mt-2 block truncate text-xs font-bold text-[#2B2B34]">
+                {category.title}
+              </span>
+              <span className="mt-1 block truncate text-xs font-medium capitalize text-[#6B6B78]">
+                {category.summary}
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      <button
+        type="button"
+        data-testid="log-more-toggle"
+        aria-expanded={showMore}
+        onClick={() => {
+          setShowMore((current) => {
+            const next = !current;
+            if (!next && MORE_CATEGORY_KEYS.includes(activeCategory)) {
+              setActiveCategory("period");
+            }
+            return next;
+          });
+        }}
+        className="mt-3 w-full rounded-full border border-[#FFD7EA] bg-white px-4 py-2.5 text-sm font-bold text-[#D61F69] transition hover:bg-[#FFF0F6] focus:outline-none focus:ring-2 focus:ring-[#FF6B9D]"
+      >
+        {showMore ? "Hide extra check-ins" : "More (sleep, energy, notes…)"}
+      </button>
 
       <div className="mt-5 rounded-[8px] bg-[#FFF7FA] p-4 ring-1 ring-[#FFE0EC]">
         {activeCategory === "period" && (
@@ -338,34 +347,6 @@ export function LogTodayPanel({
                       currentLog.sleep === option.value ? undefined : option.value,
                   })
                 }
-              />
-            ))}
-          </OptionGrid>
-        )}
-
-        {activeCategory === "discharge" && (
-          <OptionGrid>
-            {dischargeOptions.map((option) => (
-              <VisualOption
-                key={option.value}
-                selected={currentLog.discharge === option.value}
-                icon={option.icon}
-                label={option.label}
-                onClick={() => update({ discharge: option.value })}
-              />
-            ))}
-          </OptionGrid>
-        )}
-
-        {activeCategory === "activity" && (
-          <OptionGrid>
-            {activityOptions.map((option) => (
-              <VisualOption
-                key={option.value}
-                selected={currentLog.activity === option.value}
-                icon={option.icon}
-                label={option.label}
-                onClick={() => update({ activity: option.value })}
               />
             ))}
           </OptionGrid>

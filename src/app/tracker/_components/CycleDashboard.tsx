@@ -23,7 +23,7 @@ export function CycleDashboard({
   settings,
   onOpenLog,
   onOpenCalendar,
-  onLearnMore,
+  onTogglePhaseGuide,
 }: {
   prediction: CyclePrediction;
   selectedDate: string;
@@ -32,7 +32,8 @@ export function CycleDashboard({
   settings: TrackerSettings;
   onOpenLog: () => void;
   onOpenCalendar: () => void;
-  onLearnMore: () => void;
+  /** Opens the inline phase blurb on Today (merged; not a separate Learn tab). */
+  onTogglePhaseGuide: () => void;
 }) {
   const phaseLabel = phaseLabels[prediction.estimatedPhase];
   const hasDailyReminder =
@@ -51,10 +52,10 @@ export function CycleDashboard({
   return (
     <section className="px-4 pb-4 pt-2 sm:px-0">
       <div className="text-center">
-        <p className="text-xs font-bold uppercase text-[#A04464]">
+        <p className="min-h-5 text-xs font-bold uppercase leading-5 text-[#A04464]">
           {formatLongDate(selectedDate)}
         </p>
-        <h1 className="mt-1 text-2xl font-bold text-[#241B21]">
+        <h1 className="mt-1 text-3xl font-semibold leading-tight tracking-tight text-[#241B21]">
           Your cycle, at a glance
         </h1>
       </div>
@@ -67,10 +68,11 @@ export function CycleDashboard({
         />
         <button
           type="button"
-          onClick={onLearnMore}
+          onClick={onTogglePhaseGuide}
           className="absolute bottom-5 right-1 grid h-11 w-11 place-items-center rounded-full border border-[#E4D5DC] bg-white text-xl text-[#B83E68] shadow-[0_8px_24px_rgba(85,45,64,0.15)] transition hover:-translate-y-0.5 hover:bg-[#FFF4F8] focus:outline-none focus:ring-2 focus:ring-[#E9547C]"
-          aria-label={`Learn about the ${phaseLabel.toLowerCase()} phase`}
-          title="Open phase guide"
+          aria-label={`About the ${phaseLabel.toLowerCase()} phase`}
+          title="About this phase"
+          data-testid="open-phase-guide"
         >
           ?
         </button>
@@ -174,16 +176,16 @@ export function CycleDashboard({
           <InsightCard
             tone="bg-[#F1E9F7]"
             label="Phase care"
-            title={`Support for your ${phaseLabel.toLowerCase()} phase`}
-            detail="Open guide"
-            onClick={onLearnMore}
+            title={`About your ${phaseLabel.toLowerCase()} phase`}
+            detail="Short guide below"
+            onClick={onTogglePhaseGuide}
           />
           <InsightCard
             tone="bg-[#E8F4EF]"
-            label="Prediction"
-            title={`${prediction.daysUntilNextPeriod} days until your next period`}
-            detail={formatShortDate(prediction.predictedNextPeriod)}
-            onClick={onLearnMore}
+            label="Calendar"
+            title="See the full month"
+            detail="Predictions & history"
+            onClick={onOpenCalendar}
           />
           <InsightCard
             tone="bg-[#FFF4DE]"
