@@ -9,6 +9,7 @@ const links = [
   { href: "/scenarios", label: "Learn" },
   { href: "/library", label: "Library" },
   { href: "/tracker", label: "Tracker" },
+  { href: "/sos", label: "SOS" },
 ];
 
 export function NavBar() {
@@ -38,8 +39,8 @@ export function NavBar() {
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={`block border-b-2 py-1 font-medium transition-colors ${active
-                        ? "border-primary text-foreground"
-                        : "border-transparent text-text-muted hover:text-foreground"
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-text-muted hover:text-foreground"
                       }`}
                   >
                     {link.label}

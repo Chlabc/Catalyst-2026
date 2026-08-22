@@ -68,4 +68,9 @@ video script's strongest section)_
   since the library is conceptually part of the same learning module.
   Flower widget: petals fall with a real animation (not an instant
   swap) when a day gets logged.
-
+- 2026-08-22: Reframed the homepage canvas as a customisable Beach/Desert
+  desk and made the learning card deliver one plain-language, one-minute
+  fact plus a single reward question. This honours PADthai's interactive,
+  reward-based and low-cognitive-load learning direction, while avoiding a
+  dense "health library" on the first screen. The fact is deliberately
+  general health education, not personal medical advice.

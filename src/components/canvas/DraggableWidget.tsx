@@ -37,14 +37,30 @@ export function DraggableWidget({
     null,
   );
   const [dragging, setDragging] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  // Keep the widget fully inside the canvas — like notes on a Padlet
+  // board, not free to fly past the edge. Past x/y=0 the canvas can't
+  // scroll to negative coordinates, so an unclamped drag off the top or
+  // left is unrecoverable; clamping against the canvas's own rendered
+  // size (its offsetParent) prevents that in every direction.
+  function clampPos(x: number, y: number): Pos {
+    const el = wrapperRef.current;
+    const parent = el?.offsetParent as HTMLElement | null;
+    if (!el || !parent) return { x, y };
+    const maxX = Math.max(0, parent.clientWidth - el.offsetWidth);
+    const maxY = Math.max(0, parent.clientHeight - el.offsetHeight);
+    return { x: Math.min(Math.max(x, 0), maxX), y: Math.min(Math.max(y, 0), maxY) };
+  }
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_PREFIX + id);
-      if (raw) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPos(JSON.parse(raw));
-      }
+      const stored = raw ? (JSON.parse(raw) as Pos) : null;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPos((current) =>
+        clampPos(stored?.x ?? current.x, stored?.y ?? current.y),
+      );
     } catch {
       // Corrupt/missing storage — just use the default position.
     }
@@ -66,7 +82,7 @@ export function DraggableWidget({
     if (!dragRef.current) return;
     const dx = e.clientX - dragRef.current.startX;
     const dy = e.clientY - dragRef.current.startY;
-    setPos({ x: dragRef.current.origX + dx, y: dragRef.current.origY + dy });
+    setPos(clampPos(dragRef.current.origX + dx, dragRef.current.origY + dy));
   }
 
   function onPointerUp() {
@@ -83,6 +99,7 @@ export function DraggableWidget({
 
   return (
     <div
+      ref={wrapperRef}
       style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
       className={`absolute left-0 top-0 w-80 ${dragging ? "z-20" : "z-10"}`}
     >

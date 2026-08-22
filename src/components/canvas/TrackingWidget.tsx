@@ -9,11 +9,9 @@ function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
 
-// PLACEHOLDER: this is a minimal calendar so the widget slot exists and
-// shows real data in the meantime. Swap the calendar markup below for
-// [teammate]'s tracker component when it's ready - keep the outer
-// rounded-b-2xl wrapper and the widget's overall shape so it still fits
-// the canvas cleanly.
+// TEAM HAND-OFF: Replace only the calendar area below with the full tracker.
+// Keep this exported component and outer wrapper, so WidgetCanvas continues to
+// manage placement, hiding and local persistence without any rewiring.
 export function TrackingWidget() {
   const [logs, setLogs] = useState<Logs>({});
   const [loaded, setLoaded] = useState(false);
@@ -47,7 +45,7 @@ export function TrackingWidget() {
         </div>
         <div className="flex flex-col items-end gap-1">
           <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-accent">
-            placeholder
+            team slot
           </span>
           <Link
             href="/tracker"
@@ -57,6 +55,8 @@ export function TrackingWidget() {
           </Link>
         </div>
       </div>
+
+      <p className="mt-3 rounded-xl bg-white/55 px-3 py-2 text-xs leading-relaxed text-text-muted">A quick view for now. Your team&apos;s tracker can slot into this exact card when it&apos;s ready.</p>
 
       <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-text-muted">
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (

@@ -1,79 +1,85 @@
-# Video Pitch Script — Blossom (rough draft, ~3.5-4 min)
+# Video Pitch Script - Blossom
 
-Read this out loud once and time it — trim wherever it drags. Swap in your
-real names/story details before filming.
+**Run time:** about 3 minutes, plus 30-45 seconds for the live demo.
 
----
-
-## 1. Hook (15s)
-"We built Blossom because [Name] told us about struggling through
-her first period with basically nowhere to go for a straight answer — no
-judgment-free place that just explained what was happening. That's the gap
-we wanted to close."
-
-## 2. Credit + blueprint (20s)
-"This is built on a design and research from Team PADthai — Ann, Morn,
-Nana, and Pam — whose MenstraMission project won Product-thon. They did
-the research and the blueprint, including the 'Menstrome Island' biome
-world — our job in Forma was to actually build it, and to make justified
-calls on where to improve it. We renamed the product Blossom, which
-we'll get into."
-
-## 3. What we kept and why (25s)
-"We kept their core idea: menstruation explained through interactive,
-practical scenarios instead of a wall of text, and the framing of the
-site as a safe first point of contact — not a clinical page, not a
-parent's lecture, just clear answers."
-
-## 4. What we changed and why (70s) — walk the divergence log
-"A few things we changed, and why:
-- We renamed it Blossom — the original name centered on 'mission,' which
-  read narrower once we broadened the audience. Blossom keeps their own
-  growth/biome metaphor without that narrower framing.
-- We widened the audience — their own 'Future Expansion' slide named
-  parents and educators as a next step, so we built that in from day one.
-  We also stretched slightly further to late teens ourselves — that part's
-  our own call, not something their research directly says, and we're
-  upfront about that distinction.
-- We shifted the tone and colors — calmer, more direct, muted tones instead
-  of bright and playful — because a wider age range needs something that
-  reads as credible, not childish.
-- We added three things on top of their original scope: a product library
-  explaining pads, cups, tampons, discs, and period underwear in plain
-  language; a myth-busting quiz built from real misconceptions; and a
-  private, local-only tracker calendar — no account, nothing leaves your
-  device, which was a deliberate choice for a young and sensitive-topic
-  audience.
-- And we cut anything outside menstrual health — no general symptom
-  checker, no pharmacy finder — because it wasn't supported by their
-  research and would've diluted the actual product."
-
-## 5. Live demo (75s)
-"Let's walk through it. [Screen share]
-- Homepage — it knows you, locally, no account: just a name you give it
-  once, and a live summary of where you're at in your cycle.
-- Menstrome Island — their own name for the biome world. You make a
-  choice, it branches, you make another. At one ending, we show a
-  ready-to-send message you can text a parent or teacher, because
-  honestly, the hardest part usually isn't the info — it's finding the
-  words to ask for help out loud.
-- Product library — filter by what you need, or tap a real situation
-  like 'swimming tomorrow?' and it filters for you.
-- The quiz — real myths, answer, see why, small growth visual tying
-  back to their biome concept.
-- And the tracker — tap a day, tag a symptom, and it tells you why
-  that's happening, links you to the matching Menstrome mission — log
-  'Cramps' and it points you straight at the 'Cramper' level — and
-  nothing here ever leaves your device."
-
-## 6. Close (15s)
-"What's next for us: the sample-reward system and multilingual support
-they'd already envisioned. We didn't build those this weekend — we built
-the foundation they'd sit on top of."
+**Before filming:** Replace `[team name]` with your speaker names. Keep the screen recording moving while you speak - this should feel like a product tour, not a slideshow.
 
 ---
 
-## Timing check
-Read-through should land ~3.5-4 min before demo pacing adjustments.
-Cut section 4 detail first if you're running long — it's the strongest
-section for judging, but the demo needs to stay visible too.
+## 1. Hook - 15 seconds
+
+**[Show the Blossom homepage.]**
+
+"Getting your first period can feel like being dropped into a new world with no map. You might need a pad at school, have cramps at sport, or simply not know what is normal - and a wall of medical text is not much help in that moment.
+
+We are `[team name]`, and this is **Blossom**: a calm, private and practical period companion for pre-teens."
+
+## 2. The blueprint we built from - 25 seconds
+
+**[Show PADthai's MenstraMission slide/Figma briefly, then return to Blossom.]**
+
+"Blossom is our implementation of **MenstraMission**, designed by Team PADthai - Ann, Morn, Nana and Pam. Their research with 140 period-havers identified a lack of preparation before a first period, and their response was an interactive biome called Menstrome Island.
+
+That was the part we protected. PADthai gave us the strong core idea: teach through practical, interactive situations, not through a lecture. Forma asked us to turn that blueprint into a working product, and to be able to defend the places where we improved it."
+
+## 3. What we kept - 25 seconds
+
+**[Open Learn and click into a scenario.]**
+
+"We kept Menstrome Island as the learning heart of the app. Instead of asking someone to memorise information, Blossom puts them into relatable moments: your first period at school, a sleepover, cramps at practice, or a heavy-flow morning. The user chooses what they would do and gets a clear, supportive next step.
+
+This directly follows PADthai's research direction: low cognitive load, storytelling and interactive, reward-based learning for Gen Alpha."
+
+## 4. What we changed - 55 seconds
+
+**[Return to the dashboard and pan across the widgets.]**
+
+"We made four intentional changes.
+
+First, we changed the home screen from a fixed page into a personal canvas. Users can move widgets, hide optional ones, choose a Beach or Desert mood, and decorate their island. That gives them agency over a sensitive experience without asking them to create an account.
+
+Second, we made education more immediately useful. The Learning widget gives one tiny, plain-language lesson and a one-tap check instead of another long content feed. A correct answer earns a water drop.
+
+Third, we connected learning to the cycle-driven Plant widget. During a period, one petal falls each bleeding day. If bleeding ends early, the remaining petals drop together into the soil; if it lasts longer, the final petal glows and waits. Across the rest of the cycle, the plant moves from sprout, to bud, to a mature flower. The water drops earned through learning can be used to care for it. This makes progress visible without turning health tracking into a score.
+
+Finally, we made privacy a product decision. Tracker data is stored locally on the device: no account, no upload, no hidden personal profile."
+
+## 5. Building for a real team and a real product - 30 seconds
+
+**[Show Tracking, SOS and Help widgets; open the SOS page if ready.]**
+
+"We also designed the build for the way a hackathon team actually works. Tracking, Quick Help and SOS are clear, self-contained widget slots. Our teammates can plug their full calendar, support map, relief tools or GP report into those spaces without breaking the canvas or rewriting the homepage.
+
+We deliberately did not pretend that a prototype should diagnose someone. Blossom gives general education, encourages users to speak to a trusted adult or health professional when something does not feel right, and leaves clinical advice to clinicians."
+
+## 6. Short live demo - 35 seconds
+
+**[Do these actions while speaking.]**
+
+"Here is the product in action. I can switch from Beach to Desert, rearrange my island, then open a one-minute lesson. When I get the answer right, I earn a water drop. I use that drop on my plant, and it responds with a growth animation.
+
+Then I can jump into Menstrome Island to practise a real-life situation, or open the Tracker and Support spaces when I need something more practical. Everything is connected, but nothing is overwhelming."
+
+## 7. Close - 15 seconds
+
+**[Return to the full canvas with the flower visible.]**
+
+"PADthai gave us a thoughtful blueprint for making periods less scary before they happen. Blossom turns that idea into a working, customisable product that combines practical learning, gentle motivation and privacy-first utility.
+
+We did not just reproduce the design. We built the foundation it needs to live in the real world. Thank you."
+
+---
+
+## Filming order
+
+1. Homepage canvas, then a quick PADthai credit slide.
+2. Learn scenario.
+3. Back to the canvas: switch theme, move a widget, answer the lesson.
+4. Water the plant and show its cycle preview.
+5. Show Tracking, Help and SOS slots, then close on the whole dashboard.
+
+## Avoid saying
+
+- "This diagnoses your cycle" or "this tells you what is normal for you."
+- "We invented Menstrome Island." Credit PADthai every time it is introduced.
+- "The SOS page is finished" until the team has integrated the real support content.

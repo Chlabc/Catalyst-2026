@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Blossom",
+  title: "Blossom | Your period companion",
   description:
     "A safe first point of contact for curious pre-teens learning about menstruation.",
 };

@@ -3,10 +3,6 @@
 import { useState } from "react";
 import { ChevronIcon } from "@/components/icons";
 
-// PLACEHOLDER: [teammate] is replacing this FAQ list with the real
-// helpline module - a map of nearby support, yoga poses, helplines, and
-// a printable report generated from tracker data. Keep the outer
-// rounded-b-2xl wrapper so it still fits the canvas.
 const FAQS = [
   {
     q: "Is my data private?",
@@ -14,7 +10,7 @@ const FAQS = [
   },
   {
     q: "How do I move these widgets?",
-    a: "Drag the ⠿⠿⠿ handle at the top of any widget. Tracking and Help can be hidden and brought back; the flower and Menstrome Island stay put.",
+    a: "Drag the ⠿⠿⠿ handle at the top of any widget. Optional widgets can be hidden and brought back; the flower and Menstrome Island stay put.",
   },
   {
     q: "What if something feels really wrong?",
@@ -27,26 +23,7 @@ export function HelpWidget() {
 
   return (
     <div className="rounded-b-2xl border-2 border-t-0 border-accent/30 bg-accent-soft p-5">
-      <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-foreground">Quick help</p>
-        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-accent">
-          placeholder
-        </span>
-      </div>
-      <p className="mt-2 text-sm leading-relaxed text-text-muted">
-        A calm place to find support. The full help centre will connect nearby
-        pharmacies, helplines, gentle movement, and printable period notes.
-      </p>
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {["Nearby support", "Yoga & comfort", "Period summary"].map((item) => (
-          <span
-            key={item}
-            className="rounded-full bg-white/60 px-2.5 py-1 text-xs font-medium text-text-muted"
-          >
-            {item}
-          </span>
-        ))}
-      </div>
+      <p className="text-base font-semibold text-foreground">Quick help</p>
       <div className="mt-2 flex flex-col divide-y divide-border">
         {FAQS.map((faq) => {
           const isOpen = expanded === faq.q;

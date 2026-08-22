@@ -10,6 +10,7 @@ import {
 const LENGTH_KEY = "blossom_typical_period_length";
 const LAST_SEEN_KEY = "blossom_flower_last_seen_remaining";
 const WAS_BLEEDING_KEY = "blossom_flower_was_bleeding";
+const WATER_KEY = "blossom_water_drops";
 const DEFAULT_LENGTH = 7;
 const FALL_DURATION_MS = 1200;
 
@@ -39,7 +40,7 @@ function petalPoints(count: number, index: number, radius: number, center: numbe
   };
 }
 
-export function FlowerWidget() {
+export function FlowerWidget({ theme = "beach" }: { theme?: "beach" | "desert" }) {
   const [typicalLength, setTypicalLength] = useState(DEFAULT_LENGTH);
   const [editing, setEditing] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -57,6 +58,8 @@ export function FlowerWidget() {
   const [shedding, setShedding] = useState(false);
   const [sheddingCount, setSheddingCount] = useState(0);
   const [previewPhase, setPreviewPhase] = useState<PlantPhase | null>(null);
+  const [waterDrops, setWaterDrops] = useState(0);
+  const [justWatered, setJustWatered] = useState(false);
 
   useEffect(() => {
     let storedLength = DEFAULT_LENGTH;
@@ -83,6 +86,7 @@ export function FlowerWidget() {
     const isActive = Boolean(logs[toKey(today)] || logs[toKey(yesterday)]);
     const days = isActive && streak ? streak.length : 0;
     setActiveDays(days);
+    setWaterDrops(Number(window.localStorage.getItem(WATER_KEY) ?? "0") || 0);
 
     const remaining = petalsStillAttached(storedLength, days);
 
@@ -124,11 +128,29 @@ export function FlowerWidget() {
     setLoaded(true);
   }, []);
 
+  useEffect(() => {
+    function syncWaterDrops() {
+      setWaterDrops(Number(window.localStorage.getItem(WATER_KEY) ?? "0") || 0);
+    }
+    window.addEventListener("blossom:water-changed", syncWaterDrops);
+    return () => window.removeEventListener("blossom:water-changed", syncWaterDrops);
+  }, []);
+
   function saveLength(value: number) {
     const clamped = Math.max(1, Math.min(14, value));
     setTypicalLength(clamped);
     window.localStorage.setItem(LENGTH_KEY, String(clamped));
     setEditing(false);
+  }
+
+  function waterPlant() {
+    if (waterDrops < 1) return;
+    const next = waterDrops - 1;
+    setWaterDrops(next);
+    window.localStorage.setItem(WATER_KEY, String(next));
+    window.dispatchEvent(new Event("blossom:water-changed"));
+    setJustWatered(true);
+    window.setTimeout(() => setJustWatered(false), 900);
   }
 
   if (!loaded) return null;
@@ -171,7 +193,9 @@ export function FlowerWidget() {
   return (
     <div className="rounded-b-2xl border-2 border-t-0 border-border bg-surface p-5">
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-foreground">Your bloom</p>
+        <p className="text-base font-semibold text-foreground">
+          {theme === "beach" ? "Your coconut bloom" : "Your desert bloom"}
+        </p>
         {editing ? (
           <div className="flex items-center gap-1.5">
             <input
@@ -206,6 +230,13 @@ export function FlowerWidget() {
         )}
       </div>
 
+      <div className="mt-3 flex items-center justify-between rounded-xl bg-secondary-soft px-3 py-2">
+        <p className="text-xs font-semibold text-foreground">💧 {waterDrops} water drop{waterDrops === 1 ? "" : "s"}</p>
+        <button onClick={waterPlant} disabled={waterDrops < 1} className="rounded-full bg-secondary px-3 py-1 text-xs font-bold text-white transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-45">
+          {justWatered ? "Growing!" : "Water plant"}
+        </button>
+      </div>
+
       {previewPhase && (
         <div className="mt-3 flex flex-wrap gap-1.5 rounded-xl bg-background p-2">
           {([
@@ -228,7 +259,7 @@ export function FlowerWidget() {
         </div>
       )}
 
-      <div className="mx-auto mt-2" style={{ width: size, height: size }}>
+      <div className={`mx-auto mt-2 ${justWatered ? "animate-plant-watered" : ""}`} style={{ width: size, height: size }}>
         <svg width={size} height={size} style={{ overflow: "visible" }}>
           <defs>
             <radialGradient id="petalShine" cx="35%" cy="30%" r="70%">
