@@ -63,9 +63,15 @@ log("OK NavBar uses shared links; no FAQ floating opener");
 const faqsSrc = read("src/lib/faqs.ts");
 assert.match(faqsSrc, /export const FAQS/);
 const faqWidget = read("src/components/canvas/FaqWidget.tsx");
-assert.match(faqWidget, /from "@\/lib\/faqs"/);
-assert.match(faqWidget, /FAQS\.map/);
+const faqList = read("src/components/faq/FaqList.tsx");
+assert.match(faqWidget, /FaqList/);
 assert.match(faqWidget, /data-testid="faq-widget"/);
+assert.match(faqList, /from "@\/lib\/faqs"/);
+assert.match(faqList, /FAQS\.map/);
+const faqPage = read("src/app/faq/page.tsx");
+assert.match(faqPage, /FaqList/);
+assert.match(faqPage, /variant="page"/);
+assert.doesNotMatch(faqPage, /FaqWidget/);
 
 const faqsArrayMatch = faqsSrc.match(
   /export const FAQS[^=]*=\s*(\[[\s\S]*?\]);/,
@@ -77,9 +83,9 @@ assert.ok(FAQS.every((f) => typeof f.q === "string" && typeof f.a === "string"))
 log(`OK shared FAQS (${FAQS.length} entries) consumed by FaqWidget`);
 
 const canvas = read("src/components/canvas/WidgetCanvas.tsx");
-assert.match(canvas, /id:\s*"faq"/);
+assert.match(canvas, /id=["']faq["']/);
 assert.match(canvas, /FaqWidget/);
-assert.match(canvas, /label:\s*"FAQ"/);
+assert.match(canvas, /label=["']FAQ["']/);
 log("OK FAQ registered on WidgetCanvas");
 
 // --- (c) HelpPanel / floating shell / blossom:open-help gone ---
