@@ -1,5 +1,6 @@
 import { HelpFlow } from "@/components/help/HelpFlow";
 import { Container } from "@/components/ui/Container";
+import { SceneBackdropFrame } from "@/components/theme/SceneBackdropFrame";
 import {
   isHelpServiceType,
   type HelpServiceType,
@@ -25,11 +26,13 @@ export default async function FindHelpPage({ searchParams }: FindHelpPageProps) 
     : undefined;
 
   return (
-    <Container>
-      <HelpFlow
-        initialStep={view === "nearby" ? "nearby" : "landing"}
-        initialService={initialService}
-      />
-    </Container>
+    <SceneBackdropFrame testId="find-help-scene-backdrop">
+      <Container>
+        <HelpFlow
+          initialStep={view === "nearby" ? "nearby" : "landing"}
+          initialService={initialService}
+        />
+      </Container>
+    </SceneBackdropFrame>
   );
 }
