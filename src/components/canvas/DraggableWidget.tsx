@@ -85,6 +85,7 @@ export function DraggableWidget({
 
   return (
     <div
+      data-widget-id={id}
       style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
       className={`absolute left-0 top-0 w-80 ${dragging ? "z-20" : "z-10"} ${className}`}
     >
@@ -105,6 +106,8 @@ export function DraggableWidget({
           {label && <span className="text-xs font-medium uppercase tracking-[0.1em]">{label}</span>}
           {onRemove && (
             <button
+              type="button"
+              data-testid={`hide-widget-${id}`}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={onRemove}
               aria-label="Remove widget"

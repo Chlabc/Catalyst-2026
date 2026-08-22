@@ -99,14 +99,8 @@ try {
   // First may collapse or stay — either ok; assert second answer matches shared data
   note("OK FAQ accordion answers match shared FAQS");
 
-  // Hide FAQ via edit mode (Hide is on the handle; may be "Hide" text on desktop)
   await page.getByTestId("edit-widgets").click();
-  const faqHandle = page.locator('[aria-label="Remove widget"]').filter({
-    has: page.locator("xpath=ancestor::*[contains(@class,'absolute')]"),
-  });
-  // More reliable: find FAQ widget's parent drag card Hide button
-  const faqCard = page.locator("div").filter({ has: page.getByTestId("faq-widget") }).filter({ hasText: "FAQ" }).first();
-  await faqCard.getByRole("button", { name: "Remove widget" }).click();
+  await page.getByTestId("hide-widget-faq").click();
   await page.waitForTimeout(200);
   assert.equal(await page.getByTestId("faq-widget").count(), 0);
   await page.getByTestId("restore-widget-faq").click();
