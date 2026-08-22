@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Fredoka, Nunito, Geist_Mono } from "next/font/google";
 import { NavBar } from "@/components/ui/NavBar";
-import { HelpPanel } from "@/components/HelpPanel";
 import { BlossomThemeProvider } from "@/components/theme/BlossomThemeProvider";
 import "./globals.css";
 
@@ -39,7 +38,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BlossomThemeProvider>
           <NavBar />
           <main className="flex-1">{children}</main>
-          <HelpPanel />
         </BlossomThemeProvider>
         <Script id="blossom-theme-init" strategy="beforeInteractive">
           {`try{var theme=localStorage.getItem("blossom_home_scene");document.documentElement.dataset.blossomTheme=theme==="macaron"?"macaron":"beach"}catch(e){document.documentElement.dataset.blossomTheme="beach"}`}

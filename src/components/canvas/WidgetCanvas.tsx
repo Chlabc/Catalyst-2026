@@ -6,6 +6,7 @@ import { FlowerWidget } from "./FlowerWidget";
 import { LearningWidget } from "./LearningWidget";
 import { TrackingWidget } from "./TrackingWidget";
 import { HelpWidget } from "./HelpWidget";
+import { FaqWidget } from "./FaqWidget";
 import styles from "./WidgetCanvas.module.css";
 
 const HIDDEN_KEY = "blossom_hidden_widgets";
@@ -16,6 +17,7 @@ const REMOVABLE = [
   { id: "learning", label: "Learning" },
   { id: "tracking", label: "Tracking" },
   { id: "help", label: "Find Help" },
+  { id: "faq", label: "FAQ" },
 ];
 
 export function WidgetCanvas() {
@@ -62,6 +64,7 @@ export function WidgetCanvas() {
           type="button"
           onClick={() => setEditing((current) => !current)}
           aria-expanded={editing}
+          data-testid="edit-widgets"
           className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm backdrop-blur-md transition-colors ${editing ? "border-primary bg-primary text-white" : "border-white/60 bg-white/55 text-foreground hover:border-primary hover:bg-white/80"}`}
         >
           {editing ? "Done editing" : "Edit widgets"}
@@ -70,7 +73,10 @@ export function WidgetCanvas() {
       {editing && (
         <div className="relative z-20 ml-auto mt-3 max-w-md rounded-2xl border border-white/60 bg-white/70 p-4 text-sm text-text-muted shadow-sm backdrop-blur-md">
           <p className="font-semibold text-foreground">Arrange your view</p>
-          <p className="mt-1">Drag the dotted handle to move Learning, Tracking, or Find Help. Use Hide to remove a tool and add it back below whenever you need it.</p>
+          <p className="mt-1">
+            Drag the dotted handle to move Learning, Tracking, Find Help, or FAQ.
+            Use Hide to remove a tool and add it back below whenever you need it.
+          </p>
         </div>
       )}
       <div className={styles.canvas}>
@@ -119,15 +125,33 @@ export function WidgetCanvas() {
             <HelpWidget />
           </DraggableWidget>
         )}
+
+        {!hidden.has("faq") && (
+          <DraggableWidget
+            id="faq"
+            label="FAQ"
+            defaultX={720}
+            defaultY={120}
+            onRemove={() => hide("faq")}
+            handleClassName="border-border bg-surface"
+            className={styles.widget}
+          >
+            <FaqWidget />
+          </DraggableWidget>
+        )}
       </div>
 
       {hiddenList.length > 0 && (
-        <div className="relative z-20 mt-4 flex flex-wrap items-center justify-end gap-2">
+        <div
+          className="relative z-20 mt-4 flex flex-wrap items-center justify-end gap-2"
+          data-testid="hidden-widgets"
+        >
           <span className="text-xs font-medium text-foreground/65">Hidden:</span>
           {hiddenList.map((w) => (
             <button
               type="button"
               key={w.id}
+              data-testid={`restore-widget-${w.id}`}
               onClick={() => show(w.id)}
               className="rounded-full border border-white/60 bg-white/55 px-3 py-1 text-xs text-foreground/70 shadow-sm backdrop-blur-md transition-colors hover:border-primary hover:bg-white/80 hover:text-foreground"
             >

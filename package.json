@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test:theme-backdrop": "node --experimental-strip-types scripts/check-scene-backdrop.ts",
-    "test:tracker-theme": "node scripts/check-tracker-theme-playwright.mjs"
+    "test:tracker-theme": "node scripts/check-tracker-theme-playwright.mjs",
+    "test:menstrome-hotspots": "node scripts/check-menstrome-hotspots.mjs",
+    "test:home-faq": "node scripts/check-home-faq-structural.mjs"
   },
   "dependencies": {
     "next": "16.3.1",
